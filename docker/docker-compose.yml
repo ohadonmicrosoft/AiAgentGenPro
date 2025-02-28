@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -41,11 +41,11 @@ services:
       - .:/app
       - firebase-data:/app/.firebase
     ports:
-      - "4000:4000"  # Emulator UI
-      - "8080:8080"  # Firestore
-      - "9099:9099"  # Auth
-      - "9199:9199"  # Storage
-      - "5001:5001"  # Functions
+      - "4000:4000" # Emulator UI
+      - "8080:8080" # Firestore
+      - "9099:9099" # Auth
+      - "9199:9199" # Storage
+      - "5001:5001" # Functions
     networks:
       - app-network
     command: npm run firebase:emulators:start

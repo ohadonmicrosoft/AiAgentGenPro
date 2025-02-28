@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function NotFoundPage() {
   const { user } = useAuth();
-  
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -75,7 +75,8 @@ export default function NotFoundPage() {
           variants={itemVariants}
           className="mb-8 text-muted-foreground"
         >
-          Sorry, we couldn't find the page you're looking for. The page might have been moved, deleted, or never existed.
+          Sorry, we couldn't find the page you're looking for. The page might
+          have been moved, deleted, or never existed.
         </motion.p>
 
         <motion.div
@@ -98,4 +99,4 @@ export default function NotFoundPage() {
       </motion.div>
     </div>
   );
-} 
+}

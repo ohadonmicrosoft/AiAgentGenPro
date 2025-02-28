@@ -33,23 +33,29 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 
 // Define form validation schema with Zod
-const registerSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
-    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
-    .regex(/[0-9]/, { message: "Password must contain at least one number" }),
-  confirmPassword: z.string(),
-  terms: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
-  }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter",
+      })
+      .regex(/[0-9]/, { message: "Password must contain at least one number" }),
+    confirmPassword: z.string(),
+    terms: z.boolean().refine((val) => val === true, {
+      message: "You must accept the terms and conditions",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -74,14 +80,14 @@ export default function RegisterPage() {
     },
     mode: "onChange",
   });
-  
+
   // Password validation checks
   const password = form.watch("password");
   const hasMinLength = password.length >= 8;
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
-  
+
   // Handle form submission
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
@@ -97,7 +103,7 @@ export default function RegisterPage() {
     } catch (error: any) {
       console.error("Registration error:", error);
       setAuthError(
-        error.message || "Failed to create account. Please try again later."
+        error.message || "Failed to create account. Please try again later.",
       );
     } finally {
       setIsLoading(false);
@@ -119,7 +125,8 @@ export default function RegisterPage() {
     } catch (error: any) {
       console.error("GitHub sign in error:", error);
       setAuthError(
-        error.message || "Failed to sign in with GitHub. Please try again later."
+        error.message ||
+          "Failed to sign in with GitHub. Please try again later.",
       );
     } finally {
       setIsLoading(false);
@@ -146,12 +153,24 @@ export default function RegisterPage() {
     },
   };
 
-  const PasswordStrengthIndicator = ({ checked, label }: { checked: boolean; label: string }) => (
+  const PasswordStrengthIndicator = ({
+    checked,
+    label,
+  }: {
+    checked: boolean;
+    label: string;
+  }) => (
     <div className="flex items-center">
-      <div className={`flex h-4 w-4 items-center justify-center rounded-full ${checked ? 'bg-green-500' : 'bg-muted'} mr-2`}>
+      <div
+        className={`flex h-4 w-4 items-center justify-center rounded-full ${checked ? "bg-green-500" : "bg-muted"} mr-2`}
+      >
         {checked && <Check className="h-3 w-3 text-white" />}
       </div>
-      <span className={`text-xs ${checked ? 'text-green-500' : 'text-muted-foreground'}`}>{label}</span>
+      <span
+        className={`text-xs ${checked ? "text-green-500" : "text-muted-foreground"}`}
+      >
+        {label}
+      </span>
     </div>
   );
 
@@ -256,25 +275,27 @@ export default function RegisterPage() {
                                 <Eye className="h-4 w-4 text-muted-foreground" />
                               )}
                               <span className="sr-only">
-                                {showPassword ? "Hide password" : "Show password"}
+                                {showPassword
+                                  ? "Hide password"
+                                  : "Show password"}
                               </span>
                             </Button>
                           </div>
                         </FormControl>
                         <div className="grid grid-cols-2 gap-2 mt-2">
-                          <PasswordStrengthIndicator 
+                          <PasswordStrengthIndicator
                             checked={hasMinLength}
                             label="Min. 8 characters"
                           />
-                          <PasswordStrengthIndicator 
+                          <PasswordStrengthIndicator
                             checked={hasUppercase}
                             label="Uppercase letter"
                           />
-                          <PasswordStrengthIndicator 
+                          <PasswordStrengthIndicator
                             checked={hasLowercase}
                             label="Lowercase letter"
                           />
-                          <PasswordStrengthIndicator 
+                          <PasswordStrengthIndicator
                             checked={hasNumber}
                             label="Number"
                           />
@@ -303,7 +324,9 @@ export default function RegisterPage() {
                               variant="ghost"
                               size="sm"
                               className="absolute right-0 top-0 h-full px-3 py-1 hover:bg-transparent"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
                               disabled={isLoading}
                             >
                               {showConfirmPassword ? (
@@ -312,7 +335,9 @@ export default function RegisterPage() {
                                 <Eye className="h-4 w-4 text-muted-foreground" />
                               )}
                               <span className="sr-only">
-                                {showConfirmPassword ? "Hide password" : "Show password"}
+                                {showConfirmPassword
+                                  ? "Hide password"
+                                  : "Show password"}
                               </span>
                             </Button>
                           </div>
@@ -337,11 +362,17 @@ export default function RegisterPage() {
                         <div className="space-y-1 leading-none">
                           <FormLabel className="text-sm font-normal">
                             I agree to the{" "}
-                            <Link href="/terms" className="text-primary hover:underline">
+                            <Link
+                              href="/terms"
+                              className="text-primary hover:underline"
+                            >
                               Terms of Service
                             </Link>{" "}
                             and{" "}
-                            <Link href="/privacy" className="text-primary hover:underline">
+                            <Link
+                              href="/privacy"
+                              className="text-primary hover:underline"
+                            >
                               Privacy Policy
                             </Link>
                           </FormLabel>
@@ -351,11 +382,7 @@ export default function RegisterPage() {
                     )}
                   />
 
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={isLoading}
-                  >
+                  <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Creating Account..." : "Create Account"}
                   </Button>
                 </form>
@@ -402,4 +429,4 @@ export default function RegisterPage() {
       </motion.div>
     </div>
   );
-} 
+}

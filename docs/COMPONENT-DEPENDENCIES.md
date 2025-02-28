@@ -60,9 +60,11 @@ App
 ### AuthContext
 
 **Providers:**
+
 - AuthProvider (wraps the entire application)
 
 **Consumers:**
+
 - ProtectedRoute
 - Sidebar
 - TopNav
@@ -73,9 +75,11 @@ App
 ### ThemeContext
 
 **Providers:**
+
 - ThemeProvider (wraps the entire application)
 
 **Consumers:**
+
 - All UI components
 - MainLayout
 - MobileLayout
@@ -83,9 +87,11 @@ App
 ### FormContext
 
 **Providers:**
+
 - FormProvider (wraps form components)
 
 **Consumers:**
+
 - Input
 - Select
 - Checkbox
@@ -95,9 +101,11 @@ App
 ### AgentContext
 
 **Providers:**
+
 - AgentProvider (wraps agent-related pages)
 
 **Consumers:**
+
 - AgentWizard
 - AgentsPage
 - AgentDetail
@@ -105,9 +113,11 @@ App
 ### NavigationContext
 
 **Providers:**
+
 - NavigationProvider (wraps layouts)
 
 **Consumers:**
+
 - Sidebar
 - MobileNav
 - Breadcrumbs
@@ -212,12 +222,14 @@ AgentProvider
 ## Recommended Component Refactoring
 
 1. **Split Sidebar.tsx** into smaller components:
+
    - SidebarContainer
    - SidebarNavigation
    - SidebarFooter
    - SidebarNavItem
 
 2. **Extract form logic** from AgentWizard steps into custom hooks:
+
    - useAgentBasicInfoForm
    - useAgentConfigurationForm
    - useAgentPromptForm
@@ -225,4 +237,4 @@ AgentProvider
 3. **Create composition patterns** for commonly used component combinations:
    - FormFieldWithValidation
    - CardWithHeader
-   - ModalWithActions 
+   - ModalWithActions

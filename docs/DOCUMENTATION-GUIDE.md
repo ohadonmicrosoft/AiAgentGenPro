@@ -9,6 +9,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Provides an overview of the entire project and documentation structure.
 
 **Key Content:**
+
 - Project summary and key features
 - Technology stack overview
 - Links to all other documentation files
@@ -23,6 +24,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Outlines the comprehensive plan to reorganize the project for improved maintainability.
 
 **Key Content:**
+
 - Current structure issues and pain points
 - Proposed directory structure with explanations
 - File reorganization mapping from current to new locations
@@ -36,6 +38,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Documents how data moves through the application.
 
 **Key Content:**
+
 - Authentication flow diagrams and explanations
 - Agent creation workflow
 - Main UI data flow
@@ -49,6 +52,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Analyzes component relationships and dependencies.
 
 **Key Content:**
+
 - Core component hierarchy
 - Component dependency diagrams
 - Context providers and their consumers
@@ -63,6 +67,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Explains the approach to state management across the application.
 
 **Key Content:**
+
 - State management layers (local, context, React Query, storage)
 - When to use each state management approach
 - Implementation examples
@@ -77,6 +82,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Details the strategy for API integration and communication.
 
 **Key Content:**
+
 - API architecture overview
 - Internal API structure
 - API client implementation
@@ -93,6 +99,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Outlines the comprehensive testing approach.
 
 **Key Content:**
+
 - Testing pyramid explanation
 - Unit testing guidelines
 - Integration testing approach
@@ -108,6 +115,7 @@ This guide outlines the recommended sequence for reviewing the AI Agent Generato
 **Purpose:** Describes the infrastructure and deployment workflow.
 
 **Key Content:**
+
 - Multi-environment setup (development, staging, production)
 - Containerization with Docker
 - Kubernetes configuration
@@ -137,6 +145,7 @@ This section provides detailed instructions on how to use the current project im
 ### Phase 1: Preparation and Analysis
 
 #### 1.1 Create Branch and Working Directory
+
 ```bash
 # Create a new branch for the restructuring work
 git checkout -b project-restructure
@@ -145,6 +154,7 @@ mkdir -p project-restructure/{client,server,shared,config,scripts,docs,functions
 ```
 
 #### 1.2 Fix Linting Configuration
+
 ```bash
 # First, fix .eslintignore to allow proper linting
 cp .eslintignore config/.eslintignore
@@ -161,6 +171,7 @@ functions/lib/
 ```
 
 #### 1.3 Run Comprehensive Linting
+
 ```bash
 # Run ESLint on all files to identify issues
 npx eslint . --ext .ts,.tsx
@@ -169,6 +180,7 @@ npx eslint . --ext .ts,.tsx -o linting-report.json --format json
 ```
 
 #### 1.4 Create Dependency Graph
+
 ```bash
 # Install madge if not already installed
 npm install -g madge
@@ -183,6 +195,7 @@ madge --circular --extensions ts,tsx src/
 #### 2.1 Component Categorization
 
 1. **Create a component inventory spreadsheet** that includes:
+
    - Component name
    - Current location
    - Target location
@@ -192,6 +205,7 @@ madge --circular --extensions ts,tsx src/
    - Migration priority (based on dependency count)
 
 2. **Classify components** into the following categories:
+
    - Core UI components (buttons, inputs, etc.)
    - Context providers
    - Feature-specific components
@@ -222,6 +236,7 @@ For each component, follow this process:
 Follow this specific order to minimize broken dependencies:
 
 #### 3.1 Migrate Fundamental Elements
+
 ```bash
 # 1. First, migrate types
 mkdir -p project-restructure/client/src/types
@@ -241,6 +256,7 @@ cp shared/schema.ts project-restructure/shared/
 ```
 
 #### 3.2 Migrate Core UI Components
+
 ```bash
 # Create UI component directories
 mkdir -p project-restructure/client/src/components/ui
@@ -255,17 +271,19 @@ sed -i 's|@/lib/utils|../../lib/utils|g' project-restructure/client/src/componen
 #### 3.3 Migrate Context Providers
 
 1. **Consolidate context files**:
+
    - Move all context files to a single `contexts` directory
    - Ensure naming consistency (use PascalCase for context files)
    - Create index files to simplify imports
 
 2. **Create a provider composition pattern**:
+
    ```tsx
    // In project-restructure/client/src/providers/app-providers.tsx
-   import { ThemeProvider } from '../contexts/theme-context';
-   import { AuthProvider } from '../contexts/auth-context';
-   import { QueryClientProvider } from 'react-query';
-   import { queryClient } from '../lib/query-client';
+   import { ThemeProvider } from "../contexts/theme-context";
+   import { AuthProvider } from "../contexts/auth-context";
+   import { QueryClientProvider } from "react-query";
+   import { queryClient } from "../lib/query-client";
 
    export function AppProviders({ children }) {
      return (
@@ -286,10 +304,10 @@ Add robust error handling throughout the application:
 // In project-restructure/client/src/lib/error-handling.ts
 export class AppError extends Error {
   code: string;
-  
+
   constructor(message: string, code: string) {
     super(message);
-    this.name = 'AppError';
+    this.name = "AppError";
     this.code = code;
   }
 }
@@ -304,11 +322,11 @@ export function handleError(error: unknown) {
     console.error(`[UNCATEGORIZED_ERROR] ${error.message}`);
   } else {
     // Handle unknown errors
-    console.error('[UNKNOWN_ERROR]', error);
+    console.error("[UNKNOWN_ERROR]", error);
   }
-  
+
   // Return user-friendly error message
-  return 'An unexpected error occurred. Please try again.';
+  return "An unexpected error occurred. Please try again.";
 }
 ```
 
@@ -320,35 +338,35 @@ Implement a fully-typed API client that leverages TypeScript for type safety:
 
 ```tsx
 // In project-restructure/client/src/lib/api/api-client.ts
-import { ApiError } from './errors';
-import type { ApiResponse } from '../../types';
+import { ApiError } from "./errors";
+import type { ApiResponse } from "../../types";
 
 export class ApiClient {
   private baseUrl: string;
   private headers: Record<string, string>;
-  
+
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.headers = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
   }
-  
+
   setAuthToken(token: string): void {
-    this.headers['Authorization'] = `Bearer ${token}`;
+    this.headers["Authorization"] = `Bearer ${token}`;
   }
-  
+
   async get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
     // Implementation with proper error handling
     // ...
   }
-  
+
   // Other methods (post, put, delete, etc.)
 }
 
 // Create service-specific API clients that extend the base client
-export const agentApiClient = new ApiClient('/api/agents');
-export const authApiClient = new ApiClient('/api/auth');
+export const agentApiClient = new ApiClient("/api/agents");
+export const authApiClient = new ApiClient("/api/auth");
 // ...
 ```
 
@@ -358,32 +376,32 @@ Create custom React Query hooks for each API endpoint:
 
 ```tsx
 // In project-restructure/client/src/hooks/use-agents.ts
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { agentApiClient } from '../lib/api/api-client';
-import type { Agent, AgentCreateInput } from '../types';
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { agentApiClient } from "../lib/api/api-client";
+import type { Agent, AgentCreateInput } from "../types";
 
 export function useAgents() {
-  return useQuery<Agent[], Error>('agents', () => agentApiClient.get('/'));
+  return useQuery<Agent[], Error>("agents", () => agentApiClient.get("/"));
 }
 
 export function useAgent(id: string) {
   return useQuery<Agent, Error>(
-    ['agent', id], 
+    ["agent", id],
     () => agentApiClient.get(`/${id}`),
-    { enabled: !!id }
+    { enabled: !!id },
   );
 }
 
 export function useCreateAgent() {
   const queryClient = useQueryClient();
-  
+
   return useMutation<Agent, Error, AgentCreateInput>(
-    (data) => agentApiClient.post('/', data),
+    (data) => agentApiClient.post("/", data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('agents');
+        queryClient.invalidateQueries("agents");
       },
-    }
+    },
   );
 }
 ```
@@ -395,21 +413,29 @@ export function useCreateAgent() {
 Implement performance optimizations for all components:
 
 1. **Memoize expensive components**:
+
    ```tsx
    // Before
-   export function ExpensiveComponent(props) { /* ... */ }
-   
+   export function ExpensiveComponent(props) {
+     /* ... */
+   }
+
    // After
-   export const ExpensiveComponent = React.memo(function ExpensiveComponent(props) {
-     // Implementation
-   });
+   export const ExpensiveComponent = React.memo(
+     function ExpensiveComponent(props) {
+       // Implementation
+     },
+   );
    ```
 
 2. **Use callback memoization**:
+
    ```tsx
    // Before
-   function handleClick() { /* ... */ }
-   
+   function handleClick() {
+     /* ... */
+   }
+
    // After
    const handleClick = useCallback(() => {
      // Implementation
@@ -417,35 +443,36 @@ Implement performance optimizations for all components:
    ```
 
 3. **Apply virtualization for long lists**:
+
    ```tsx
-   import { useVirtualizer } from '@tanstack/react-virtual';
-   
+   import { useVirtualizer } from "@tanstack/react-virtual";
+
    export function VirtualizedList({ items }) {
      const parentRef = useRef(null);
-     
+
      const rowVirtualizer = useVirtualizer({
        count: items.length,
        getScrollElement: () => parentRef.current,
        estimateSize: () => 35,
      });
-     
+
      return (
-       <div ref={parentRef} style={{ height: '400px', overflow: 'auto' }}>
+       <div ref={parentRef} style={{ height: "400px", overflow: "auto" }}>
          <div
            style={{
              height: `${rowVirtualizer.getTotalSize()}px`,
-             width: '100%',
-             position: 'relative',
+             width: "100%",
+             position: "relative",
            }}
          >
            {rowVirtualizer.getVirtualItems().map((virtualRow) => (
              <div
                key={virtualRow.index}
                style={{
-                 position: 'absolute',
+                 position: "absolute",
                  top: 0,
                  left: 0,
-                 width: '100%',
+                 width: "100%",
                  height: `${virtualRow.size}px`,
                  transform: `translateY(${virtualRow.start}px)`,
                }}
@@ -464,14 +491,15 @@ Implement performance optimizations for all components:
 Implement accessibility improvements across all components:
 
 1. **Add proper ARIA attributes**:
+
    ```tsx
    // Before
    <button onClick={toggle}>Menu</button>
-   
+
    // After
-   <button 
-     onClick={toggle} 
-     aria-expanded={isOpen} 
+   <button
+     onClick={toggle}
+     aria-expanded={isOpen}
      aria-controls="menu-content"
      aria-label="Toggle menu"
    >
@@ -483,19 +511,20 @@ Implement accessibility improvements across all components:
    ```
 
 2. **Implement keyboard navigation**:
+
    ```tsx
    function handleKeyDown(e: React.KeyboardEvent) {
      switch (e.key) {
-       case 'ArrowDown':
+       case "ArrowDown":
          e.preventDefault();
          // Navigate to next item
          break;
-       case 'ArrowUp':
+       case "ArrowUp":
          e.preventDefault();
          // Navigate to previous item
          break;
-       case 'Enter':
-       case ' ':
+       case "Enter":
+       case " ":
          e.preventDefault();
          // Select current item
          break;
@@ -504,29 +533,32 @@ Implement accessibility improvements across all components:
    ```
 
 3. **Create a FocusTrap component**:
+
    ```tsx
    // In project-restructure/client/src/components/ui/focus-trap.tsx
-   import { useEffect, useRef } from 'react';
-   
+   import { useEffect, useRef } from "react";
+
    export function FocusTrap({ children, active = true }) {
      const rootRef = useRef<HTMLDivElement>(null);
-     
+
      useEffect(() => {
        if (!active) return;
-       
+
        const root = rootRef.current;
        if (!root) return;
-       
+
        const focusableElements = root.querySelectorAll(
-         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
        );
-       
+
        const firstElement = focusableElements[0] as HTMLElement;
-       const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-       
+       const lastElement = focusableElements[
+         focusableElements.length - 1
+       ] as HTMLElement;
+
        function handleKeyDown(e: KeyboardEvent) {
-         if (e.key !== 'Tab') return;
-         
+         if (e.key !== "Tab") return;
+
          if (e.shiftKey) {
            if (document.activeElement === firstElement) {
              lastElement.focus();
@@ -539,15 +571,15 @@ Implement accessibility improvements across all components:
            }
          }
        }
-       
-       root.addEventListener('keydown', handleKeyDown);
+
+       root.addEventListener("keydown", handleKeyDown);
        firstElement?.focus();
-       
+
        return () => {
-         root.removeEventListener('keydown', handleKeyDown);
+         root.removeEventListener("keydown", handleKeyDown);
        };
      }, [active]);
-     
+
      return <div ref={rootRef}>{children}</div>;
    }
    ```
@@ -569,9 +601,9 @@ touch project-restructure/client/src/test/setup.ts
 
 ```typescript
 // In project-restructure/client/src/test/setup.ts
-import '@testing-library/jest-dom';
-import { afterEach } from 'vitest';
-import { cleanup } from '@testing-library/react';
+import "@testing-library/jest-dom";
+import { afterEach } from "vitest";
+import { cleanup } from "@testing-library/react";
 
 // Automatically clean up after each test
 afterEach(() => {
@@ -585,9 +617,9 @@ Create test utilities to simplify testing:
 
 ```typescript
 // In project-restructure/client/src/test/utils.tsx
-import { render as rtlRender } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { AppProviders } from '../providers/app-providers';
+import { render as rtlRender } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { AppProviders } from "../providers/app-providers";
 
 // Custom render function that includes providers
 function render(ui, options = {}) {
@@ -601,7 +633,7 @@ function render(ui, options = {}) {
 }
 
 // Re-export everything from testing-library
-export * from '@testing-library/react';
+export * from "@testing-library/react";
 export { render, userEvent };
 ```
 
@@ -620,15 +652,15 @@ describe('Button', () => {
     render(<Button>Click me</Button>);
     expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
   });
-  
+
   it('handles click events', async () => {
     const handleClick = vi.fn();
     const { user } = render(<Button onClick={handleClick}>Click me</Button>);
-    
+
     await user.click(screen.getByRole('button', { name: /click me/i }));
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
-  
+
   it('can be disabled', () => {
     render(<Button disabled>Click me</Button>);
     expect(screen.getByRole('button', { name: /click me/i })).toBeDisabled();
@@ -656,26 +688,31 @@ For each integrated component, verify:
 Before completing the migration:
 
 1. **Compile the entire application**:
+
    ```bash
    npm run build
    ```
 
 2. **Run all tests**:
+
    ```bash
    npm run test
    ```
 
 3. **Perform end-to-end testing**:
+
    ```bash
    npm run e2e
    ```
 
 4. **Check for type errors**:
+
    ```bash
    npx tsc --noEmit
    ```
 
 5. **Verify bundle size**:
+
    ```bash
    npm run analyze
    ```
@@ -691,17 +728,17 @@ Before completing the migration:
 
 For each component, create or update documentation:
 
-```tsx
+````tsx
 /**
  * Button component with various styles and states.
- * 
+ *
  * @example
  * ```tsx
  * <Button variant="primary" size="md" onClick={handleClick}>
  *   Click me
  * </Button>
  * ```
- * 
+ *
  * @param props - Component props
  * @param props.variant - Button style variant ('primary', 'secondary', 'ghost', etc.)
  * @param props.size - Button size ('sm', 'md', 'lg')
@@ -710,8 +747,8 @@ For each component, create or update documentation:
  * @param props.children - Button content
  */
 export function Button({
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   onClick,
   disabled,
   children,
@@ -719,21 +756,21 @@ export function Button({
 }: ButtonProps) {
   // Implementation
 }
-```
+````
 
 #### 8.2 Update API Documentation
 
 Create or update API documentation:
 
-```typescript
+````typescript
 /**
  * Fetches agents from the API.
- * 
+ *
  * @async
  * @function getAgents
  * @returns {Promise<Agent[]>} - Promise resolving to an array of agents
  * @throws {ApiError} - If the API request fails
- * 
+ *
  * @example
  * ```ts
  * try {
@@ -747,8 +784,8 @@ Create or update API documentation:
 async function getAgents(): Promise<Agent[]> {
   // Implementation
 }
-```
+````
 
 ### Conclusion
 
-By following these detailed implementation guidelines, you will be able to successfully migrate the AI Agent Generator project to the new structure while enhancing it with robust error handling, improved performance, better accessibility, and comprehensive testing. This structured approach minimizes the risk of issues during the migration and ensures that the final product is of high quality. 
+By following these detailed implementation guidelines, you will be able to successfully migrate the AI Agent Generator project to the new structure while enhancing it with robust error handling, improved performance, better accessibility, and comprehensive testing. This structured approach minimizes the risk of issues during the migration and ensures that the final product is of high quality.

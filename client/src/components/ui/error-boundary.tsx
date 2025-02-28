@@ -53,7 +53,11 @@ export class ErrorBoundary extends Component<
     }
 
     // Report error to logging service
-    this.reportErrorToServer(error, errorInfo, this.props.name || "ErrorBoundary");
+    this.reportErrorToServer(
+      error,
+      errorInfo,
+      this.props.name || "ErrorBoundary",
+    );
   }
 
   private reportErrorToServer = (
@@ -147,4 +151,4 @@ export function withErrorBoundary<P extends object>(
   WrappedComponent.displayName = `withErrorBoundary(${displayName})`;
 
   return WrappedComponent;
-} 
+}

@@ -177,14 +177,14 @@ app.get("/api/stats", async (req, res) => {
       .collection("agents")
       .where("owner", "==", uid)
       .get();
-    
+
     // Get active agents count
     const activeAgentsSnapshot = await db
       .collection("agents")
       .where("owner", "==", uid)
       .where("status", "==", "active")
       .get();
-    
+
     // Get prompts count
     const promptsSnapshot = await db
       .collection("prompts")
@@ -226,29 +226,34 @@ app.get("/api/stats", async (req, res) => {
 export const api = functions.https.onRequest(app);
 
 // User creation trigger to set up initial data
-export const createUserProfile = functions.auth.user().onCreate(async (user) => {
-  try {
-    const { uid, displayName, email, photoURL } = user;
-    const timestamp = admin.firestore.FieldValue.serverTimestamp();
-    
-    // Create user document in Firestore
-    await db.collection("users").doc(uid).set({
-      displayName: displayName || "",
-      email: email || "",
-      photoURL: photoURL || "",
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      role: "user",
-      settings: {
-        theme: "system",
-        notifications: true,
-      },
-    });
-    
-    console.log(`User profile created for ${uid}`);
-    return null;
-  } catch (error) {
-    console.error("Error creating user profile:", error);
-    return null;
-  }
-}); 
+export const createUserProfile = functions.auth
+  .user()
+  .onCreate(async (user) => {
+    try {
+      const { uid, displayName, email, photoURL } = user;
+      const timestamp = admin.firestore.FieldValue.serverTimestamp();
+
+      // Create user document in Firestore
+      await db
+        .collection("users")
+        .doc(uid)
+        .set({
+          displayName: displayName || "",
+          email: email || "",
+          photoURL: photoURL || "",
+          createdAt: timestamp,
+          updatedAt: timestamp,
+          role: "user",
+          settings: {
+            theme: "system",
+            notifications: true,
+          },
+        });
+
+      console.log(`User profile created for ${uid}`);
+      return null;
+    } catch (error) {
+      console.error("Error creating user profile:", error);
+      return null;
+    }
+  });

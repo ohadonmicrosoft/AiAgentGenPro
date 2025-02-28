@@ -12,7 +12,7 @@ const toggleVariants = cva(
         default: "bg-transparent",
         outline:
           "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
-        solid: 
+        solid:
           "bg-primary text-primary-foreground hover:bg-primary/90 data-[state=on]:bg-primary/90",
       },
       size: {
@@ -35,9 +35,9 @@ const toggleVariants = cva(
   },
 );
 
-interface ToggleProps extends 
-  React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>,
-  VariantProps<typeof toggleVariants> {
+interface ToggleProps
+  extends React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>,
+    VariantProps<typeof toggleVariants> {
   /**
    * An accessible label for the toggle. If not provided, an aria-label or aria-labelledby must be passed.
    */
@@ -47,26 +47,37 @@ interface ToggleProps extends
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   ToggleProps
->(({ className, variant, size, shape, label, "aria-label": ariaLabel, ...props }, ref) => {
-  // If label is provided but aria-label is not, use label as aria-label
-  const accessibilityLabel = ariaLabel || label;
-  
-  return (
-    <TogglePrimitive.Root
-      ref={ref}
-      className={cn(toggleVariants({ variant, size, shape, className }))}
-      aria-label={accessibilityLabel}
-      data-testid="toggle"
-      {...props}
-    >
-      {props.children}
-      {label && (
-        <span className="sr-only">{label}</span>
-      )}
-    </TogglePrimitive.Root>
-  );
-});
+>(
+  (
+    {
+      className,
+      variant,
+      size,
+      shape,
+      label,
+      "aria-label": ariaLabel,
+      ...props
+    },
+    ref,
+  ) => {
+    // If label is provided but aria-label is not, use label as aria-label
+    const accessibilityLabel = ariaLabel || label;
+
+    return (
+      <TogglePrimitive.Root
+        ref={ref}
+        className={cn(toggleVariants({ variant, size, shape, className }))}
+        aria-label={accessibilityLabel}
+        data-testid="toggle"
+        {...props}
+      >
+        {props.children}
+        {label && <span className="sr-only">{label}</span>}
+      </TogglePrimitive.Root>
+    );
+  },
+);
 
 Toggle.displayName = TogglePrimitive.Root.displayName;
 
-export { Toggle, toggleVariants, type ToggleProps }; 
+export { Toggle, toggleVariants, type ToggleProps };

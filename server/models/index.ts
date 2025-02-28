@@ -1,2 +1,2 @@
-export * from './user.model';
-export * from './agent.model'; 
+export * from "./user.model";
+export * from "./agent.model";

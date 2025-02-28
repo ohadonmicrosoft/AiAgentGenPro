@@ -23,16 +23,19 @@ This document outlines the data flow in the AI Agent Generator application, show
 
 ### Key Components:
 
-1. **Authentication Pages**: 
+1. **Authentication Pages**:
+
    - `auth.tsx` and `auth-page.tsx` handle user login/registration UI
    - Form validation using React Hook Form and Zod
 
 2. **Authentication Contexts**:
+
    - `AuthContext.tsx` - Firebase authentication
    - `ServerAuthContext.tsx` - Custom server authentication
    - Stores user state and provides authentication methods
 
 3. **Authentication Services**:
+
    - `auth-service.ts` handles Firebase authentication calls
    - Server-side `auth.ts` handles session management
 
@@ -58,14 +61,17 @@ This document outlines the data flow in the AI Agent Generator application, show
 ### Key Components:
 
 1. **Agent Wizard**:
+
    - `AgentWizard.tsx` - Main container for the agent creation flow
    - Step components: `AgentBasicInfo.tsx`, `AgentConfiguration.tsx`, `AgentPrompt.tsx`, `AgentReview.tsx`
 
 2. **State Management**:
+
    - Uses React Query for server state
    - Uses React's useState/useReducer for wizard state
 
 3. **API Services**:
+
    - Communicates with backend API endpoints in `server/api/`
    - Handles creating and updating agents
 
@@ -91,17 +97,21 @@ This document outlines the data flow in the AI Agent Generator application, show
 ### Key Components:
 
 1. **App.tsx**:
+
    - Root component that sets up routing and providers
 
 2. **MainLayout.tsx**:
+
    - Provides the structural layout for all pages
    - Includes Sidebar, TopNav, and content area
 
 3. **Page Components**:
+
    - Located in `client/src/pages/`
    - Each represents a different view in the application
 
 4. **Sidebar & Navigation**:
+
    - `Sidebar.tsx` contains the main navigation links
    - Uses the `useAuth` hook to display user-specific navigation
 
@@ -127,18 +137,22 @@ This document outlines the data flow in the AI Agent Generator application, show
 ### Key Components:
 
 1. **React Query Client**:
+
    - Defined in `client/src/lib/queryClient.ts`
    - Handles data fetching, caching, and synchronization
 
 2. **Server Routes & Controllers**:
+
    - Defined in `server/routes.ts` and `server/api/`
    - Handle HTTP requests and business logic
 
 3. **Database Access**:
+
    - Uses Drizzle ORM in `server/db.ts`
    - Provides type-safe database operations
 
 4. **Firebase Integration**:
+
    - Authentication and storage integration
    - Firestore for some data storage
 
@@ -158,10 +172,12 @@ This document outlines the data flow in the AI Agent Generator application, show
 ### Key Components:
 
 1. **React Hook Form**:
+
    - Used throughout the application for form handling
    - Provides form state, validation, and submission handling
 
 2. **Zod Schema Validation**:
+
    - Defined in various files and in `shared/schema.ts`
    - Provides type-safe validation for forms and API data
 
@@ -181,13 +197,15 @@ This document outlines the data flow in the AI Agent Generator application, show
 ### Key Components:
 
 1. **Service Worker**:
+
    - Defined in `client/src/service-worker.ts`
    - Handles caching and offline access
 
 2. **Offline Cache**:
+
    - Caches assets and API responses
    - Provides offline functionality
 
 3. **Offline Forms & Sync**:
    - Allows users to submit forms offline
-   - Syncs when connection is restored 
+   - Syncs when connection is restored

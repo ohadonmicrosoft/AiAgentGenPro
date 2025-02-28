@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: "Environment to deploy to"
         required: true
-        default: 'development'
+        default: "development"
         type: choice
         options:
           - development
@@ -21,63 +21,63 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'npm'
-          
+          node-version: "16"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run linter
         run: npm run lint
-        
+
       - name: Run type check
         run: npm run typecheck
-      
+
       - name: Run tests
         run: npm run test
-        
+
       - name: Upload test coverage
         uses: actions/upload-artifact@v3
         with:
           name: coverage
           path: coverage/
-          
+
   build:
     name: Build
     needs: test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'npm'
-          
+          node-version: "16"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build application
         run: |
           NODE_ENV=${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'development') }} npm run build
-      
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build
           path: dist/
-  
+
   deploy-firebase:
     name: Deploy to Firebase
     needs: build
@@ -85,25 +85,25 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'development' }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: build
           path: dist/
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-      
+          node-version: "16"
+
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
-      
+
       - name: Deploy to Firebase
         run: |
           cd dist
@@ -111,7 +111,7 @@ jobs:
           firebase deploy --only hosting,firestore,storage,functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-  
+
   deploy-server:
     name: Deploy Server
     needs: build
@@ -119,28 +119,28 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event.inputs.environment || 'development' }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: build
           path: dist/
-      
+
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
+
       - name: Deploy to server
         run: |
           # Add server to known hosts
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
-          
+
           # Set deployment target based on environment
           if [ "${{ github.event.inputs.environment }}" == "production" ]; then
             DEPLOY_TARGET="${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }}:${{ secrets.PROD_SERVER_PATH }}"
@@ -149,21 +149,21 @@ jobs:
           else
             DEPLOY_TARGET="${{ secrets.DEV_SERVER_USER }}@${{ secrets.DEV_SERVER_HOST }}:${{ secrets.DEV_SERVER_PATH }}"
           fi
-          
+
           # Archive the build
           cd dist
           tar -czf ../deploy.tar.gz .
-          
+
           # Copy to server and extract
           scp ../deploy.tar.gz ${DEPLOY_TARGET}/deploy.tar.gz
           ssh ${DEPLOY_TARGET%%:*} "cd ${DEPLOY_TARGET#*:} && tar -xzf deploy.tar.gz && rm deploy.tar.gz && npm install --production && pm2 restart ai-agent-generator || pm2 start dist/server/index.js --name ai-agent-generator"
-      
+
   notify:
     name: Send notifications
     needs: [deploy-firebase, deploy-server]
     if: always() && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check workflow status
         id: check
@@ -173,7 +173,7 @@ jobs:
           else
             echo "status=failure" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Send Slack notification on success
         if: steps.check.outputs.status == 'success'
         uses: slackapi/slack-github-action@v1.23.0
@@ -193,7 +193,7 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      
+
       - name: Send Slack notification on failure
         if: steps.check.outputs.status == 'failure'
         uses: slackapi/slack-github-action@v1.23.0

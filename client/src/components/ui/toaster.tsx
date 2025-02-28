@@ -1,14 +1,34 @@
-import { Toaster as SonnerToaster } from "sonner";
+import React from "react";
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@/components/ui/toast";
+import { useToast } from "@/lib/hooks/use-toast";
 
-export const Toaster = () => {
+export function Toaster() {
+  const { toasts } = useToast();
+
   return (
-    <SonnerToaster
-      position="top-right"
-      toastOptions={{
-        duration: 5000,
-        className: "rounded-md border bg-background text-foreground",
-        descriptionClassName: "text-muted-foreground text-sm",
-      }}
-    />
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, ...props }) {
+        return (
+          <Toast key={id} {...props}>
+            <div className="grid gap-1">
+              {title && <ToastTitle>{title}</ToastTitle>}
+              {description && (
+                <ToastDescription>{description}</ToastDescription>
+              )}
+            </div>
+            {action}
+            <ToastClose />
+          </Toast>
+        );
+      })}
+      <ToastViewport />
+    </ToastProvider>
   );
-}; 
+}

@@ -103,4 +103,4 @@ export interface DroppableConfig {
   onDragEnter?: (item: DraggableItem) => void;
   onDragLeave?: (item: DraggableItem) => void;
   onDrop?: (result: DragResult) => void;
-} 
+}

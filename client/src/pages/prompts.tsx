@@ -10,12 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,11 +60,11 @@ import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { 
-  getPrompts, 
-  deletePrompt, 
+import {
+  getPrompts,
+  deletePrompt,
   favoritePrompt,
-  unfavoritePrompt 
+  unfavoritePrompt,
 } from "@/lib/api";
 
 // Define prompt type
@@ -107,7 +102,11 @@ export default function PromptsPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Query for fetching prompts
-  const { data: allPrompts = [], isLoading, error } = useQuery({
+  const {
+    data: allPrompts = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["prompts"],
     queryFn: getPrompts,
   });
@@ -124,13 +123,11 @@ export default function PromptsPage() {
   });
 
   const favoriteMutation = useMutation({
-    mutationFn: ({ id, isFavorite }: { id: string; isFavorite: boolean }) => 
+    mutationFn: ({ id, isFavorite }: { id: string; isFavorite: boolean }) =>
       isFavorite ? unfavoritePrompt(id) : favoritePrompt(id),
     onSuccess: (_, variables) => {
       toast.success(
-        variables.isFavorite 
-          ? "Removed from favorites" 
-          : "Added to favorites"
+        variables.isFavorite ? "Removed from favorites" : "Added to favorites",
       );
     },
   });
@@ -156,7 +153,7 @@ export default function PromptsPage() {
         prompt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         prompt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         prompt.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
         );
 
       // Filter by category
@@ -173,15 +170,21 @@ export default function PromptsPage() {
         (activeTab === "my-prompts" && prompt.author.id === user?.id) ||
         (activeTab === "favorites" && prompt.isFavorite);
 
-      return matchesSearch && matchesCategory && matchesVisibility && matchesTab;
+      return (
+        matchesSearch && matchesCategory && matchesVisibility && matchesTab
+      );
     })
     .sort((a: Prompt, b: Prompt) => {
       // Sort based on selected order
       switch (sortOrder) {
         case "recent":
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+          return (
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          );
         case "oldest":
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
         case "a-z":
           return a.title.localeCompare(b.title);
         case "z-a":
@@ -228,8 +231,10 @@ export default function PromptsPage() {
 
     if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 2592000)
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
     return date.toLocaleDateString();
   };
 
@@ -238,7 +243,9 @@ export default function PromptsPage() {
       <div className="container mx-auto py-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Prompt Library</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Prompt Library
+            </h1>
             <p className="text-muted-foreground mt-1">
               Browse, create, and manage your prompts
             </p>
@@ -299,17 +306,17 @@ export default function PromptsPage() {
         <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
-            <Select
-              value={categoryFilter}
-              onValueChange={setCategoryFilter}
-            >
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
                 {categories.slice(1).map((category) => (
-                  <SelectItem key={category.toLowerCase()} value={category.toLowerCase()}>
+                  <SelectItem
+                    key={category.toLowerCase()}
+                    value={category.toLowerCase()}
+                  >
                     {category}
                   </SelectItem>
                 ))}
@@ -366,7 +373,9 @@ export default function PromptsPage() {
           <div className="flex justify-center my-12">
             <div className="flex flex-col items-center">
               <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
-              <p className="text-destructive font-medium mb-1">Error loading prompts</p>
+              <p className="text-destructive font-medium mb-1">
+                Error loading prompts
+              </p>
               <p className="text-muted-foreground">Please try again later</p>
             </div>
           </div>
@@ -393,266 +402,298 @@ export default function PromptsPage() {
         )}
 
         {/* Grid view */}
-        {!isLoading && !error && viewMode === "grid" && filteredPrompts.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredPrompts.map((prompt: Prompt) => (
-              <Card
-                key={prompt.id}
-                className="flex flex-col overflow-hidden hover:border-primary/50 transition-colors cursor-pointer"
-                onClick={() => handlePreviewPrompt(prompt)}
-              >
-                <div className="p-4 flex-1">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-lg line-clamp-1">
-                      {prompt.title}
-                    </h3>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-primary"
-                      onClick={(e) => handleToggleFavorite(prompt, e)}
-                    >
-                      <Star
-                        className={cn(
-                          "h-5 w-5",
-                          prompt.isFavorite && "fill-primary text-primary"
-                        )}
-                      />
-                    </Button>
-                  </div>
-                  <p className="text-muted-foreground line-clamp-2 mb-3">
-                    {prompt.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {prompt.tags.slice(0, 3).map((tag) => (
-                      <Badge variant="secondary" key={tag} className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {prompt.tags.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{prompt.tags.length - 3}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                <div className="bg-muted/50 p-3 flex justify-between items-center border-t">
-                  <div className="flex items-center text-xs text-muted-foreground">
-                    <Badge
-                      variant={
-                        prompt.visibility === "public"
-                          ? "default"
-                          : prompt.visibility === "team"
-                          ? "secondary"
-                          : "outline"
-                      }
-                      className="text-[10px] mr-2"
-                    >
-                      {prompt.visibility}
-                    </Badge>
-                    <span>Used {prompt.usageCount} times</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7"
-                      onClick={(e) => handleCopyPrompt(prompt, e)}
-                    >
-                      <Copy className="h-3.5 w-3.5" />
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={(e) => e.stopPropagation()}
+        {!isLoading &&
+          !error &&
+          viewMode === "grid" &&
+          filteredPrompts.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredPrompts.map((prompt: Prompt) => (
+                <Card
+                  key={prompt.id}
+                  className="flex flex-col overflow-hidden hover:border-primary/50 transition-colors cursor-pointer"
+                  onClick={() => handlePreviewPrompt(prompt)}
+                >
+                  <div className="p-4 flex-1">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium text-lg line-clamp-1">
+                        {prompt.title}
+                      </h3>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        onClick={(e) => handleToggleFavorite(prompt, e)}
+                      >
+                        <Star
+                          className={cn(
+                            "h-5 w-5",
+                            prompt.isFavorite && "fill-primary text-primary",
+                          )}
+                        />
+                      </Button>
+                    </div>
+                    <p className="text-muted-foreground line-clamp-2 mb-3">
+                      {prompt.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {prompt.tags.slice(0, 3).map((tag) => (
+                        <Badge
+                          variant="secondary"
+                          key={tag}
+                          className="text-xs"
                         >
-                          <MoreHorizontal className="h-3.5 w-3.5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={(e) => {
-                          e.stopPropagation();
-                          window.location.href = `/prompts/${prompt.id}/edit`;
-                        }}>
-                          <Edit className="h-4 w-4 mr-2" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={(e) => {
-                          e.stopPropagation();
-                          window.location.href = `/prompts/${prompt.id}`;
-                        }}>
-                          <Eye className="h-4 w-4 mr-2" /> View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={(e) => {
-                          e.stopPropagation();
-                          window.location.href = `/prompts/${prompt.id}/share`;
-                        }}>
-                          <Share2 className="h-4 w-4 mr-2" /> Share
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={(e) => handleDeletePrompt(prompt, e)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                          {tag}
+                        </Badge>
+                      ))}
+                      {prompt.tags.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{prompt.tags.length - 3}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* List view */}
-        {!isLoading && !error && viewMode === "list" && filteredPrompts.length > 0 && (
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Visibility</TableHead>
-                  <TableHead>Last Updated</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredPrompts.map((prompt: Prompt) => (
-                  <TableRow
-                    key={prompt.id}
-                    className="cursor-pointer"
-                    onClick={() => handlePreviewPrompt(prompt)}
-                  >
-                    <TableCell>
-                      <div className="flex items-start gap-3">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 mt-0.5 text-muted-foreground hover:text-primary"
-                          onClick={(e) => handleToggleFavorite(prompt, e)}
-                        >
-                          <Star
-                            className={cn(
-                              "h-4 w-4",
-                              prompt.isFavorite && "fill-primary text-primary"
-                            )}
-                          />
-                        </Button>
-                        <div>
-                          <div className="font-medium">{prompt.title}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">
-                            {prompt.description}
-                          </div>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {prompt.tags.slice(0, 2).map((tag) => (
-                              <Badge variant="secondary" key={tag} className="text-[10px]">
-                                {tag}
-                              </Badge>
-                            ))}
-                            {prompt.tags.length > 2 && (
-                              <Badge variant="outline" className="text-[10px]">
-                                +{prompt.tags.length - 2}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{prompt.category}</TableCell>
-                    <TableCell>
+                  <div className="bg-muted/50 p-3 flex justify-between items-center border-t">
+                    <div className="flex items-center text-xs text-muted-foreground">
                       <Badge
                         variant={
                           prompt.visibility === "public"
                             ? "default"
                             : prompt.visibility === "team"
-                            ? "secondary"
-                            : "outline"
+                              ? "secondary"
+                              : "outline"
                         }
-                        className="text-[10px]"
+                        className="text-[10px] mr-2"
                       >
                         {prompt.visibility}
                       </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">{formatRelativeTime(prompt.updatedAt)}</div>
-                      <div className="text-xs text-muted-foreground">
-                        Used {prompt.usageCount} times
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={(e) => handleCopyPrompt(prompt, e)}
+                      <span>Used {prompt.usageCount} times</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={(e) => handleCopyPrompt(prompt, e)}
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreHorizontal className="h-3.5 w-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.location.href = `/prompts/${prompt.id}/edit`;
+                            }}
+                          >
+                            <Edit className="h-4 w-4 mr-2" /> Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.location.href = `/prompts/${prompt.id}`;
+                            }}
+                          >
+                            <Eye className="h-4 w-4 mr-2" /> View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.location.href = `/prompts/${prompt.id}/share`;
+                            }}
+                          >
+                            <Share2 className="h-4 w-4 mr-2" /> Share
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={(e) => handleDeletePrompt(prompt, e)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+
+        {/* List view */}
+        {!isLoading &&
+          !error &&
+          viewMode === "list" &&
+          filteredPrompts.length > 0 && (
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Visibility</TableHead>
+                    <TableHead>Last Updated</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredPrompts.map((prompt: Prompt) => (
+                    <TableRow
+                      key={prompt.id}
+                      className="cursor-pointer"
+                      onClick={() => handlePreviewPrompt(prompt)}
+                    >
+                      <TableCell>
+                        <div className="flex items-start gap-3">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 mt-0.5 text-muted-foreground hover:text-primary"
+                            onClick={(e) => handleToggleFavorite(prompt, e)}
+                          >
+                            <Star
+                              className={cn(
+                                "h-4 w-4",
+                                prompt.isFavorite &&
+                                  "fill-primary text-primary",
+                              )}
+                            />
+                          </Button>
+                          <div>
+                            <div className="font-medium">{prompt.title}</div>
+                            <div className="text-sm text-muted-foreground line-clamp-1">
+                              {prompt.description}
+                            </div>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {prompt.tags.slice(0, 2).map((tag) => (
+                                <Badge
+                                  variant="secondary"
+                                  key={tag}
+                                  className="text-[10px]"
+                                >
+                                  {tag}
+                                </Badge>
+                              ))}
+                              {prompt.tags.length > 2 && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-[10px]"
+                                >
+                                  +{prompt.tags.length - 2}
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{prompt.category}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            prompt.visibility === "public"
+                              ? "default"
+                              : prompt.visibility === "team"
+                                ? "secondary"
+                                : "outline"
+                          }
+                          className="text-[10px]"
                         >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                        <Link href={`/prompts/${prompt.id}/edit`}>
+                          {prompt.visibility}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          {formatRelativeTime(prompt.updatedAt)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Used {prompt.usageCount} times
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
                           <Button
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => handleCopyPrompt(prompt, e)}
                           >
-                            <Edit className="h-4 w-4" />
+                            <Copy className="h-4 w-4" />
                           </Button>
-                        </Link>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                          <Link href={`/prompts/${prompt.id}/edit`}>
                             <Button
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <MoreHorizontal className="h-4 w-4" />
+                              <Edit className="h-4 w-4" />
                             </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation();
-                              window.location.href = `/prompts/${prompt.id}`;
-                            }}>
-                              <Eye className="h-4 w-4 mr-2" /> View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation();
-                              window.location.href = `/prompts/${prompt.id}/share`;
-                            }}>
-                              <Share2 className="h-4 w-4 mr-2" /> Share
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation();
-                              navigator.clipboard.writeText(
-                                `${window.location.origin}/prompts/${prompt.id}`
-                              );
-                              toast.success("Link copied to clipboard");
-                            }}>
-                              <LinkIcon className="h-4 w-4 mr-2" /> Copy Link
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-destructive"
-                              onClick={(e) => handleDeletePrompt(prompt, e)}
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" /> Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        )}
+                          </Link>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.location.href = `/prompts/${prompt.id}`;
+                                }}
+                              >
+                                <Eye className="h-4 w-4 mr-2" /> View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  window.location.href = `/prompts/${prompt.id}/share`;
+                                }}
+                              >
+                                <Share2 className="h-4 w-4 mr-2" /> Share
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(
+                                    `${window.location.origin}/prompts/${prompt.id}`,
+                                  );
+                                  toast.success("Link copied to clipboard");
+                                }}
+                              >
+                                <LinkIcon className="h-4 w-4 mr-2" /> Copy Link
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={(e) => handleDeletePrompt(prompt, e)}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
+          )}
 
         {/* Prompt preview dialog */}
         <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
@@ -675,7 +716,8 @@ export default function PromptsPage() {
                     <Star
                       className={cn(
                         "h-5 w-5",
-                        selectedPrompt.isFavorite && "fill-primary text-primary"
+                        selectedPrompt.isFavorite &&
+                          "fill-primary text-primary",
                       )}
                     />
                   </Button>
@@ -707,7 +749,9 @@ export default function PromptsPage() {
                   </div>
                   <div>
                     <p className="text-muted-foreground">Used</p>
-                    <p className="font-medium">{selectedPrompt.usageCount} times</p>
+                    <p className="font-medium">
+                      {selectedPrompt.usageCount} times
+                    </p>
                   </div>
                 </div>
 
@@ -733,7 +777,9 @@ export default function PromptsPage() {
 
                 <div className="text-xs text-muted-foreground">
                   <p>Created by {selectedPrompt.author.name}</p>
-                  <p>Last updated {formatRelativeTime(selectedPrompt.updatedAt)}</p>
+                  <p>
+                    Last updated {formatRelativeTime(selectedPrompt.updatedAt)}
+                  </p>
                 </div>
               </div>
 
@@ -767,8 +813,10 @@ export default function PromptsPage() {
   {
     id: "1",
     title: "Creative Story Generator",
-    description: "Generate creative short stories based on a few keywords or themes",
-    content: "You are a creative storyteller. Write a short story about [THEME] with a [EMOTION] mood and a surprising ending. The story should be approximately [LENGTH] paragraphs long and include vivid sensory details.",
+    description:
+      "Generate creative short stories based on a few keywords or themes",
+    content:
+      "You are a creative storyteller. Write a short story about [THEME] with a [EMOTION] mood and a surprising ending. The story should be approximately [LENGTH] paragraphs long and include vivid sensory details.",
     tags: ["creative", "storytelling", "fiction"],
     category: "creative writing",
     visibility: "public",
@@ -784,8 +832,10 @@ export default function PromptsPage() {
   {
     id: "2",
     title: "Code Review Assistant",
-    description: "Helps review code and suggest improvements for better quality and performance",
-    content: "You are a senior software engineer specializing in [LANGUAGE]. Review the following code and suggest improvements for: 1) Performance optimizations, 2) Better readability, 3) Potential bugs, 4) Security vulnerabilities. Be specific and explain why each change is recommended.\n\nCode to review:\n```\n[CODE]\n```",
+    description:
+      "Helps review code and suggest improvements for better quality and performance",
+    content:
+      "You are a senior software engineer specializing in [LANGUAGE]. Review the following code and suggest improvements for: 1) Performance optimizations, 2) Better readability, 3) Potential bugs, 4) Security vulnerabilities. Be specific and explain why each change is recommended.\n\nCode to review:\n```\n[CODE]\n```",
     tags: ["programming", "code-review", "best-practices"],
     category: "programming",
     visibility: "team",
@@ -801,8 +851,10 @@ export default function PromptsPage() {
   {
     id: "3",
     title: "Email Response Generator",
-    description: "Generates professional email responses for various business situations",
-    content: "Draft a professional email response for a [SITUATION] with a [TONE] tone. The email should address [KEY_POINTS] and include a clear call to action. Keep it concise but comprehensive, maintaining a professional business style throughout.",
+    description:
+      "Generates professional email responses for various business situations",
+    content:
+      "Draft a professional email response for a [SITUATION] with a [TONE] tone. The email should address [KEY_POINTS] and include a clear call to action. Keep it concise but comprehensive, maintaining a professional business style throughout.",
     tags: ["business", "email", "professional"],
     category: "business",
     visibility: "private",
@@ -818,8 +870,10 @@ export default function PromptsPage() {
   {
     id: "4",
     title: "Product Description Writer",
-    description: "Creates compelling product descriptions for e-commerce websites",
-    content: "Write a persuasive product description for [PRODUCT_NAME], which is a [PRODUCT_TYPE]. The target audience is [TARGET_AUDIENCE]. Highlight the following features and benefits: [FEATURES_BENEFITS]. The description should be approximately [LENGTH] words and include SEO-friendly keywords while maintaining an engaging tone.",
+    description:
+      "Creates compelling product descriptions for e-commerce websites",
+    content:
+      "Write a persuasive product description for [PRODUCT_NAME], which is a [PRODUCT_TYPE]. The target audience is [TARGET_AUDIENCE]. Highlight the following features and benefits: [FEATURES_BENEFITS]. The description should be approximately [LENGTH] words and include SEO-friendly keywords while maintaining an engaging tone.",
     tags: ["marketing", "e-commerce", "copywriting"],
     category: "marketing",
     visibility: "public",
@@ -835,8 +889,10 @@ export default function PromptsPage() {
   {
     id: "5",
     title: "Learning Guide Creator",
-    description: "Creates structured learning guides on any topic with examples and exercises",
-    content: "Create a comprehensive learning guide for [TOPIC] aimed at [SKILL_LEVEL] learners. The guide should include: 1) An introduction explaining the importance of this topic, 2) Key concepts explained in simple terms, 3) Step-by-step tutorials for practical application, 4) Common mistakes to avoid, 5) Exercises for practice, and 6) Resources for further learning. Use examples throughout to illustrate the concepts.",
+    description:
+      "Creates structured learning guides on any topic with examples and exercises",
+    content:
+      "Create a comprehensive learning guide for [TOPIC] aimed at [SKILL_LEVEL] learners. The guide should include: 1) An introduction explaining the importance of this topic, 2) Key concepts explained in simple terms, 3) Step-by-step tutorials for practical application, 4) Common mistakes to avoid, 5) Exercises for practice, and 6) Resources for further learning. Use examples throughout to illustrate the concepts.",
     tags: ["education", "tutorial", "learning"],
     category: "education",
     visibility: "public",
@@ -852,8 +908,10 @@ export default function PromptsPage() {
   {
     id: "6",
     title: "Customer Support Reply Template",
-    description: "Template for responding to customer support inquiries efficiently",
-    content: "As a customer support representative for [COMPANY_NAME], respond to the following customer inquiry about [ISSUE_TYPE]. Your response should: 1) Acknowledge the customer's concern, 2) Provide a clear explanation or solution, 3) Include any necessary steps the customer needs to take, 4) Offer additional assistance if needed, and 5) End with an appropriate closing. Maintain a [TONE] tone throughout.\n\nCustomer inquiry: [CUSTOMER_MESSAGE]",
+    description:
+      "Template for responding to customer support inquiries efficiently",
+    content:
+      "As a customer support representative for [COMPANY_NAME], respond to the following customer inquiry about [ISSUE_TYPE]. Your response should: 1) Acknowledge the customer's concern, 2) Provide a clear explanation or solution, 3) Include any necessary steps the customer needs to take, 4) Offer additional assistance if needed, and 5) End with an appropriate closing. Maintain a [TONE] tone throughout.\n\nCustomer inquiry: [CUSTOMER_MESSAGE]",
     tags: ["customer-support", "template", "service"],
     category: "customer support",
     visibility: "team",
@@ -865,5 +923,5 @@ export default function PromptsPage() {
     updatedAt: "2023-07-15T10:30:00Z",
     usageCount: 621,
     isFavorite: false,
-  }
-]; 
+  },
+];

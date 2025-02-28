@@ -148,4 +148,4 @@ export type Message = typeof messages.$inferSelect;
 
 // Type definitions for roles and permissions
 export type Role = (typeof ROLES)[keyof typeof ROLES];
-export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]; 
+export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

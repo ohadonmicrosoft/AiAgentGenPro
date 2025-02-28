@@ -2,7 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,7 +50,19 @@ import {
 } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronRight, Mail, User, Bell, Settings, Share, MoreVertical, Trash, Edit, Copy } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Mail,
+  User,
+  Bell,
+  Settings,
+  Share,
+  MoreVertical,
+  Trash,
+  Edit,
+  Copy,
+} from "lucide-react";
 
 // Example 1: Confirmation Dialog
 export function ConfirmationDialog() {
@@ -53,13 +72,16 @@ export function ConfirmationDialog() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Dangerous Action</CardTitle>
-        <CardDescription>This requires confirmation before proceeding.</CardDescription>
+        <CardDescription>
+          This requires confirmation before proceeding.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          Click the button below to see a confirmation dialog that helps prevent accidental actions.
+          Click the button below to see a confirmation dialog that helps prevent
+          accidental actions.
         </p>
-        
+
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive">Delete Account</Button>
@@ -68,14 +90,18 @@ export function ConfirmationDialog() {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+                This action cannot be undone. This will permanently delete your
+                account and remove all your data from our servers.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  toast.success("Account deleted", "Your account has been successfully deleted");
+                  toast.success(
+                    "Account deleted",
+                    "Your account has been successfully deleted",
+                  );
                 }}
               >
                 Delete
@@ -100,13 +126,16 @@ export function AdvancedDropdownMenu() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Dropdown Menu</CardTitle>
-        <CardDescription>A versatile dropdown with multiple options and sections.</CardDescription>
+        <CardDescription>
+          A versatile dropdown with multiple options and sections.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          This example shows a rich dropdown menu with various interactive elements.
+          This example shows a rich dropdown menu with various interactive
+          elements.
         </p>
-        
+
         <div className="flex justify-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -118,17 +147,25 @@ export function AdvancedDropdownMenu() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => toast.info("Profile", "Profile clicked")}>
+                <DropdownMenuItem
+                  onClick={() => toast.info("Profile", "Profile clicked")}
+                >
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                   <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("Settings", "Settings clicked")}>
+                <DropdownMenuItem
+                  onClick={() => toast.info("Settings", "Settings clicked")}
+                >
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                   <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("Notifications", "Notifications clicked")}>
+                <DropdownMenuItem
+                  onClick={() =>
+                    toast.info("Notifications", "Notifications clicked")
+                  }
+                >
                   <Bell className="mr-2 h-4 w-4" />
                   <span>Notifications</span>
                 </DropdownMenuItem>
@@ -141,11 +178,15 @@ export function AdvancedDropdownMenu() {
                     <span>Share</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem onClick={() => toast.info("Share", "Copied to clipboard")}>
+                    <DropdownMenuItem
+                      onClick={() => toast.info("Share", "Copied to clipboard")}
+                    >
                       <Copy className="mr-2 h-4 w-4" />
                       <span>Copy Link</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => toast.info("Share", "Shared via email")}>
+                    <DropdownMenuItem
+                      onClick={() => toast.info("Share", "Shared via email")}
+                    >
                       <Mail className="mr-2 h-4 w-4" />
                       <span>Email</span>
                     </DropdownMenuItem>
@@ -159,18 +200,31 @@ export function AdvancedDropdownMenu() {
                     <span>Position</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
-                    <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-                      <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="bottom">Bottom</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="left">Left</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="right">Right</DropdownMenuRadioItem>
+                    <DropdownMenuRadioGroup
+                      value={position}
+                      onValueChange={setPosition}
+                    >
+                      <DropdownMenuRadioItem value="top">
+                        Top
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="bottom">
+                        Bottom
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="left">
+                        Left
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="right">
+                        Right
+                      </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => toast.warning("Logout", "You've been logged out")}
+                onClick={() =>
+                  toast.warning("Logout", "You've been logged out")
+                }
                 className="text-red-500"
               >
                 <span>Logout</span>
@@ -181,7 +235,9 @@ export function AdvancedDropdownMenu() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between text-xs text-muted-foreground">
-        <p>Current position: <Badge variant="outline">{position}</Badge></p>
+        <p>
+          Current position: <Badge variant="outline">{position}</Badge>
+        </p>
       </CardFooter>
     </Card>
   );
@@ -193,13 +249,16 @@ export function TooltipExamples() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Tooltips</CardTitle>
-        <CardDescription>Tooltips provide additional information on hover.</CardDescription>
+        <CardDescription>
+          Tooltips provide additional information on hover.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-          Hover over these elements to see different tooltip styles and positions.
+          Hover over these elements to see different tooltip styles and
+          positions.
         </p>
-        
+
         <div className="flex flex-wrap gap-4 justify-center">
           <TooltipProvider>
             <Tooltip>
@@ -210,7 +269,7 @@ export function TooltipExamples() {
                 <p>Basic tooltip with useful information</p>
               </TooltipContent>
             </Tooltip>
-            
+
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="secondary">Position Top</Button>
@@ -219,7 +278,7 @@ export function TooltipExamples() {
                 <p>Appears above the element</p>
               </TooltipContent>
             </Tooltip>
-            
+
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="default">Position Right</Button>
@@ -227,11 +286,13 @@ export function TooltipExamples() {
               <TooltipContent side="right" className="max-w-xs">
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold">Rich Content Tooltip</p>
-                  <p className="text-xs text-muted-foreground">Can contain multiple lines and formatting</p>
+                  <p className="text-xs text-muted-foreground">
+                    Can contain multiple lines and formatting
+                  </p>
                 </div>
               </TooltipContent>
             </Tooltip>
-            
+
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="destructive">
@@ -239,7 +300,10 @@ export function TooltipExamples() {
                   Delete
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-destructive text-destructive-foreground">
+              <TooltipContent
+                side="bottom"
+                className="bg-destructive text-destructive-foreground"
+              >
                 <p>Permanently delete this item</p>
               </TooltipContent>
             </Tooltip>
@@ -262,13 +326,15 @@ export function PopoverExamples() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Popovers</CardTitle>
-        <CardDescription>Interactive popovers for more complex interactions.</CardDescription>
+        <CardDescription>
+          Interactive popovers for more complex interactions.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
           Popovers are like tooltips but allow for more complex interactions.
         </p>
-        
+
         <div className="flex flex-wrap gap-4 justify-center">
           {/* Simple information popover */}
           <Popover>
@@ -280,16 +346,19 @@ export function PopoverExamples() {
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Information</h4>
                   <p className="text-sm text-muted-foreground">
-                    This is a popover component that can show additional information or controls.
+                    This is a popover component that can show additional
+                    information or controls.
                   </p>
                 </div>
                 <div className="flex justify-end">
-                  <Button variant="outline" size="sm">Learn More</Button>
+                  <Button variant="outline" size="sm">
+                    Learn More
+                  </Button>
                 </div>
               </div>
             </PopoverContent>
           </Popover>
-          
+
           {/* Form inside popover */}
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -306,11 +375,19 @@ export function PopoverExamples() {
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-3">
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" defaultValue="John Doe" className="col-span-2" />
+                    <Input
+                      id="name"
+                      defaultValue="John Doe"
+                      className="col-span-2"
+                    />
                   </div>
                   <div className="grid grid-cols-3 items-center gap-3">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" defaultValue="john@example.com" className="col-span-2" />
+                    <Input
+                      id="email"
+                      defaultValue="john@example.com"
+                      className="col-span-2"
+                    />
                   </div>
                 </div>
                 <div className="flex justify-end gap-2">
@@ -325,7 +402,10 @@ export function PopoverExamples() {
                     size="sm"
                     onClick={() => {
                       setOpen(false);
-                      toast.success("Profile updated", "Your profile has been updated successfully");
+                      toast.success(
+                        "Profile updated",
+                        "Your profile has been updated successfully",
+                      );
                     }}
                   >
                     Save
@@ -334,7 +414,7 @@ export function PopoverExamples() {
               </div>
             </PopoverContent>
           </Popover>
-          
+
           {/* Context menu style popover */}
           <Popover>
             <PopoverTrigger asChild>
@@ -387,12 +467,15 @@ export function PopoverExamples() {
 export function DialogExamplesShowcase() {
   return (
     <div className="container mx-auto py-10 space-y-8">
-      <h1 className="text-3xl font-bold tracking-tight mb-4">Overlay Component Examples</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-4">
+        Overlay Component Examples
+      </h1>
       <p className="text-muted-foreground max-w-3xl mb-8">
-        These examples demonstrate various overlay components for creating interactive user interfaces.
-        Each component is designed for specific use cases and includes accessibility features.
+        These examples demonstrate various overlay components for creating
+        interactive user interfaces. Each component is designed for specific use
+        cases and includes accessibility features.
       </p>
-      
+
       <div className="grid gap-8 md:grid-cols-2">
         <ConfirmationDialog />
         <AdvancedDropdownMenu />
@@ -401,4 +484,4 @@ export function DialogExamplesShowcase() {
       </div>
     </div>
   );
-} 
+}

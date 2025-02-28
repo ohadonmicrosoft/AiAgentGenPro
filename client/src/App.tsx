@@ -1,25 +1,25 @@
-import { useState, Suspense, lazy } from 'react';
-import { Route, Switch } from 'wouter';
-import { MainLayout } from './layouts/main-layout';
-import { useAuth } from './hooks/use-auth';
+import { useState, Suspense, lazy } from "react";
+import { Route, Switch } from "wouter";
+import { MainLayout } from "./layouts/main-layout";
+import { useAuth } from "./hooks/use-auth";
 
 // UI Components
-import { Spinner } from './components/ui/spinner';
-import { ErrorBoundary } from './components/ui/error-boundary';
+import { Spinner } from "./components/ui/spinner";
+import { ErrorBoundary } from "./components/ui/error-boundary";
 
 // Lazy-loaded pages
-const DashboardPage = lazy(() => import('./pages/dashboard'));
-const LoginPage = lazy(() => import('./pages/login'));
-const RegisterPage = lazy(() => import('./pages/register'));
-const NotFoundPage = lazy(() => import('./pages/not-found'));
-const AgentsPage = lazy(() => import('./pages/agents'));
-const PromptsPage = lazy(() => import('./pages/prompts'));
-const SettingsPage = lazy(() => import('./pages/settings'));
+const DashboardPage = lazy(() => import("./pages/dashboard"));
+const LoginPage = lazy(() => import("./pages/login"));
+const RegisterPage = lazy(() => import("./pages/register"));
+const NotFoundPage = lazy(() => import("./pages/not-found"));
+const AgentsPage = lazy(() => import("./pages/agents"));
+const PromptsPage = lazy(() => import("./pages/prompts"));
+const SettingsPage = lazy(() => import("./pages/settings"));
 
 export default function App() {
   const { user, isLoading } = useAuth();
   const [isNavigating, setIsNavigating] = useState(false);
-  
+
   // Show loading state while auth is initializing
   if (isLoading) {
     return (
@@ -79,4 +79,4 @@ export default function App() {
       </Suspense>
     </ErrorBoundary>
   );
-} 
+}

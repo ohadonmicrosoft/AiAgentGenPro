@@ -3,7 +3,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-interface TabsProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
+interface TabsProps
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
   /**
    * Optional orientation for the tabs
    */
@@ -16,10 +17,7 @@ const Tabs = React.forwardRef<
 >(({ className, orientation = "horizontal", ...props }, ref) => (
   <TabsPrimitive.Root
     ref={ref}
-    className={cn(
-      orientation === "vertical" && "flex",
-      className
-    )}
+    className={cn(orientation === "vertical" && "flex", className)}
     orientation={orientation === "vertical" ? "vertical" : "horizontal"}
     {...props}
     data-testid="tabs-root"
@@ -28,7 +26,8 @@ const Tabs = React.forwardRef<
 
 Tabs.displayName = TabsPrimitive.Root.displayName;
 
-interface TabsListProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> {
+interface TabsListProps
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> {
   /**
    * Whether this list is part of vertical tabs
    */
@@ -53,7 +52,8 @@ const TabsList = React.forwardRef<
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
+interface TabsTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
   /**
    * Icon element to display before the tab text
    */
@@ -79,7 +79,8 @@ const TabsTrigger = React.forwardRef<
 ));
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-interface TabsContentProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> {
+interface TabsContentProps
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> {
   /**
    * Whether to fade in the content when shown
    */
@@ -103,13 +104,13 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { 
-  Tabs, 
-  TabsList, 
-  TabsTrigger, 
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
   TabsContent,
   type TabsProps,
   type TabsListProps,
   type TabsTriggerProps,
   type TabsContentProps,
-}; 
+};

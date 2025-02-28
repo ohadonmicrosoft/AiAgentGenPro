@@ -27,7 +27,7 @@ The application uses a multi-layered approach to state management:
 // Example of local component state
 function Counter() {
   const [count, setCount] = useState(0);
-  
+
   return (
     <div>
       <p>Count: {count}</p>
@@ -59,13 +59,15 @@ function Counter() {
 ```tsx
 // Example of Context API usage
 // AuthContext.tsx
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  
+
   // Authentication logic...
-  
+
   return (
     <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
@@ -76,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 // Usage in components
 function UserProfile() {
   const { user } = useAuth(); // Custom hook that uses AuthContext
-  
+
   return <div>Hello, {user?.name}</div>;
 }
 ```
@@ -84,21 +86,25 @@ function UserProfile() {
 ### Current Contexts
 
 1. **AuthContext**
+
    - User authentication state
    - Login/logout methods
    - User profile information
 
 2. **ThemeContext**
+
    - Light/dark mode preference
    - Theme customization options
    - Color scheme settings
 
 3. **AgentContext**
+
    - Agent creation/editing state
    - Agent list and selection
    - Agent operations (create, update, delete)
 
 4. **NavigationContext**
+
    - Current route information
    - Navigation history
    - Breadcrumb data
@@ -122,14 +128,14 @@ function UserProfile() {
 ```tsx
 // Example of React Query usage
 function AgentsList() {
-  const { data, isLoading, error } = useQuery('agents', fetchAgents);
-  
+  const { data, isLoading, error } = useQuery("agents", fetchAgents);
+
   if (isLoading) return <Loading />;
   if (error) return <Error message={error.message} />;
-  
+
   return (
     <div>
-      {data.map(agent => (
+      {data.map((agent) => (
         <AgentCard key={agent.id} agent={agent} />
       ))}
     </div>
@@ -141,14 +147,14 @@ function CreateAgentForm() {
   const queryClient = useQueryClient();
   const mutation = useMutation(createAgent, {
     onSuccess: () => {
-      queryClient.invalidateQueries('agents');
+      queryClient.invalidateQueries("agents");
     },
   });
-  
+
   const handleSubmit = (data) => {
     mutation.mutate(data);
   };
-  
+
   // Form implementation...
 }
 ```
@@ -187,7 +193,8 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
@@ -200,10 +207,10 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 
 // Usage
 function ThemeToggle() {
-  const [theme, setTheme] = useLocalStorage('theme', 'light');
-  
+  const [theme, setTheme] = useLocalStorage("theme", "light");
+
   return (
-    <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+    <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
       Toggle Theme
     </button>
   );
@@ -223,14 +230,17 @@ function ThemeToggle() {
 When adding a new feature, use this decision tree to determine the appropriate state management approach:
 
 1. **Is the state specific to a single component with no need to share?**
+
    - Yes → Use local component state (useState/useReducer)
    - No → Continue to next question
 
 2. **Is the state related to server data?**
+
    - Yes → Use React Query
    - No → Continue to next question
 
 3. **Does the state need to be shared across multiple components?**
+
    - Yes → Use Context API
    - No → Continue to next question
 
@@ -241,18 +251,22 @@ When adding a new feature, use this decision tree to determine the appropriate s
 ## State Management Anti-Patterns to Avoid
 
 1. **Prop Drilling**
+
    - Passing props through multiple levels of components
    - Solution: Use Context API for deeply shared state
 
 2. **Context Overuse**
+
    - Creating contexts for every small piece of shared state
    - Solution: Combine related state in a single context
 
 3. **Redundant State**
+
    - Duplicating state that already exists elsewhere
    - Solution: Identify a single source of truth
 
 4. **Over-Fetching**
+
    - Fetching the same data multiple times
    - Solution: Use React Query for caching and deduplication
 
@@ -263,14 +277,17 @@ When adding a new feature, use this decision tree to determine the appropriate s
 ## Recommended State Management Improvements
 
 1. **Consolidate Related Contexts**
+
    - Combine UI-related contexts (modal, toast, drawer) into a single UIContext
    - Merge user-related contexts (auth, preferences) into a UserContext
 
 2. **Implement State Machines for Complex Flows**
+
    - Use XState for the agent creation wizard
    - Implement state machines for authentication flows
 
 3. **Optimize React Query Usage**
+
    - Implement optimistic updates for better UX
    - Use prefetching for anticipated data needs
    - Configure proper stale times and caching strategies
@@ -278,4 +295,4 @@ When adding a new feature, use this decision tree to determine the appropriate s
 4. **Add State Persistence Layer**
    - Implement a consistent approach to state persistence
    - Create a wrapper for Local Storage with type safety
-   - Add migration strategies for stored data structure changes 
+   - Add migration strategies for stored data structure changes

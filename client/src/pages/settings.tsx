@@ -7,12 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -71,19 +66,21 @@ const apiKeyMockData = [
     key: "sk_prod_9A8B7C6D5E4F3G2H1I2J3K4L5M6N7O8P",
     createdAt: "2023-09-01T08:20:00Z",
     lastUsed: "2023-09-26T09:15:00Z",
-  }
+  },
 ];
 
 export default function SettingsPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("account");
   const [apiKeys, setApiKeys] = useState(apiKeyMockData);
-  const [selectedTheme, setSelectedTheme] = useState<"light" | "dark" | "system">("system");
+  const [selectedTheme, setSelectedTheme] = useState<
+    "light" | "dark" | "system"
+  >("system");
   const [showPassword, setShowPassword] = useState(false);
   const [keyBeingCreated, setKeyBeingCreated] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
   const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     fullName: user?.fullName || "",
@@ -100,7 +97,7 @@ export default function SettingsPage() {
       tips: true,
       usage: true,
       security: true,
-    }
+    },
   });
 
   // Mutations
@@ -115,7 +112,8 @@ export default function SettingsPage() {
   });
 
   const changePasswordMutation = useMutation({
-    mutationFn: (passwords: any) => updateUser({ ...passwords, type: "password" }),
+    mutationFn: (passwords: any) =>
+      updateUser({ ...passwords, type: "password" }),
     onSuccess: () => {
       toast.success("Password changed successfully!");
       setFormData({
@@ -165,7 +163,9 @@ export default function SettingsPage() {
   });
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -173,7 +173,9 @@ export default function SettingsPage() {
   };
 
   // Handle notification toggle
-  const handleToggleNotification = (key: keyof typeof formData.emailNotifications) => {
+  const handleToggleNotification = (
+    key: keyof typeof formData.emailNotifications,
+  ) => {
     setFormData({
       ...formData,
       emailNotifications: {
@@ -199,46 +201,48 @@ export default function SettingsPage() {
   // Handle password change
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.newPassword !== formData.confirmNewPassword) {
       toast.error("New passwords do not match");
       return;
     }
-    
+
     const passwordData = {
       currentPassword: formData.currentPassword,
       newPassword: formData.newPassword,
       type: "password",
     };
-    
+
     changePasswordMutation.mutate(passwordData);
   };
 
   // Handle theme change
   const handleThemeChange = (theme: "light" | "dark" | "system") => {
     setSelectedTheme(theme);
-    
+
     if (theme === "system") {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
       document.documentElement.classList.toggle("dark", prefersDark);
       localStorage.removeItem("theme");
     } else {
       document.documentElement.classList.toggle("dark", theme === "dark");
       localStorage.setItem("theme", theme);
     }
-    
+
     toast.success(`Theme changed to ${theme}`);
   };
 
   // Handle API key generation
   const handleGenerateApiKey = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newKeyName) {
       toast.error("Please provide a name for your API key");
       return;
     }
-    
+
     generateApiKeyMutation.mutate({ name: newKeyName });
   };
 
@@ -251,7 +255,7 @@ export default function SettingsPage() {
   // Format date
   const formatDate = (dateString: string) => {
     if (!dateString) return "Never";
-    
+
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, {
       year: "numeric",
@@ -263,14 +267,14 @@ export default function SettingsPage() {
   // Handle preferences update
   const handleUpdatePreferences = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const preferencesData = {
       modelPreference: formData.modelPreference,
       language: formData.language,
       emailNotifications: formData.emailNotifications,
       type: "preferences",
     };
-    
+
     updateProfileMutation.mutate(preferencesData);
   };
 
@@ -310,7 +314,10 @@ export default function SettingsPage() {
             <TabsTrigger value="api" className="flex items-center gap-2">
               <Key className="h-4 w-4" /> API
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="flex items-center gap-2">
+            <TabsTrigger
+              value="preferences"
+              className="flex items-center gap-2"
+            >
               <Palette className="h-4 w-4" /> Preferences
             </TabsTrigger>
           </TabsList>
@@ -318,7 +325,9 @@ export default function SettingsPage() {
           {/* Account Tab Content */}
           <TabsContent value="account" className="space-y-6">
             <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Profile Information
+              </h2>
               <form onSubmit={handleUpdateProfile} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
@@ -330,7 +339,7 @@ export default function SettingsPage() {
                     placeholder="Your full name"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <Input
@@ -341,7 +350,7 @@ export default function SettingsPage() {
                     placeholder="username"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
                   <Input
@@ -353,7 +362,7 @@ export default function SettingsPage() {
                     placeholder="your@email.com"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="bio">Bio</Label>
                   <Textarea
@@ -365,7 +374,7 @@ export default function SettingsPage() {
                     className="min-h-[100px]"
                   />
                 </div>
-                
+
                 <Button
                   type="submit"
                   className="gap-2"
@@ -383,14 +392,14 @@ export default function SettingsPage() {
                 </Button>
               </form>
             </Card>
-            
+
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">Danger Zone</h2>
               <p className="text-muted-foreground mb-4">
                 Once you delete your account, there is no going back. Please be
                 certain.
               </p>
-              
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive" className="gap-2">
@@ -400,13 +409,13 @@ export default function SettingsPage() {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className="flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5 text-destructive" /> 
+                      <AlertTriangle className="h-5 w-5 text-destructive" />
                       Delete Account
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                      Are you sure you want to delete your account? All of your data 
-                      including agents, prompts, and settings will be permanently removed.
-                      This action cannot be undone.
+                      Are you sure you want to delete your account? All of your
+                      data including agents, prompts, and settings will be
+                      permanently removed. This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -454,7 +463,7 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="newPassword">New Password</Label>
                   <Input
@@ -466,9 +475,11 @@ export default function SettingsPage() {
                     placeholder="Enter new password"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+                  <Label htmlFor="confirmNewPassword">
+                    Confirm New Password
+                  </Label>
                   <Input
                     id="confirmNewPassword"
                     name="confirmNewPassword"
@@ -478,7 +489,7 @@ export default function SettingsPage() {
                     placeholder="Confirm new password"
                   />
                 </div>
-                
+
                 <Button
                   type="submit"
                   className="gap-2"
@@ -502,21 +513,23 @@ export default function SettingsPage() {
                 </Button>
               </form>
             </Card>
-            
+
             <Card className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Two-Factor Authentication</h2>
+                <h2 className="text-xl font-semibold">
+                  Two-Factor Authentication
+                </h2>
                 <Switch id="2fa" />
               </div>
               <p className="text-muted-foreground mb-4">
-                Add an extra layer of security to your account by enabling two-factor
-                authentication.
+                Add an extra layer of security to your account by enabling
+                two-factor authentication.
               </p>
               <Button variant="outline" className="gap-2">
                 <HelpCircle className="h-4 w-4" /> Learn More
               </Button>
             </Card>
-            
+
             <Card className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Connected Services</h2>
@@ -525,8 +538,8 @@ export default function SettingsPage() {
                 </Button>
               </div>
               <p className="text-muted-foreground mb-4">
-                Connect your account to other services for additional features and 
-                integrations.
+                Connect your account to other services for additional features
+                and integrations.
               </p>
               <div className="space-y-2">
                 <div className="flex items-center justify-between p-3 border rounded-md">
@@ -534,14 +547,18 @@ export default function SettingsPage() {
                     <Globe className="h-5 w-5 text-blue-500" />
                     <span>Google</span>
                   </div>
-                  <Button variant="ghost" size="sm">Disconnect</Button>
+                  <Button variant="ghost" size="sm">
+                    Disconnect
+                  </Button>
                 </div>
                 <div className="flex items-center justify-between p-3 border rounded-md">
                   <div className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-indigo-500" />
                     <span>Stripe</span>
                   </div>
-                  <Button variant="outline" size="sm">Connect</Button>
+                  <Button variant="outline" size="sm">
+                    Connect
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -555,11 +572,16 @@ export default function SettingsPage() {
                 Manage your API keys for accessing the AI Agent Generator API.
                 Keep these keys secret and never share them publicly.
               </p>
-              
+
               {/* Create new API key form */}
               {keyBeingCreated ? (
-                <form onSubmit={handleGenerateApiKey} className="mb-6 p-4 border rounded-md">
-                  <h3 className="text-lg font-medium mb-3">Generate New API Key</h3>
+                <form
+                  onSubmit={handleGenerateApiKey}
+                  className="mb-6 p-4 border rounded-md"
+                >
+                  <h3 className="text-lg font-medium mb-3">
+                    Generate New API Key
+                  </h3>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="keyName">Key Name</Label>
@@ -580,11 +602,13 @@ export default function SettingsPage() {
                       </Button>
                       <Button
                         type="submit"
-                        disabled={!newKeyName || generateApiKeyMutation.isPending}
+                        disabled={
+                          !newKeyName || generateApiKeyMutation.isPending
+                        }
                       >
                         {generateApiKeyMutation.isPending ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> 
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Generating...
                           </>
                         ) : (
@@ -602,7 +626,7 @@ export default function SettingsPage() {
                   <Plus className="h-4 w-4" /> New API Key
                 </Button>
               )}
-              
+
               {/* Show newly created key */}
               {newlyCreatedKey && (
                 <div className="mb-6 p-4 border rounded-md bg-muted/50">
@@ -618,15 +642,15 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">
-                    This is the only time your API key will be displayed. 
-                    Please copy it now and store it securely.
+                    This is the only time your API key will be displayed. Please
+                    copy it now and store it securely.
                   </p>
                   <div className="bg-background p-3 rounded border font-mono text-sm break-all">
                     {newlyCreatedKey}
                   </div>
                 </div>
               )}
-              
+
               {/* API keys list */}
               {apiKeys.length > 0 ? (
                 <div className="space-y-4">
@@ -637,27 +661,34 @@ export default function SettingsPage() {
                           <h3 className="font-medium">{apiKey.name}</h3>
                           <p className="text-sm text-muted-foreground">
                             Created: {formatDate(apiKey.createdAt)}
-                            {apiKey.lastUsed && ` • Last used: ${formatDate(apiKey.lastUsed)}`}
+                            {apiKey.lastUsed &&
+                              ` • Last used: ${formatDate(apiKey.lastUsed)}`}
                           </p>
                         </div>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="text-destructive">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive"
+                            >
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete API Key</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Delete API Key
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete this API key? Any 
-                                applications using this key will no longer be able
-                                to access the API.
+                                Are you sure you want to delete this API key?
+                                Any applications using this key will no longer
+                                be able to access the API.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction 
+                              <AlertDialogAction
                                 onClick={() => handleDeleteApiKey(apiKey.id)}
                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
@@ -688,8 +719,8 @@ export default function SettingsPage() {
                   <Key className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
                   <h3 className="text-lg font-medium mb-1">No API Keys</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    You haven't created any API keys yet. Create one to get started
-                    with our API.
+                    You haven't created any API keys yet. Create one to get
+                    started with our API.
                   </p>
                   <Button onClick={() => setKeyBeingCreated(true)}>
                     <Plus className="mr-2 h-4 w-4" /> Create API Key
@@ -697,12 +728,12 @@ export default function SettingsPage() {
                 </div>
               )}
             </Card>
-            
+
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">API Documentation</h2>
               <p className="text-muted-foreground mb-4">
-                Learn how to integrate with our AI Agent API to create, manage, and
-                run AI agents programmatically.
+                Learn how to integrate with our AI Agent API to create, manage,
+                and run AI agents programmatically.
               </p>
               <div className="flex gap-2">
                 <Button variant="outline" className="gap-2">
@@ -728,7 +759,7 @@ export default function SettingsPage() {
                       variant="outline"
                       className={cn(
                         "flex flex-col items-center justify-center gap-1 p-3 h-auto",
-                        selectedTheme === "light" && "border-primary"
+                        selectedTheme === "light" && "border-primary",
                       )}
                       onClick={() => handleThemeChange("light")}
                     >
@@ -740,7 +771,7 @@ export default function SettingsPage() {
                       variant="outline"
                       className={cn(
                         "flex flex-col items-center justify-center gap-1 p-3 h-auto",
-                        selectedTheme === "dark" && "border-primary"
+                        selectedTheme === "dark" && "border-primary",
                       )}
                       onClick={() => handleThemeChange("dark")}
                     >
@@ -752,7 +783,7 @@ export default function SettingsPage() {
                       variant="outline"
                       className={cn(
                         "flex flex-col items-center justify-center gap-1 p-3 h-auto",
-                        selectedTheme === "system" && "border-primary"
+                        selectedTheme === "system" && "border-primary",
                       )}
                       onClick={() => handleThemeChange("system")}
                     >
@@ -766,7 +797,7 @@ export default function SettingsPage() {
                 </div>
               </div>
             </Card>
-            
+
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">Preferences</h2>
               <form onSubmit={handleUpdatePreferences} className="space-y-4">
@@ -782,14 +813,20 @@ export default function SettingsPage() {
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="gpt-4">GPT-4 (Powerful, Slower)</SelectItem>
-                      <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast)</SelectItem>
+                      <SelectItem value="gpt-4">
+                        GPT-4 (Powerful, Slower)
+                      </SelectItem>
+                      <SelectItem value="gpt-3.5-turbo">
+                        GPT-3.5 Turbo (Fast)
+                      </SelectItem>
                       <SelectItem value="claude-3">Claude 3 Opus</SelectItem>
-                      <SelectItem value="llama-3">Llama 3 (Open Source)</SelectItem>
+                      <SelectItem value="llama-3">
+                        Llama 3 (Open Source)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="language">Language</Label>
                   <Select
@@ -811,12 +848,12 @@ export default function SettingsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <Separator className="my-4" />
-                
+
                 <div className="space-y-3">
                   <h3 className="font-medium">Email Notifications</h3>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Product Updates</Label>
@@ -826,12 +863,14 @@ export default function SettingsPage() {
                     </div>
                     <Switch
                       checked={formData.emailNotifications.updates}
-                      onCheckedChange={() => handleToggleNotification("updates")}
+                      onCheckedChange={() =>
+                        handleToggleNotification("updates")
+                      }
                     />
                   </div>
-                  
+
                   <Separator className="my-2" />
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Tips & Tutorials</Label>
@@ -844,9 +883,9 @@ export default function SettingsPage() {
                       onCheckedChange={() => handleToggleNotification("tips")}
                     />
                   </div>
-                  
+
                   <Separator className="my-2" />
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Usage Reports</Label>
@@ -859,9 +898,9 @@ export default function SettingsPage() {
                       onCheckedChange={() => handleToggleNotification("usage")}
                     />
                   </div>
-                  
+
                   <Separator className="my-2" />
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Security Alerts</Label>
@@ -871,11 +910,13 @@ export default function SettingsPage() {
                     </div>
                     <Switch
                       checked={formData.emailNotifications.security}
-                      onCheckedChange={() => handleToggleNotification("security")}
+                      onCheckedChange={() =>
+                        handleToggleNotification("security")
+                      }
                     />
                   </div>
                 </div>
-                
+
                 <Button type="submit" className="gap-2">
                   {updateProfileMutation.isPending ? (
                     <>
@@ -889,7 +930,7 @@ export default function SettingsPage() {
                 </Button>
               </form>
             </Card>
-            
+
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">Data & Privacy</h2>
               <div className="space-y-4">
@@ -898,17 +939,20 @@ export default function SettingsPage() {
                     <div>
                       <h3 className="font-medium">Analytics & Usage Data</h3>
                       <p className="text-sm text-muted-foreground">
-                        Allow us to collect anonymous usage data to improve our service
+                        Allow us to collect anonymous usage data to improve our
+                        service
                       </p>
                     </div>
                     <Switch defaultChecked />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2 pt-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium">Store Conversation History</h3>
+                      <h3 className="font-medium">
+                        Store Conversation History
+                      </h3>
                       <p className="text-sm text-muted-foreground">
                         Save your agent conversations for future reference
                       </p>
@@ -916,9 +960,9 @@ export default function SettingsPage() {
                     <Switch defaultChecked />
                   </div>
                 </div>
-                
+
                 <Separator className="my-4" />
-                
+
                 <div className="flex gap-2">
                   <Button variant="outline" className="gap-2">
                     <HelpCircle className="h-4 w-4" /> Privacy Policy
@@ -934,4 +978,4 @@ export default function SettingsPage() {
       </div>
     </MainLayout>
   );
-} 
+}

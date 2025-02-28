@@ -25,6 +25,7 @@ docker-compose up
 ```
 
 The development environment will be available at:
+
 - Client App: http://localhost:3000
 - Server API: http://localhost:5000
 - Firebase Emulator UI: http://localhost:4000
@@ -45,6 +46,7 @@ docker-compose -f docker-compose.prod.yml -f docker-compose.staging.yml up -d
 ```
 
 The staging environment will be available at:
+
 - Web Application: http://localhost:8080
 - HTTPS Application: https://localhost:8443 (using self-signed certificates)
 - Monitoring Dashboard: http://localhost:9090
@@ -65,6 +67,7 @@ docker-compose -f docker-compose.prod.yml up -d
 ```
 
 The production application will be available at:
+
 - HTTPS Application: https://your-domain.com (requires proper SSL certificates)
 
 ## Container Management
@@ -134,4 +137,4 @@ The following volumes are used for data persistence:
 - [Docker Documentation](https://docs.docker.com/)
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [Nginx Documentation](https://nginx.org/en/docs/)
-- [Firebase Emulator Documentation](https://firebase.google.com/docs/emulator-suite) 
+- [Firebase Emulator Documentation](https://firebase.google.com/docs/emulator-suite)

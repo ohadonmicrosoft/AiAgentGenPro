@@ -167,8 +167,8 @@ const Sidebar = () => {
         isCollapsed && !isHovering
           ? "w-[70px]"
           : isOpen
-          ? "w-[240px]"
-          : "w-0 md:w-[240px]"
+            ? "w-[240px]"
+            : "w-0 md:w-[240px]",
       )}
     >
       {/* Sidebar header */}
@@ -180,7 +180,7 @@ const Sidebar = () => {
           <h1
             className={cn(
               "text-lg font-bold transition-opacity duration-200",
-              isCollapsed && !isHovering ? "hidden" : "block"
+              isCollapsed && !isHovering ? "hidden" : "block",
             )}
           >
             AI Agent
@@ -208,7 +208,7 @@ const Sidebar = () => {
                     "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     isActive(item)
                       ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                   aria-current={isActive(item) ? "page" : undefined}
                 >
@@ -216,7 +216,7 @@ const Sidebar = () => {
                   <span
                     className={cn(
                       "transition-opacity duration-200",
-                      isCollapsed && !isHovering ? "hidden" : "block"
+                      isCollapsed && !isHovering ? "hidden" : "block",
                     )}
                   >
                     {item.label}
@@ -233,7 +233,7 @@ const Sidebar = () => {
             <div
               className={cn(
                 "mt-6 mb-2 px-4 text-xs font-semibold text-muted-foreground",
-                isCollapsed && !isHovering ? "hidden" : "block"
+                isCollapsed && !isHovering ? "hidden" : "block",
               )}
             >
               Admin
@@ -247,7 +247,7 @@ const Sidebar = () => {
                         "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
                         isActive(item)
                           ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
                       )}
                       aria-current={isActive(item) ? "page" : undefined}
                     >
@@ -255,7 +255,7 @@ const Sidebar = () => {
                       <span
                         className={cn(
                           "transition-opacity duration-200",
-                          isCollapsed && !isHovering ? "hidden" : "block"
+                          isCollapsed && !isHovering ? "hidden" : "block",
                         )}
                       >
                         {item.label}
@@ -392,7 +392,8 @@ export function MainLayout({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const { announce } = useAnnouncer();
-  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
+  const isMobile =
+    typeof window !== "undefined" ? window.innerWidth < 768 : false;
 
   // Close sidebar on mobile when clicking outside
   useEffect(() => {
@@ -481,7 +482,7 @@ export function MainLayout({
             id="main-content"
             className={cn(
               "flex-1 overflow-y-auto p-4 md:p-6",
-              fullWidth ? "max-w-full" : "mx-auto max-w-7xl"
+              fullWidth ? "max-w-full" : "mx-auto max-w-7xl",
             )}
           >
             <ErrorBoundary
@@ -511,4 +512,4 @@ export function MainLayout({
       </div>
     </SidebarContext.Provider>
   );
-} 
+}

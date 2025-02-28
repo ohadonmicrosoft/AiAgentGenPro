@@ -128,7 +128,7 @@ CMD ["npm", "start"]
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -182,42 +182,42 @@ spec:
         app: aiagent-app
     spec:
       containers:
-      - name: aiagent-app
-        image: gcr.io/aiagent-project/aiagent-app:${TAG}
-        ports:
-        - containerPort: 3000
-        resources:
-          limits:
-            cpu: "1"
-            memory: "1Gi"
-          requests:
-            cpu: "500m"
-            memory: "512Mi"
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: aiagent-secrets
-              key: database-url
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aiagent-secrets
-              key: openai-api-key
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 15
-          periodSeconds: 20
+        - name: aiagent-app
+          image: gcr.io/aiagent-project/aiagent-app:${TAG}
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: aiagent-secrets
+                  key: database-url
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aiagent-secrets
+                  key: openai-api-key
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
 ```
 
 ```yaml
@@ -231,8 +231,8 @@ spec:
   selector:
     app: aiagent-app
   ports:
-  - port: 80
-    targetPort: 3000
+    - port: 80
+      targetPort: 3000
   type: ClusterIP
 ```
 
@@ -248,20 +248,20 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
-  - hosts:
-    - app.aiagentgenerator.com
-    secretName: aiagent-tls
+    - hosts:
+        - app.aiagentgenerator.com
+      secretName: aiagent-tls
   rules:
-  - host: app.aiagentgenerator.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: aiagent-service
-            port:
-              number: 80
+    - host: app.aiagentgenerator.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aiagent-service
+                port:
+                  number: 80
 ```
 
 ## CI/CD Pipeline
@@ -287,21 +287,21 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      
+
       - name: Configure Docker
         run: gcloud auth configure-docker
-      
+
       - name: Set environment variables
         run: |
           if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
@@ -312,23 +312,23 @@ jobs:
             echo "DEPLOYMENT_NAME=aiagent-app-staging" >> $GITHUB_ENV
           fi
           echo "IMAGE_TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
-      
+
       - name: Build and push Docker image
         run: |
           docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/aiagent-app:${{ env.IMAGE_TAG }} .
           docker push gcr.io/${{ env.GCP_PROJECT_ID }}/aiagent-app:${{ env.IMAGE_TAG }}
-      
+
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
-      
+
       - name: Deploy to GKE
         run: |
           envsubst < kubernetes/deployment.yaml | kubectl apply -f -
           kubectl apply -f kubernetes/service.yaml
           kubectl apply -f kubernetes/ingress.yaml
           kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} aiagent-app=gcr.io/${{ env.GCP_PROJECT_ID }}/aiagent-app:${{ env.IMAGE_TAG }}
-      
+
       - name: Verify deployment
         run: |
           kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }}
@@ -405,8 +405,8 @@ spec:
     matchLabels:
       app: aiagent-app
   endpoints:
-  - port: metrics
-    interval: 15s
+    - port: metrics
+      interval: 15s
 ```
 
 ### Logging Configuration
@@ -415,20 +415,20 @@ The application uses structured logging with Winston:
 
 ```typescript
 // server/lib/logger.ts
-import winston from 'winston';
+import winston from "winston";
 
 const logger = winston.createLogger({
-  level: process.env.LOGGING_LEVEL || 'info',
+  level: process.env.LOGGING_LEVEL || "info",
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json()
+    winston.format.json(),
   ),
-  defaultMeta: { service: 'aiagent-app' },
+  defaultMeta: { service: "aiagent-app" },
   transports: [
     new winston.transports.Console(),
     // In production, add additional transports like Google Cloud Logging
-    ...(process.env.NODE_ENV === 'production'
-      ? [new winston.transports.File({ filename: '/var/log/app.log' })]
+    ...(process.env.NODE_ENV === "production"
+      ? [new winston.transports.File({ filename: "/var/log/app.log" })]
       : []),
   ],
 });
@@ -455,18 +455,18 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
 ```
 
 ### Vertical Pod Autoscaling
@@ -487,13 +487,13 @@ spec:
     updateMode: Auto
   resourcePolicy:
     containerPolicies:
-    - containerName: '*'
-      minAllowed:
-        cpu: 100m
-        memory: 256Mi
-      maxAllowed:
-        cpu: 2
-        memory: 2Gi
+      - containerName: "*"
+        minAllowed:
+          cpu: 100m
+          memory: 256Mi
+        maxAllowed:
+          cpu: 2
+          memory: 2Gi
 ```
 
 ## Backup and Disaster Recovery
@@ -508,47 +508,47 @@ metadata:
   name: database-backup
   namespace: aiagent
 spec:
-  schedule: "0 2 * * *"  # Run at 2 AM every day
+  schedule: "0 2 * * *" # Run at 2 AM every day
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: backup
-            image: postgres:14
-            command:
-            - /bin/sh
-            - -c
-            - |
-              pg_dump -h $DB_HOST -U $DB_USER -d $DB_NAME | gzip > /backups/backup-$(date +%Y%m%d).sql.gz
-              gsutil cp /backups/backup-$(date +%Y%m%d).sql.gz gs://aiagent-backups/
-            env:
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: db-credentials
-                  key: host
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: db-credentials
-                  key: username
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-credentials
-                  key: database
-            - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-credentials
-                  key: password
-            volumeMounts:
-            - name: backup-volume
-              mountPath: /backups
+            - name: backup
+              image: postgres:14
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  pg_dump -h $DB_HOST -U $DB_USER -d $DB_NAME | gzip > /backups/backup-$(date +%Y%m%d).sql.gz
+                  gsutil cp /backups/backup-$(date +%Y%m%d).sql.gz gs://aiagent-backups/
+              env:
+                - name: DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-credentials
+                      key: host
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-credentials
+                      key: username
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-credentials
+                      key: database
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: db-credentials
+                      key: password
+              volumeMounts:
+                - name: backup-volume
+                  mountPath: /backups
           volumes:
-          - name: backup-volume
-            emptyDir: {}
+            - name: backup-volume
+              emptyDir: {}
           restartPolicy: OnFailure
 ```
 
@@ -577,34 +577,34 @@ spec:
     matchLabels:
       app: aiagent-app
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 3000
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: database
-    ports:
-    - protocol: TCP
-      port: 5432
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
-        except:
-        - 10.0.0.0/8
-        - 172.16.0.0/12
-        - 192.168.0.0/16
-    ports:
-    - protocol: TCP
-      port: 443
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: database
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443
 ```
 
 2. **Secret Management**:
@@ -637,25 +637,25 @@ spec:
   requiredDropCapabilities:
     - ALL
   volumes:
-    - 'configMap'
-    - 'emptyDir'
-    - 'projected'
-    - 'secret'
-    - 'downwardAPI'
+    - "configMap"
+    - "emptyDir"
+    - "projected"
+    - "secret"
+    - "downwardAPI"
   hostNetwork: false
   hostIPC: false
   hostPID: false
   runAsUser:
-    rule: 'MustRunAsNonRoot'
+    rule: "MustRunAsNonRoot"
   seLinux:
-    rule: 'RunAsAny'
+    rule: "RunAsAny"
   supplementalGroups:
-    rule: 'MustRunAs'
+    rule: "MustRunAs"
     ranges:
       - min: 1
         max: 65535
   fsGroup:
-    rule: 'MustRunAs'
+    rule: "MustRunAs"
     ranges:
       - min: 1
         max: 65535
@@ -741,9 +741,9 @@ spec:
         version: blue
     spec:
       containers:
-      - name: aiagent-app
-        image: gcr.io/aiagent-project/aiagent-app:${CURRENT_VERSION}
-        # ... other configuration ...
+        - name: aiagent-app
+          image: gcr.io/aiagent-project/aiagent-app:${CURRENT_VERSION}
+          # ... other configuration ...
 
 ---
 apiVersion: apps/v1
@@ -752,7 +752,7 @@ metadata:
   name: aiagent-app-green
   namespace: aiagent
 spec:
-  replicas: 0  # Initially set to 0
+  replicas: 0 # Initially set to 0
   selector:
     matchLabels:
       app: aiagent-app
@@ -764,9 +764,9 @@ spec:
         version: green
     spec:
       containers:
-      - name: aiagent-app
-        image: gcr.io/aiagent-project/aiagent-app:${NEW_VERSION}
-        # ... other configuration ...
+        - name: aiagent-app
+          image: gcr.io/aiagent-project/aiagent-app:${NEW_VERSION}
+          # ... other configuration ...
 
 ---
 apiVersion: v1
@@ -777,31 +777,35 @@ metadata:
 spec:
   selector:
     app: aiagent-app
-    version: blue  # Initially points to blue
+    version: blue # Initially points to blue
   ports:
-  - port: 80
-    targetPort: 3000
+    - port: 80
+      targetPort: 3000
   type: ClusterIP
 ```
 
 ## Recommended Deployment Improvements
 
 1. **Implement Canary Deployments**
+
    - Deploy new versions to a small subset of users
    - Gradually increase traffic to the new version
    - Automate rollback based on error rates
 
 2. **Add Feature Flags**
+
    - Use feature flags to control feature rollout
    - Decouple deployment from feature release
    - Enable A/B testing capabilities
 
 3. **Enhance Monitoring**
+
    - Implement distributed tracing
    - Add business metrics monitoring
    - Set up anomaly detection
 
 4. **Improve Database Operations**
+
    - Implement zero-downtime migrations
    - Add database performance monitoring
    - Set up read replicas for scaling
@@ -809,4 +813,4 @@ spec:
 5. **Optimize CI/CD Pipeline**
    - Reduce build times
    - Implement parallel testing
-   - Add deployment approval gates for production 
+   - Add deployment approval gates for production

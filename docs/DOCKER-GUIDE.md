@@ -89,6 +89,7 @@ docker-compose -f docker-compose.prod.yml up -d
 The production Dockerfile uses a multi-stage build process:
 
 1. **Build Stage**:
+
    - Builds the application from source
    - Compiles TypeScript
    - Creates optimized production assets
@@ -125,13 +126,13 @@ http://localhost:4000
 
 ### Available Emulated Services
 
-| Service     | Port  | Description                        |
-|-------------|-------|------------------------------------|
-| Firestore   | 8080  | NoSQL document database            |
-| Auth        | 9099  | Authentication service             |
-| Storage     | 9199  | File storage                       |
-| Functions   | 5001  | Serverless functions               |
-| Emulator UI | 4000  | Dashboard for all emulated services|
+| Service     | Port | Description                         |
+| ----------- | ---- | ----------------------------------- |
+| Firestore   | 8080 | NoSQL document database             |
+| Auth        | 9099 | Authentication service              |
+| Storage     | 9199 | File storage                        |
+| Functions   | 5001 | Serverless functions                |
+| Emulator UI | 4000 | Dashboard for all emulated services |
 
 ## Best Practices
 
@@ -174,6 +175,7 @@ Create separate environment files for different deployment targets:
 #### Container fails to start
 
 Check logs for errors:
+
 ```bash
 docker-compose logs app
 ```
@@ -181,14 +183,16 @@ docker-compose logs app
 #### Port conflicts
 
 If ports are already in use on your host machine, modify the port mappings in docker-compose.yml:
+
 ```yaml
 ports:
-  - "3001:3000"  # Map container port 3000 to host port 3001
+  - "3001:3000" # Map container port 3000 to host port 3001
 ```
 
 #### Node modules issues
 
 If you encounter node_modules permission issues:
+
 ```bash
 # Rebuild the node_modules inside the container
 docker-compose down
@@ -198,11 +202,13 @@ docker-compose up --build
 #### Redis connection issues
 
 Ensure Redis service is running:
+
 ```bash
 docker-compose ps redis
 ```
 
 Check Redis logs:
+
 ```bash
 docker-compose logs redis
 ```
@@ -214,4 +220,4 @@ If you encounter issues not covered here:
 1. Check Docker and Docker Compose documentation
 2. Review the error logs for specific error messages
 3. Search the project repository issues
-4. Reach out to the development team for support 
+4. Reach out to the development team for support

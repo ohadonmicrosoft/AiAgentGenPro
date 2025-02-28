@@ -4,12 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { useNavigate } from "wouter";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ArrowLeft,
   ArrowRight,
@@ -62,19 +57,19 @@ const agentSchema = z.object({
     .string()
     .min(10, { message: "Description must be at least 10 characters" }),
   visibility: z.enum(["private", "team", "public"]),
-  
+
   // Personality
   persona: z.string().min(20, { message: "Persona must be more detailed" }),
   tone: z.enum(["friendly", "professional", "technical", "casual", "formal"]),
   temperament: z.number().min(1).max(10),
   creativity: z.number().min(1).max(10),
-  
+
   // Knowledge
   baseModel: z.enum(["gpt-4", "gpt-3.5-turbo", "claude-3", "llama-3"]),
   knowledgeSources: z.array(z.string()).optional(),
   uploadedDocuments: z.array(z.any()).optional(),
   contextWindow: z.number().min(2000).max(128000),
-  
+
   // Capabilities
   webBrowsing: z.boolean().default(false),
   codeExecution: z.boolean().default(false),
@@ -119,7 +114,7 @@ export default function CreateAgentPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("basics");
   const [loading, setLoading] = useState(false);
-  
+
   // Initialize form with default values
   const form = useForm<AgentFormValues>({
     resolver: zodResolver(agentSchema),
@@ -144,7 +139,7 @@ export default function CreateAgentPage() {
       plugins: [],
     },
   });
-  
+
   // Mutation for creating an agent
   const createAgentMutation = useMutation({
     mutationFn: createAgent,
@@ -155,7 +150,7 @@ export default function CreateAgentPage() {
     onError: (error) => {
       toast.error("Failed to create agent. Please try again.");
       console.error(error);
-    }
+    },
   });
 
   // Handle form submission
@@ -228,19 +223,38 @@ export default function CreateAgentPage() {
   // Define steps with their icons
   const steps = [
     { id: "basics", label: "Basics", icon: <Settings className="h-5 w-5" /> },
-    { id: "personality", label: "Personality", icon: <UserRound className="h-5 w-5" /> },
-    { id: "knowledge", label: "Knowledge", icon: <Brain className="h-5 w-5" /> },
-    { id: "capabilities", label: "Capabilities", icon: <Sparkles className="h-5 w-5" /> },
-    { id: "review", label: "Review", icon: <CheckCircle className="h-5 w-5" /> },
+    {
+      id: "personality",
+      label: "Personality",
+      icon: <UserRound className="h-5 w-5" />,
+    },
+    {
+      id: "knowledge",
+      label: "Knowledge",
+      icon: <Brain className="h-5 w-5" />,
+    },
+    {
+      id: "capabilities",
+      label: "Capabilities",
+      icon: <Sparkles className="h-5 w-5" />,
+    },
+    {
+      id: "review",
+      label: "Review",
+      icon: <CheckCircle className="h-5 w-5" />,
+    },
   ];
 
   return (
     <MainLayout title="Create Agent" showBackButton>
       <div className="mx-auto max-w-4xl py-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Create a New Agent</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Create a New Agent
+          </h1>
           <p className="mt-2 text-muted-foreground">
-            Configure your AI agent with the perfect personality, knowledge, and capabilities.
+            Configure your AI agent with the perfect personality, knowledge, and
+            capabilities.
           </p>
         </div>
 
@@ -255,8 +269,8 @@ export default function CreateAgentPage() {
                   step === s.id
                     ? "text-primary"
                     : index < steps.findIndex((x) => x.id === step)
-                    ? "text-primary/60"
-                    : "text-muted-foreground"
+                      ? "text-primary/60"
+                      : "text-muted-foreground",
                 )}
               >
                 <div
@@ -265,8 +279,8 @@ export default function CreateAgentPage() {
                     step === s.id
                       ? "border-primary bg-primary/10"
                       : index < steps.findIndex((x) => x.id === step)
-                      ? "border-primary/60 bg-primary/5"
-                      : "border-muted-foreground/30 bg-background"
+                        ? "border-primary/60 bg-primary/5"
+                        : "border-muted-foreground/30 bg-background",
                   )}
                 >
                   {s.icon}
@@ -280,7 +294,8 @@ export default function CreateAgentPage() {
               className="h-full bg-primary transition-all duration-300"
               style={{
                 width: `${
-                  ((steps.findIndex((s) => s.id === step) + 1) / steps.length) * 100
+                  ((steps.findIndex((s) => s.id === step) + 1) / steps.length) *
+                  100
                 }%`,
               }}
             />
@@ -296,7 +311,7 @@ export default function CreateAgentPage() {
                   <Settings className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Basic Information</h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
@@ -314,7 +329,7 @@ export default function CreateAgentPage() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="description"
@@ -335,7 +350,7 @@ export default function CreateAgentPage() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="visibility"
@@ -381,7 +396,7 @@ export default function CreateAgentPage() {
                   <UserRound className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Agent Personality</h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
@@ -397,13 +412,14 @@ export default function CreateAgentPage() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Describe your agent's personality, character, and background.
+                          Describe your agent's personality, character, and
+                          background.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="tone"
@@ -421,7 +437,10 @@ export default function CreateAgentPage() {
                           </FormControl>
                           <SelectContent>
                             {toneOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
                                 {option.label}
                               </SelectItem>
                             ))}
@@ -448,7 +467,9 @@ export default function CreateAgentPage() {
                               max={10}
                               step={1}
                               defaultValue={[field.value]}
-                              onValueChange={(value) => field.onChange(value[0])}
+                              onValueChange={(value) =>
+                                field.onChange(value[0])
+                              }
                             />
                             <div className="flex justify-between text-xs text-muted-foreground">
                               <span>Calm (1)</span>
@@ -478,7 +499,9 @@ export default function CreateAgentPage() {
                               max={10}
                               step={1}
                               defaultValue={[field.value]}
-                              onValueChange={(value) => field.onChange(value[0])}
+                              onValueChange={(value) =>
+                                field.onChange(value[0])
+                              }
                             />
                             <div className="flex justify-between text-xs text-muted-foreground">
                               <span>Precise (1)</span>
@@ -488,7 +511,8 @@ export default function CreateAgentPage() {
                           </div>
                         </FormControl>
                         <FormDescription>
-                          How creative or precise your agent is in its responses.
+                          How creative or precise your agent is in its
+                          responses.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -505,7 +529,7 @@ export default function CreateAgentPage() {
                   <Brain className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Knowledge Base</h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
@@ -524,7 +548,10 @@ export default function CreateAgentPage() {
                           </FormControl>
                           <SelectContent>
                             {modelOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
                                 {option.label}
                               </SelectItem>
                             ))}
@@ -551,7 +578,9 @@ export default function CreateAgentPage() {
                               max={128000}
                               step={1000}
                               defaultValue={[field.value]}
-                              onValueChange={(value) => field.onChange(value[0])}
+                              onValueChange={(value) =>
+                                field.onChange(value[0])
+                              }
                             />
                             <div className="flex justify-between text-xs text-muted-foreground">
                               <span>2K</span>
@@ -561,7 +590,8 @@ export default function CreateAgentPage() {
                           </div>
                         </FormControl>
                         <FormDescription>
-                          How much context your agent can process at once. Larger windows increase token usage.
+                          How much context your agent can process at once.
+                          Larger windows increase token usage.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -574,22 +604,38 @@ export default function CreateAgentPage() {
                       Knowledge Sources
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Upload documents or connect knowledge sources to enhance your agent's knowledge.
+                      Upload documents or connect knowledge sources to enhance
+                      your agent's knowledge.
                     </p>
                     <div className="flex flex-col gap-2">
-                      <Button variant="outline" type="button" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-start"
+                      >
                         <span className="mr-2">+</span> Upload Documents
                       </Button>
-                      <Button variant="outline" type="button" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-start"
+                      >
                         <span className="mr-2">+</span> Connect Website
                       </Button>
-                      <Button variant="outline" type="button" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-start"
+                      >
                         <span className="mr-2">+</span> Connect API
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Pro features require a subscription. {" "}
-                      <a href="/pricing" className="text-primary underline hover:no-underline">
+                      Pro features require a subscription.{" "}
+                      <a
+                        href="/pricing"
+                        className="text-primary underline hover:no-underline"
+                      >
                         Upgrade
                       </a>
                     </p>
@@ -605,7 +651,7 @@ export default function CreateAgentPage() {
                   <Sparkles className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Agent Capabilities</h2>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FormField
@@ -622,13 +668,14 @@ export default function CreateAgentPage() {
                           <div className="space-y-1 leading-none">
                             <FormLabel>Web Browsing</FormLabel>
                             <FormDescription>
-                              Allow agent to search and browse the web for information.
+                              Allow agent to search and browse the web for
+                              information.
                             </FormDescription>
                           </div>
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="codeExecution"
@@ -643,13 +690,14 @@ export default function CreateAgentPage() {
                           <div className="space-y-1 leading-none">
                             <FormLabel>Code Execution</FormLabel>
                             <FormDescription>
-                              Allow agent to write and execute code in a sandbox environment.
+                              Allow agent to write and execute code in a sandbox
+                              environment.
                             </FormDescription>
                           </div>
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="apiIntegration"
@@ -670,7 +718,7 @@ export default function CreateAgentPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="imageGeneration"
@@ -691,7 +739,7 @@ export default function CreateAgentPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="dataAnalysis"
@@ -712,7 +760,7 @@ export default function CreateAgentPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="longTermMemory"
@@ -755,7 +803,10 @@ export default function CreateAgentPage() {
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
                       Additional plugins available in the{" "}
-                      <a href="/marketplace" className="text-primary underline hover:no-underline">
+                      <a
+                        href="/marketplace"
+                        className="text-primary underline hover:no-underline"
+                      >
                         marketplace
                       </a>
                     </p>
@@ -771,96 +822,143 @@ export default function CreateAgentPage() {
                   <CheckCircle className="h-5 w-5 text-primary" />
                   <h2 className="text-xl font-semibold">Review & Create</h2>
                 </div>
-                
+
                 <div className="space-y-6">
                   <div>
                     <h3 className="font-medium mb-2">Basic Information</h3>
                     <div className="rounded-md border p-3 bg-muted/50">
                       <div className="grid gap-2 sm:grid-cols-2">
                         <div>
-                          <span className="text-sm text-muted-foreground">Name:</span>
+                          <span className="text-sm text-muted-foreground">
+                            Name:
+                          </span>
                           <p className="font-medium">{form.getValues().name}</p>
                         </div>
                         <div>
-                          <span className="text-sm text-muted-foreground">Visibility:</span>
-                          <p className="font-medium capitalize">{form.getValues().visibility}</p>
+                          <span className="text-sm text-muted-foreground">
+                            Visibility:
+                          </span>
+                          <p className="font-medium capitalize">
+                            {form.getValues().visibility}
+                          </p>
                         </div>
                         <div className="sm:col-span-2">
-                          <span className="text-sm text-muted-foreground">Description:</span>
+                          <span className="text-sm text-muted-foreground">
+                            Description:
+                          </span>
                           <p>{form.getValues().description}</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h3 className="font-medium mb-2">Personality</h3>
                     <div className="rounded-md border p-3 bg-muted/50">
                       <div className="grid gap-2 sm:grid-cols-2">
                         <div className="sm:col-span-2">
-                          <span className="text-sm text-muted-foreground">Persona:</span>
+                          <span className="text-sm text-muted-foreground">
+                            Persona:
+                          </span>
                           <p>{form.getValues().persona}</p>
                         </div>
                         <div>
-                          <span className="text-sm text-muted-foreground">Tone:</span>
-                          <p className="font-medium capitalize">{form.getValues().tone}</p>
+                          <span className="text-sm text-muted-foreground">
+                            Tone:
+                          </span>
+                          <p className="font-medium capitalize">
+                            {form.getValues().tone}
+                          </p>
                         </div>
                         <div>
-                          <span className="text-sm text-muted-foreground">Temperament/Creativity:</span>
-                          <p className="font-medium">{form.getValues().temperament}/10 - {form.getValues().creativity}/10</p>
+                          <span className="text-sm text-muted-foreground">
+                            Temperament/Creativity:
+                          </span>
+                          <p className="font-medium">
+                            {form.getValues().temperament}/10 -{" "}
+                            {form.getValues().creativity}/10
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div>
-                    <h3 className="font-medium mb-2">Knowledge & Capabilities</h3>
+                    <h3 className="font-medium mb-2">
+                      Knowledge & Capabilities
+                    </h3>
                     <div className="rounded-md border p-3 bg-muted/50">
                       <div className="grid gap-2 sm:grid-cols-2">
                         <div>
-                          <span className="text-sm text-muted-foreground">Base Model:</span>
-                          <p className="font-medium">{
-                            modelOptions.find(m => m.value === form.getValues().baseModel)?.label
-                          }</p>
+                          <span className="text-sm text-muted-foreground">
+                            Base Model:
+                          </span>
+                          <p className="font-medium">
+                            {
+                              modelOptions.find(
+                                (m) => m.value === form.getValues().baseModel,
+                              )?.label
+                            }
+                          </p>
                         </div>
                         <div>
-                          <span className="text-sm text-muted-foreground">Context Window:</span>
-                          <p className="font-medium">{form.getValues().contextWindow.toLocaleString()} tokens</p>
+                          <span className="text-sm text-muted-foreground">
+                            Context Window:
+                          </span>
+                          <p className="font-medium">
+                            {form.getValues().contextWindow.toLocaleString()}{" "}
+                            tokens
+                          </p>
                         </div>
                         <div className="sm:col-span-2">
-                          <span className="text-sm text-muted-foreground">Capabilities:</span>
+                          <span className="text-sm text-muted-foreground">
+                            Capabilities:
+                          </span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {form.getValues().webBrowsing && (
-                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">Web Browsing</span>
+                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                                Web Browsing
+                              </span>
                             )}
                             {form.getValues().codeExecution && (
-                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">Code Execution</span>
+                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                                Code Execution
+                              </span>
                             )}
                             {form.getValues().apiIntegration && (
-                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">API Integration</span>
+                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                                API Integration
+                              </span>
                             )}
                             {form.getValues().imageGeneration && (
-                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">Image Generation</span>
+                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                                Image Generation
+                              </span>
                             )}
                             {form.getValues().dataAnalysis && (
-                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">Data Analysis</span>
+                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                                Data Analysis
+                              </span>
                             )}
                             {form.getValues().longTermMemory && (
-                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">Long-term Memory</span>
+                              <span className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
+                                Long-term Memory
+                              </span>
                             )}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="rounded-md border p-4 bg-primary/5">
                     <h3 className="font-medium mb-2 flex items-center">
                       <Code className="h-4 w-4 mr-2 text-primary" />
                       Deploy & Integration
                     </h3>
                     <p className="text-sm mb-3">
-                      After creating your agent, you can deploy it in various ways:
+                      After creating your agent, you can deploy it in various
+                      ways:
                     </p>
                     <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-2">
                       <li>Embed on your website</li>
@@ -883,14 +981,14 @@ export default function CreateAgentPage() {
               >
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back
               </Button>
-              
+
               {step !== "review" ? (
                 <Button type="button" onClick={handleNext}>
                   Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               ) : (
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={createAgentMutation.isPending}
                   className="bg-primary text-primary-foreground"
                 >
@@ -912,4 +1010,4 @@ export default function CreateAgentPage() {
       </div>
     </MainLayout>
   );
-} 
+}

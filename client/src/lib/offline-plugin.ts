@@ -60,23 +60,23 @@ export function offlinePlugin(options: OfflinePluginOptions = {}) {
   return {
     onSuccess: async (data: unknown, query: any) => {
       const queryKey = query.queryKey;
-      
+
       if (queryKeyFilter(queryKey)) {
         await storage.setItem(JSON.stringify(queryKey), data);
       }
     },
-    
+
     onError: async (error: Error, query: any) => {
       const queryKey = query.queryKey;
-      
+
       if (queryKeyFilter(queryKey) && !window.navigator.onLine) {
         const cachedData = await storage.getItem(JSON.stringify(queryKey));
         if (cachedData) {
           return cachedData;
         }
       }
-      
+
       throw error;
     },
   };
-} 
+}

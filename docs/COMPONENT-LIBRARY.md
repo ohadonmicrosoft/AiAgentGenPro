@@ -5,6 +5,7 @@ This document provides a comprehensive guide to the UI components available in o
 ## Table of Contents
 
 1. [Basic Components](#basic-components)
+
    - [Button](#button)
    - [Card](#card)
    - [Input](#input)
@@ -16,18 +17,21 @@ This document provides a comprehensive guide to the UI components available in o
    - [Textarea](#textarea)
 
 2. [Layout Components](#layout-components)
+
    - [MainLayout](#mainlayout)
    - [Container](#container)
    - [Grid](#grid)
    - [Flex](#flex)
 
 3. [Feedback Components](#feedback-components)
+
    - [Alert](#alert)
    - [Toast](#toast)
    - [Progress](#progress)
    - [Skeleton](#skeleton)
 
 4. [Overlay Components](#overlay-components)
+
    - [AlertDialog](#alertdialog)
    - [Dialog](#dialog)
    - [Drawer](#drawer)
@@ -36,18 +40,21 @@ This document provides a comprehensive guide to the UI components available in o
    - [DropdownMenu](#dropdownmenu)
 
 5. [Navigation Components](#navigation-components)
+
    - [Tabs](#tabs)
    - [Accordion](#accordion)
    - [Breadcrumb](#breadcrumb)
    - [Pagination](#pagination)
 
 6. [Data Display Components](#data-display-components)
+
    - [Table](#table)
    - [VirtualizedList](#virtualizedlist)
    - [Badge](#badge)
    - [Avatar](#avatar)
 
 7. [Forms](#forms)
+
    - [Form](#form)
    - [FormField](#formfield)
    - [FormItem](#formitem)
@@ -79,18 +86,25 @@ import { Button } from "@/components/ui/button";
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | Button style variant |
-| `size` | `"default" \| "sm" \| "lg" \| "icon"` | `"default"` | Button size |
-| `asChild` | `boolean` | `false` | Whether to render as a child component |
+| Prop      | Type                                                                          | Default     | Description                            |
+| --------- | ----------------------------------------------------------------------------- | ----------- | -------------------------------------- |
+| `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link"` | `"default"` | Button style variant                   |
+| `size`    | `"default" \| "sm" \| "lg" \| "icon"`                                         | `"default"` | Button size                            |
+| `asChild` | `boolean`                                                                     | `false`     | Whether to render as a child component |
 
 ### Card
 
 The Card component is used to group related information in a container with a header, content, and footer.
 
 ```tsx
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 
 <Card>
   <CardHeader>
@@ -103,7 +117,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
   <CardFooter>
     <Button>Action</Button>
   </CardFooter>
-</Card>
+</Card>;
 ```
 
 ### Checkbox
@@ -121,16 +135,16 @@ import { Checkbox } from "@/components/ui/checkbox";
   >
     Accept terms and conditions
   </label>
-</div>
+</div>;
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `checked` | `boolean` | - | Whether the checkbox is checked |
-| `onCheckedChange` | `(checked: boolean) => void` | - | Callback when checked state changes |
-| `disabled` | `boolean` | `false` | Whether the checkbox is disabled |
+| Prop              | Type                         | Default | Description                         |
+| ----------------- | ---------------------------- | ------- | ----------------------------------- |
+| `checked`         | `boolean`                    | -       | Whether the checkbox is checked     |
+| `onCheckedChange` | `(checked: boolean) => void` | -       | Callback when checked state changes |
+| `disabled`        | `boolean`                    | `false` | Whether the checkbox is disabled    |
 
 ### RadioGroup
 
@@ -148,24 +162,30 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
     <RadioGroupItem value="option-two" id="option-two" />
     <label htmlFor="option-two">Option Two</label>
   </div>
-</RadioGroup>
+</RadioGroup>;
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | The value of the selected radio item |
-| `onValueChange` | `(value: string) => void` | - | Callback when the value changes |
-| `defaultValue` | `string` | - | The default value |
-| `disabled` | `boolean` | `false` | Whether the radio group is disabled |
+| Prop            | Type                      | Default | Description                          |
+| --------------- | ------------------------- | ------- | ------------------------------------ |
+| `value`         | `string`                  | -       | The value of the selected radio item |
+| `onValueChange` | `(value: string) => void` | -       | Callback when the value changes      |
+| `defaultValue`  | `string`                  | -       | The default value                    |
+| `disabled`      | `boolean`                 | `false` | Whether the radio group is disabled  |
 
 ### Select
 
 The Select component provides a dropdown list of options for users to choose from.
 
 ```tsx
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 <Select>
   <SelectTrigger>
@@ -176,20 +196,20 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
     <SelectItem value="option-two">Option Two</SelectItem>
     <SelectItem value="option-three">Option Three</SelectItem>
   </SelectContent>
-</Select>
+</Select>;
 ```
 
 #### Props
 
-| Component | Prop | Type | Default | Description |
-|-----------|------|------|---------|-------------|
-| `Select` | `value` | `string` | - | The controlled value |
-| `Select` | `defaultValue` | `string` | - | The default value |
-| `Select` | `onValueChange` | `(value: string) => void` | - | Callback when value changes |
-| `Select` | `disabled` | `boolean` | `false` | Whether the select is disabled |
-| `SelectItem` | `value` | `string` | - | The value of the item |
-| `SelectItem` | `disabled` | `boolean` | `false` | Whether the item is disabled |
-| `SelectItem` | `withCheckIcon` | `boolean` | `true` | Whether to show a check icon when selected |
+| Component    | Prop            | Type                      | Default | Description                                |
+| ------------ | --------------- | ------------------------- | ------- | ------------------------------------------ |
+| `Select`     | `value`         | `string`                  | -       | The controlled value                       |
+| `Select`     | `defaultValue`  | `string`                  | -       | The default value                          |
+| `Select`     | `onValueChange` | `(value: string) => void` | -       | Callback when value changes                |
+| `Select`     | `disabled`      | `boolean`                 | `false` | Whether the select is disabled             |
+| `SelectItem` | `value`         | `string`                  | -       | The value of the item                      |
+| `SelectItem` | `disabled`      | `boolean`                 | `false` | Whether the item is disabled               |
+| `SelectItem` | `withCheckIcon` | `boolean`                 | `true`  | Whether to show a check icon when selected |
 
 ### Slider
 
@@ -198,20 +218,20 @@ The Slider component allows users to select a value or range from a specified ra
 ```tsx
 import { Slider } from "@/components/ui/slider";
 
-<Slider defaultValue={[50]} max={100} step={1} />
+<Slider defaultValue={[50]} max={100} step={1} />;
 ```
 
 #### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `defaultValue` | `number[]` | - | The default value(s) |
-| `value` | `number[]` | - | The controlled value(s) |
-| `onValueChange` | `(value: number[]) => void` | - | Callback when value changes |
-| `min` | `number` | `0` | The minimum value |
-| `max` | `number` | `100` | The maximum value |
-| `step` | `number` | `1` | The step increment |
-| `disabled` | `boolean` | `false` | Whether the slider is disabled |
+| Prop            | Type                        | Default | Description                    |
+| --------------- | --------------------------- | ------- | ------------------------------ |
+| `defaultValue`  | `number[]`                  | -       | The default value(s)           |
+| `value`         | `number[]`                  | -       | The controlled value(s)        |
+| `onValueChange` | `(value: number[]) => void` | -       | Callback when value changes    |
+| `min`           | `number`                    | `0`     | The minimum value              |
+| `max`           | `number`                    | `100`   | The maximum value              |
+| `step`          | `number`                    | `1`     | The step increment             |
+| `disabled`      | `boolean`                   | `false` | Whether the slider is disabled |
 
 ## Overlay Components
 
@@ -249,7 +269,7 @@ import {
       <AlertDialogAction>Delete</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
-</AlertDialog>
+</AlertDialog>;
 ```
 
 ### Popover
@@ -257,7 +277,11 @@ import {
 The Popover component displays a popup that contains additional information or controls.
 
 ```tsx
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 <Popover>
   <PopoverTrigger asChild>
@@ -273,25 +297,30 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
       </div>
     </div>
   </PopoverContent>
-</Popover>
+</Popover>;
 ```
 
 #### Props
 
-| Component | Prop | Type | Default | Description |
-|-----------|------|------|---------|-------------|
-| `Popover` | `open` | `boolean` | - | Whether the popover is open |
-| `Popover` | `onOpenChange` | `(open: boolean) => void` | - | Callback when open state changes |
-| `PopoverTrigger` | `asChild` | `boolean` | `false` | Whether to render as a child component |
-| `PopoverContent` | `align` | `"center" \| "start" \| "end"` | `"center"` | Alignment of the popover |
-| `PopoverContent` | `sideOffset` | `number` | `4` | Gap between the popover and the trigger |
+| Component        | Prop           | Type                           | Default    | Description                             |
+| ---------------- | -------------- | ------------------------------ | ---------- | --------------------------------------- |
+| `Popover`        | `open`         | `boolean`                      | -          | Whether the popover is open             |
+| `Popover`        | `onOpenChange` | `(open: boolean) => void`      | -          | Callback when open state changes        |
+| `PopoverTrigger` | `asChild`      | `boolean`                      | `false`    | Whether to render as a child component  |
+| `PopoverContent` | `align`        | `"center" \| "start" \| "end"` | `"center"` | Alignment of the popover                |
+| `PopoverContent` | `sideOffset`   | `number`                       | `4`        | Gap between the popover and the trigger |
 
 ### Tooltip
 
 The Tooltip component displays informative text when a user hovers over an element.
 
 ```tsx
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 <TooltipProvider>
   <Tooltip>
@@ -302,17 +331,17 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
       <p>Tooltip content</p>
     </TooltipContent>
   </Tooltip>
-</TooltipProvider>
+</TooltipProvider>;
 ```
 
 #### Props
 
-| Component | Prop | Type | Default | Description |
-|-----------|------|------|---------|-------------|
-| `Tooltip` | `open` | `boolean` | - | Whether the tooltip is open |
-| `Tooltip` | `onOpenChange` | `(open: boolean) => void` | - | Callback when open state changes |
-| `TooltipTrigger` | `asChild` | `boolean` | `false` | Whether to render as a child component |
-| `TooltipContent` | `sideOffset` | `number` | `4` | Gap between the tooltip and the trigger |
+| Component        | Prop           | Type                      | Default | Description                             |
+| ---------------- | -------------- | ------------------------- | ------- | --------------------------------------- |
+| `Tooltip`        | `open`         | `boolean`                 | -       | Whether the tooltip is open             |
+| `Tooltip`        | `onOpenChange` | `(open: boolean) => void` | -       | Callback when open state changes        |
+| `TooltipTrigger` | `asChild`      | `boolean`                 | `false` | Whether to render as a child component  |
+| `TooltipContent` | `sideOffset`   | `number`                  | `4`     | Gap between the tooltip and the trigger |
 
 ### DropdownMenu
 
@@ -337,7 +366,7 @@ import {
     <DropdownMenuSeparator />
     <DropdownMenuItem>Logout</DropdownMenuItem>
   </DropdownMenuContent>
-</DropdownMenu>
+</DropdownMenu>;
 ```
 
 ## Feedback Components
@@ -426,7 +455,10 @@ export function ProfileForm() {
       console.log(values);
     },
     toast: {
-      success: { title: "Profile saved", description: "Your profile has been updated" },
+      success: {
+        title: "Profile saved",
+        description: "Your profile has been updated",
+      },
       error: true,
     },
   });
@@ -508,7 +540,10 @@ function MyComponent() {
       title: "Action needed",
       description: "You need to do something",
       action: (
-        <ToastAction altText="Do it" onClick={() => console.log("Action clicked")}>
+        <ToastAction
+          altText="Do it"
+          onClick={() => console.log("Action clicked")}
+        >
           Do it
         </ToastAction>
       ),
@@ -519,14 +554,11 @@ function MyComponent() {
     setTimeout(() => toast.dismiss(toastId), 2000);
 
     // Promise toast
-    toast.promise(
-      fetch("/api/data"),
-      {
-        loading: "Loading...",
-        success: "Data loaded successfully",
-        error: "Error loading data",
-      }
-    );
+    toast.promise(fetch("/api/data"), {
+      loading: "Loading...",
+      success: "Data loaded successfully",
+      error: "Error loading data",
+    });
   };
 
   return <Button onClick={handleAction}>Show Toast</Button>;
@@ -545,7 +577,10 @@ function CreateUserForm() {
   const mutation = useMutation({
     mutationFn: (userData) => apiClient.users.create(userData),
     toast: {
-      success: { title: "User created", description: "User has been created successfully" },
+      success: {
+        title: "User created",
+        description: "User has been created successfully",
+      },
       error: true,
       loading: { title: "Creating user", description: "Please wait..." },
     },
@@ -626,15 +661,15 @@ The `useAuth` hook provides authentication functionality.
 import { useAuth } from "@/contexts/auth-context";
 
 function MyComponent() {
-  const { 
-    user, 
-    isAuthenticated, 
-    isLoading, 
-    signIn, 
-    signUp, 
+  const {
+    user,
+    isAuthenticated,
+    isLoading,
+    signIn,
+    signUp,
     signOut,
     resetPassword,
-    updateUserProfile
+    updateUserProfile,
   } = useAuth();
 
   const handleSignIn = async () => {
@@ -766,4 +801,4 @@ async function getDashboardStats() {
 
 This documentation provides an overview of the core components available in our UI library. All components are built with accessibility in mind and follow a consistent design pattern. Use these components to build consistent, accessible, and beautiful user interfaces.
 
-For more details on specific components, refer to the implementation in the codebase or reach out to the development team. 
+For more details on specific components, refer to the implementation in the codebase or reach out to the development team.

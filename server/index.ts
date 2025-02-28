@@ -20,7 +20,7 @@ import { serveStatic, setupVite } from "./lib/vite-middleware";
 async function startServer() {
   // Create Express application
   const app = express();
-  
+
   // Standard middleware
   app.use(helmet());
   app.use(compression());
@@ -76,9 +76,11 @@ async function startServer() {
       const { createServer } = await import("http");
       const server = createServer(app);
       await setupVite(app, server);
-      
+
       // Start server
-      const port = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 5000;
+      const port = process.env.PORT
+        ? Number.parseInt(process.env.PORT, 10)
+        : 5000;
       server.listen(
         {
           port,
@@ -94,11 +96,13 @@ async function startServer() {
       return server;
     } else {
       serveStatic(app);
-      
+
       // Start server
       const { createServer } = await import("http");
       const server = createServer(app);
-      const port = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 5000;
+      const port = process.env.PORT
+        ? Number.parseInt(process.env.PORT, 10)
+        : 5000;
       server.listen(
         {
           port,
@@ -106,7 +110,9 @@ async function startServer() {
           reusePort: true,
         },
         () => {
-          logger.info(`Server started and listening on port ${port} in production mode`);
+          logger.info(
+            `Server started and listening on port ${port} in production mode`,
+          );
         },
       );
 
@@ -209,4 +215,4 @@ if (require.main === module) {
   });
 }
 
-export { startServer }; 
+export { startServer };

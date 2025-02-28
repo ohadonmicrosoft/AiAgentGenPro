@@ -72,11 +72,11 @@ export interface AgentRunHistory {
  * Status of an agent run
  */
 export enum AgentRunStatus {
-  QUEUED = 'queued',
-  RUNNING = 'running',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  CANCELLED = 'cancelled',
+  QUEUED = "queued",
+  RUNNING = "running",
+  COMPLETED = "completed",
+  FAILED = "failed",
+  CANCELLED = "cancelled",
 }
 
 /**
@@ -85,7 +85,7 @@ export enum AgentRunStatus {
 export interface AgentMessage {
   id: string;
   runId: string;
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
   timestamp: string;
   metadata?: Record<string, any>;
@@ -111,8 +111,8 @@ export interface AgentSearchParams {
   tags?: string[];
   ownerId?: string;
   publicOnly?: boolean;
-  sort?: 'name' | 'createdAt' | 'usageCount' | 'rating';
-  order?: 'asc' | 'desc';
+  sort?: "name" | "createdAt" | "usageCount" | "rating";
+  order?: "asc" | "desc";
   limit?: number;
   offset?: number;
-} 
+}

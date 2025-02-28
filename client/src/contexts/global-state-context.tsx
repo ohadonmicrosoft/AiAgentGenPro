@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useReducer, useCallback, ReactNode } from 'react';
-import { AppError } from '../lib/error-handling';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  ReactNode,
+} from "react";
+import { AppError } from "../lib/error-handling";
 
 /**
  * Error class for global state operations
@@ -7,7 +13,7 @@ import { AppError } from '../lib/error-handling';
 export class GlobalStateError extends AppError {
   constructor(message: string, code: string) {
     super(message, code);
-    this.name = 'GlobalStateError';
+    this.name = "GlobalStateError";
   }
 }
 
@@ -15,7 +21,7 @@ export class GlobalStateError extends AppError {
  * Application state interface
  */
 export interface GlobalState {
-  theme: 'light' | 'dark' | 'system';
+  theme: "light" | "dark" | "system";
   sidebarExpanded: boolean;
   notifications: Notification[];
   currentWorkspaceId: string | null;
@@ -29,7 +35,7 @@ export interface GlobalState {
  */
 export interface Notification {
   id: string;
-  type: 'info' | 'success' | 'warning' | 'error';
+  type: "info" | "success" | "warning" | "error";
   message: string;
   title?: string;
   autoClose?: boolean;
@@ -42,11 +48,11 @@ export interface Notification {
  * Initial global state
  */
 const initialState: GlobalState = {
-  theme: 'system',
+  theme: "system",
   sidebarExpanded: true,
   notifications: [],
   currentWorkspaceId: null,
-  isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+  isOnline: typeof navigator !== "undefined" ? navigator.onLine : true,
   lastSyncTime: null,
   isAppLoading: false,
 };
@@ -55,39 +61,45 @@ const initialState: GlobalState = {
  * Action types for the global state reducer
  */
 type GlobalStateAction =
-  | { type: 'SET_THEME'; payload: 'light' | 'dark' | 'system' }
-  | { type: 'TOGGLE_SIDEBAR' }
-  | { type: 'SET_SIDEBAR_EXPANDED'; payload: boolean }
-  | { type: 'ADD_NOTIFICATION'; payload: Omit<Notification, 'id' | 'createdAt' | 'isRead'> }
-  | { type: 'REMOVE_NOTIFICATION'; payload: string }
-  | { type: 'MARK_NOTIFICATION_READ'; payload: string }
-  | { type: 'CLEAR_ALL_NOTIFICATIONS' }
-  | { type: 'SET_CURRENT_WORKSPACE'; payload: string | null }
-  | { type: 'SET_ONLINE_STATUS'; payload: boolean }
-  | { type: 'SET_LAST_SYNC_TIME'; payload: number }
-  | { type: 'SET_APP_LOADING'; payload: boolean };
+  | { type: "SET_THEME"; payload: "light" | "dark" | "system" }
+  | { type: "TOGGLE_SIDEBAR" }
+  | { type: "SET_SIDEBAR_EXPANDED"; payload: boolean }
+  | {
+      type: "ADD_NOTIFICATION";
+      payload: Omit<Notification, "id" | "createdAt" | "isRead">;
+    }
+  | { type: "REMOVE_NOTIFICATION"; payload: string }
+  | { type: "MARK_NOTIFICATION_READ"; payload: string }
+  | { type: "CLEAR_ALL_NOTIFICATIONS" }
+  | { type: "SET_CURRENT_WORKSPACE"; payload: string | null }
+  | { type: "SET_ONLINE_STATUS"; payload: boolean }
+  | { type: "SET_LAST_SYNC_TIME"; payload: number }
+  | { type: "SET_APP_LOADING"; payload: boolean };
 
 /**
  * Reducer function for global state management
  */
-function globalStateReducer(state: GlobalState, action: GlobalStateAction): GlobalState {
+function globalStateReducer(
+  state: GlobalState,
+  action: GlobalStateAction,
+): GlobalState {
   switch (action.type) {
-    case 'SET_THEME':
+    case "SET_THEME":
       return {
         ...state,
         theme: action.payload,
       };
-    case 'TOGGLE_SIDEBAR':
+    case "TOGGLE_SIDEBAR":
       return {
         ...state,
         sidebarExpanded: !state.sidebarExpanded,
       };
-    case 'SET_SIDEBAR_EXPANDED':
+    case "SET_SIDEBAR_EXPANDED":
       return {
         ...state,
         sidebarExpanded: action.payload,
       };
-    case 'ADD_NOTIFICATION': {
+    case "ADD_NOTIFICATION": {
       const newNotification: Notification = {
         id: `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         createdAt: Date.now(),
@@ -101,43 +113,43 @@ function globalStateReducer(state: GlobalState, action: GlobalStateAction): Glob
         notifications: [newNotification, ...state.notifications].slice(0, 50), // Keep max 50 notifications
       };
     }
-    case 'REMOVE_NOTIFICATION':
+    case "REMOVE_NOTIFICATION":
       return {
         ...state,
         notifications: state.notifications.filter(
-          (notification) => notification.id !== action.payload
+          (notification) => notification.id !== action.payload,
         ),
       };
-    case 'MARK_NOTIFICATION_READ':
+    case "MARK_NOTIFICATION_READ":
       return {
         ...state,
         notifications: state.notifications.map((notification) =>
           notification.id === action.payload
             ? { ...notification, isRead: true }
-            : notification
+            : notification,
         ),
       };
-    case 'CLEAR_ALL_NOTIFICATIONS':
+    case "CLEAR_ALL_NOTIFICATIONS":
       return {
         ...state,
         notifications: [],
       };
-    case 'SET_CURRENT_WORKSPACE':
+    case "SET_CURRENT_WORKSPACE":
       return {
         ...state,
         currentWorkspaceId: action.payload,
       };
-    case 'SET_ONLINE_STATUS':
+    case "SET_ONLINE_STATUS":
       return {
         ...state,
         isOnline: action.payload,
       };
-    case 'SET_LAST_SYNC_TIME':
+    case "SET_LAST_SYNC_TIME":
       return {
         ...state,
         lastSyncTime: action.payload,
       };
-    case 'SET_APP_LOADING':
+    case "SET_APP_LOADING":
       return {
         ...state,
         isAppLoading: action.payload,
@@ -152,10 +164,12 @@ function globalStateReducer(state: GlobalState, action: GlobalStateAction): Glob
  */
 interface GlobalStateContextValue {
   state: GlobalState;
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  setTheme: (theme: "light" | "dark" | "system") => void;
   toggleSidebar: () => void;
   setSidebarExpanded: (expanded: boolean) => void;
-  addNotification: (notification: Omit<Notification, 'id' | 'createdAt' | 'isRead'>) => string;
+  addNotification: (
+    notification: Omit<Notification, "id" | "createdAt" | "isRead">,
+  ) => string;
   removeNotification: (id: string) => void;
   markNotificationRead: (id: string) => void;
   clearAllNotifications: () => void;
@@ -166,11 +180,13 @@ interface GlobalStateContextValue {
 }
 
 // Create context
-const GlobalStateContext = createContext<GlobalStateContextValue | undefined>(undefined);
+const GlobalStateContext = createContext<GlobalStateContextValue | undefined>(
+  undefined,
+);
 
 /**
  * Provider component for global state
- * 
+ *
  * @example
  * ```tsx
  * <GlobalStateProvider>
@@ -182,53 +198,53 @@ export function GlobalStateProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(globalStateReducer, initialState);
 
   // Action creators
-  const setTheme = useCallback((theme: 'light' | 'dark' | 'system') => {
-    dispatch({ type: 'SET_THEME', payload: theme });
+  const setTheme = useCallback((theme: "light" | "dark" | "system") => {
+    dispatch({ type: "SET_THEME", payload: theme });
   }, []);
 
   const toggleSidebar = useCallback(() => {
-    dispatch({ type: 'TOGGLE_SIDEBAR' });
+    dispatch({ type: "TOGGLE_SIDEBAR" });
   }, []);
 
   const setSidebarExpanded = useCallback((expanded: boolean) => {
-    dispatch({ type: 'SET_SIDEBAR_EXPANDED', payload: expanded });
+    dispatch({ type: "SET_SIDEBAR_EXPANDED", payload: expanded });
   }, []);
 
   const addNotification = useCallback(
-    (notification: Omit<Notification, 'id' | 'createdAt' | 'isRead'>) => {
+    (notification: Omit<Notification, "id" | "createdAt" | "isRead">) => {
       const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      dispatch({ type: 'ADD_NOTIFICATION', payload: notification });
+      dispatch({ type: "ADD_NOTIFICATION", payload: notification });
       return id;
     },
-    []
+    [],
   );
 
   const removeNotification = useCallback((id: string) => {
-    dispatch({ type: 'REMOVE_NOTIFICATION', payload: id });
+    dispatch({ type: "REMOVE_NOTIFICATION", payload: id });
   }, []);
 
   const markNotificationRead = useCallback((id: string) => {
-    dispatch({ type: 'MARK_NOTIFICATION_READ', payload: id });
+    dispatch({ type: "MARK_NOTIFICATION_READ", payload: id });
   }, []);
 
   const clearAllNotifications = useCallback(() => {
-    dispatch({ type: 'CLEAR_ALL_NOTIFICATIONS' });
+    dispatch({ type: "CLEAR_ALL_NOTIFICATIONS" });
   }, []);
 
   const setCurrentWorkspace = useCallback((workspaceId: string | null) => {
-    dispatch({ type: 'SET_CURRENT_WORKSPACE', payload: workspaceId });
+    dispatch({ type: "SET_CURRENT_WORKSPACE", payload: workspaceId });
   }, []);
 
   const setOnlineStatus = useCallback((isOnline: boolean) => {
-    dispatch({ type: 'SET_ONLINE_STATUS', payload: isOnline });
+    dispatch({ type: "SET_ONLINE_STATUS", payload: isOnline });
   }, []);
 
   const setLastSyncTime = useCallback((time: number) => {
-    dispatch({ type: 'SET_LAST_SYNC_TIME', payload: time });
+    dispatch({ type: "SET_LAST_SYNC_TIME", payload: time });
   }, []);
 
   const setAppLoading = useCallback((isLoading: boolean) => {
-    dispatch({ type: 'SET_APP_LOADING', payload: isLoading });
+    dispatch({ type: "SET_APP_LOADING", payload: isLoading });
   }, []);
 
   // Monitor online status
@@ -236,19 +252,19 @@ export function GlobalStateProvider({ children }: { children: ReactNode }) {
     const handleOnline = () => setOnlineStatus(true);
     const handleOffline = () => setOnlineStatus(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, [setOnlineStatus]);
 
   // Notification auto-close handler
   React.useEffect(() => {
     const autoCloseNotifications = state.notifications.filter(
-      (n) => n.autoClose && !n.isRead
+      (n) => n.autoClose && !n.isRead,
     );
 
     if (autoCloseNotifications.length === 0) return;
@@ -288,17 +304,17 @@ export function GlobalStateProvider({ children }: { children: ReactNode }) {
 
 /**
  * Hook to use the global state context
- * 
+ *
  * @returns The global state context value
  * @throws {GlobalStateError} If used outside of a GlobalStateProvider
- * 
+ *
  * @example
  * ```tsx
  * const { state, addNotification, toggleSidebar } = useGlobalState();
- * 
+ *
  * // Access state
  * const { theme, notifications } = state;
- * 
+ *
  * // Use actions
  * const handleSuccess = () => {
  *   addNotification({
@@ -314,10 +330,10 @@ export function useGlobalState() {
 
   if (context === undefined) {
     throw new GlobalStateError(
-      'useGlobalState must be used within a GlobalStateProvider',
-      'CONTEXT_OUTSIDE_PROVIDER'
+      "useGlobalState must be used within a GlobalStateProvider",
+      "CONTEXT_OUTSIDE_PROVIDER",
     );
   }
 
   return context;
-} 
+}

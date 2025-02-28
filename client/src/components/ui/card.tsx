@@ -34,13 +34,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           ? (e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                props.onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+                props.onClick?.(
+                  e as unknown as React.MouseEvent<HTMLDivElement>,
+                );
               }
             }
           : undefined
       }
     />
-  )
+  ),
 );
 Card.displayName = "Card";
 
@@ -75,7 +77,7 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
       {...props}
       data-testid="card-title"
     />
-  )
+  ),
 );
 CardTitle.displayName = "CardTitle";
 
@@ -99,10 +101,10 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div 
-    ref={ref} 
-    className={cn("p-4 sm:p-6 pt-0", className)} 
-    {...props} 
+  <div
+    ref={ref}
+    className={cn("p-4 sm:p-6 pt-0", className)}
+    {...props}
     data-testid="card-content"
   />
 ));
@@ -130,4 +132,4 @@ export {
   CardContent,
   type CardProps,
   type CardTitleProps,
-}; 
+};

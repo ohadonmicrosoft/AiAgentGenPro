@@ -33,7 +33,9 @@ import { useToast } from "@/hooks/use-toast";
 // Define form validation schema with Zod
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -70,7 +72,8 @@ export default function LoginPage() {
     } catch (error: any) {
       console.error("Login error:", error);
       setAuthError(
-        error.message || "Failed to sign in. Please check your credentials and try again."
+        error.message ||
+          "Failed to sign in. Please check your credentials and try again.",
       );
     } finally {
       setIsLoading(false);
@@ -92,7 +95,8 @@ export default function LoginPage() {
     } catch (error: any) {
       console.error("GitHub login error:", error);
       setAuthError(
-        error.message || "Failed to sign in with GitHub. Please try again later."
+        error.message ||
+          "Failed to sign in with GitHub. Please try again later.",
       );
     } finally {
       setIsLoading(false);
@@ -201,7 +205,9 @@ export default function LoginPage() {
                                 <Eye className="h-4 w-4 text-muted-foreground" />
                               )}
                               <span className="sr-only">
-                                {showPassword ? "Hide password" : "Show password"}
+                                {showPassword
+                                  ? "Hide password"
+                                  : "Show password"}
                               </span>
                             </Button>
                           </div>
@@ -219,11 +225,7 @@ export default function LoginPage() {
                     )}
                   />
 
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={isLoading}
-                  >
+                  <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
@@ -283,4 +285,4 @@ export default function LoginPage() {
       </motion.div>
     </div>
   );
-} 
+}

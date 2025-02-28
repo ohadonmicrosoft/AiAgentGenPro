@@ -1,6 +1,6 @@
 /**
  * Migration: 00002-create-agents-table.ts
- * 
+ *
  * Creates the agents table structure.
  * This is an example migration file for use with a SQL database.
  * In a Firestore project, this would represent the schema design.
@@ -28,10 +28,10 @@ export async function up() {
   //   table.timestamp('createdAt').defaultTo(db.fn.now());
   //   table.timestamp('updatedAt').defaultTo(db.fn.now());
   // });
-  
+
   // For Firestore, we'd document the schema design:
-  console.log('Migrating: Create agents collection structure');
-  
+  console.log("Migrating: Create agents collection structure");
+
   /*
     Collection: agents
     Document ID: Auto-generated
@@ -66,19 +66,19 @@ export async function up() {
     - category (ASC), createdAt (DESC)
     - tags (array-contains)
   */
-  
+
   return Promise.resolve();
 }
 
 export async function down() {
   // Example SQL rollback:
   // await db.schema.dropTable('agents');
-  
+
   // For Firestore, we'd document the rollback procedure:
-  console.log('Rolling back: Drop agents collection structure');
-  
+  console.log("Rolling back: Drop agents collection structure");
+
   // Note: In Firestore, we don't typically drop collections in rollbacks,
   // but we would document the process for removing data if needed.
-  
+
   return Promise.resolve();
-} 
+}

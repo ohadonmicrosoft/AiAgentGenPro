@@ -107,4 +107,4 @@ const Button = withErrorBoundary(ButtonBase, {
 });
 Button.displayName = "Button";
 
-export { Button, ButtonBase, buttonVariants }; 
+export { Button, ButtonBase, buttonVariants };

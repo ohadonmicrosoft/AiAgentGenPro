@@ -4,7 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { useForm } from "@/hooks/use-form";
@@ -20,14 +26,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 // Example 1: Basic Contact Form
 const contactFormSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters long" }),
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters long" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  subject: z.string().min(5, { message: "Subject must be at least 5 characters long" }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters long" }),
+  subject: z
+    .string()
+    .min(5, { message: "Subject must be at least 5 characters long" }),
+  message: z
+    .string()
+    .min(10, { message: "Message must be at least 10 characters long" }),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -47,7 +66,10 @@ export function ContactForm() {
       console.log("Form submitted:", values);
     },
     toast: {
-      success: { title: "Message sent", description: "Your message has been sent successfully" },
+      success: {
+        title: "Message sent",
+        description: "Your message has been sent successfully",
+      },
       error: true,
     },
   });
@@ -56,7 +78,9 @@ export function ContactForm() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Contact Us</CardTitle>
-        <CardDescription>Send us a message and we'll get back to you as soon as possible.</CardDescription>
+        <CardDescription>
+          Send us a message and we'll get back to you as soon as possible.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -110,10 +134,10 @@ export function ContactForm() {
                 <FormItem>
                   <FormLabel>Message</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter your message here" 
-                      className="min-h-[120px]" 
-                      {...field} 
+                    <Textarea
+                      placeholder="Enter your message here"
+                      className="min-h-[120px]"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -121,7 +145,11 @@ export function ContactForm() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={form.isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.isSubmitting}
+            >
               {form.isSubmitting ? "Sending..." : "Send Message"}
             </Button>
           </form>
@@ -169,7 +197,10 @@ export function PreferencesForm() {
       console.log("Preferences updated:", values);
     },
     toast: {
-      success: { title: "Preferences saved", description: "Your preferences have been updated" },
+      success: {
+        title: "Preferences saved",
+        description: "Your preferences have been updated",
+      },
       error: true,
     },
   });
@@ -178,7 +209,9 @@ export function PreferencesForm() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>User Preferences</CardTitle>
-        <CardDescription>Manage your account preferences and settings.</CardDescription>
+        <CardDescription>
+          Manage your account preferences and settings.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -189,8 +222,8 @@ export function PreferencesForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Theme</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -260,8 +293,8 @@ export function PreferencesForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Language</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -282,7 +315,11 @@ export function PreferencesForm() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={form.isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.isSubmitting}
+            >
               {form.isSubmitting ? "Saving..." : "Save preferences"}
             </Button>
           </form>
@@ -309,7 +346,7 @@ type ApiKeyFormValues = z.infer<typeof apiKeyFormSchema>;
 
 export function ApiKeyForm() {
   const [createdKey, setCreatedKey] = useState<string | null>(null);
-  
+
   const createKeyMutation = useMutation({
     mutationFn: (values: ApiKeyFormValues) => {
       // Mock API call
@@ -328,7 +365,10 @@ export function ApiKeyForm() {
       });
     },
     toast: {
-      success: { title: "API key created", description: "Your new API key has been created successfully" },
+      success: {
+        title: "API key created",
+        description: "Your new API key has been created successfully",
+      },
       error: true,
       loading: { title: "Creating API key", description: "Please wait..." },
     },
@@ -359,7 +399,9 @@ export function ApiKeyForm() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Create API Key</CardTitle>
-        <CardDescription>Create a new API key to access our API services.</CardDescription>
+        <CardDescription>
+          Create a new API key to access our API services.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -386,7 +428,7 @@ export function ApiKeyForm() {
               <FormDescription>
                 Select what this API key will be able to do.
               </FormDescription>
-              
+
               <FormField
                 control={form.control}
                 name="permissions.read"
@@ -404,7 +446,7 @@ export function ApiKeyForm() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="permissions.write"
@@ -422,7 +464,7 @@ export function ApiKeyForm() {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="permissions.delete"
@@ -448,8 +490,8 @@ export function ApiKeyForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Expiration</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -469,9 +511,9 @@ export function ApiKeyForm() {
               )}
             />
 
-            <Button 
-              type="submit" 
-              className="w-full" 
+            <Button
+              type="submit"
+              className="w-full"
               disabled={createKeyMutation.isLoading}
             >
               {createKeyMutation.isLoading ? "Creating..." : "Create API Key"}
@@ -481,7 +523,9 @@ export function ApiKeyForm() {
 
         {createdKey && (
           <div className="mt-6 p-4 border rounded-md bg-muted">
-            <p className="text-sm font-medium mb-2">Your API Key (copy this now, it won't be shown again)</p>
+            <p className="text-sm font-medium mb-2">
+              Your API Key (copy this now, it won't be shown again)
+            </p>
             <div className="bg-background p-2 rounded border font-mono text-xs break-all">
               {createdKey}
             </div>
@@ -494,13 +538,21 @@ export function ApiKeyForm() {
 
 // Example 4: Settings Form with Multiple Control Types
 const settingsFormSchema = z.object({
-  displayName: z.string().min(2, { message: "Display name must be at least 2 characters" }),
+  displayName: z
+    .string()
+    .min(2, { message: "Display name must be at least 2 characters" }),
   avatar: z.string().optional(),
   bio: z.string().max(160).optional(),
   notifications: z.boolean().default(true),
-  emailDigest: z.enum(["daily", "weekly", "never"], { required_error: "Please select an option" }),
-  profileVisibility: z.enum(["public", "followers", "private"], { required_error: "Please select an option" }),
-  theme: z.enum(["light", "dark", "system"], { required_error: "Please select a theme" }),
+  emailDigest: z.enum(["daily", "weekly", "never"], {
+    required_error: "Please select an option",
+  }),
+  profileVisibility: z.enum(["public", "followers", "private"], {
+    required_error: "Please select an option",
+  }),
+  theme: z.enum(["light", "dark", "system"], {
+    required_error: "Please select a theme",
+  }),
   fontSize: z.number().min(12).max(24),
 });
 
@@ -523,7 +575,10 @@ export function SettingsForm() {
       console.log("Settings updated:", values);
     },
     toast: {
-      success: { title: "Settings updated", description: "Your settings have been saved successfully" },
+      success: {
+        title: "Settings updated",
+        description: "Your settings have been saved successfully",
+      },
       error: true,
     },
   });
@@ -532,7 +587,9 @@ export function SettingsForm() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Account Settings</CardTitle>
-        <CardDescription>Manage your account settings and preferences.</CardDescription>
+        <CardDescription>
+          Manage your account settings and preferences.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -550,7 +607,7 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="bio"
@@ -558,21 +615,19 @@ export function SettingsForm() {
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Tell us about yourself" 
-                      className="resize-none" 
-                      {...field} 
+                    <Textarea
+                      placeholder="Tell us about yourself"
+                      className="resize-none"
+                      {...field}
                       value={field.value || ""}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Maximum 160 characters.
-                  </FormDescription>
+                  <FormDescription>Maximum 160 characters.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="notifications"
@@ -595,7 +650,7 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="emailDigest"
@@ -612,25 +667,19 @@ export function SettingsForm() {
                         <FormControl>
                           <RadioGroupItem value="daily" />
                         </FormControl>
-                        <FormLabel className="font-normal">
-                          Daily
-                        </FormLabel>
+                        <FormLabel className="font-normal">Daily</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="weekly" />
                         </FormControl>
-                        <FormLabel className="font-normal">
-                          Weekly
-                        </FormLabel>
+                        <FormLabel className="font-normal">Weekly</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="never" />
                         </FormControl>
-                        <FormLabel className="font-normal">
-                          Never
-                        </FormLabel>
+                        <FormLabel className="font-normal">Never</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -638,15 +687,15 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="profileVisibility"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Profile Visibility</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -667,15 +716,15 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="theme"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Theme</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -693,7 +742,7 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="fontSize"
@@ -716,8 +765,12 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            
-            <Button type="submit" className="w-full" disabled={form.isSubmitting}>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.isSubmitting}
+            >
               {form.isSubmitting ? "Saving..." : "Save Settings"}
             </Button>
           </form>
@@ -725,4 +778,4 @@ export function SettingsForm() {
       </CardContent>
     </Card>
   );
-} 
+}

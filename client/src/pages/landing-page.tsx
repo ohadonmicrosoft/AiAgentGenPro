@@ -20,7 +20,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Bot, ArrowRight, Check, BarChart, MessageSquare, Brain } from "lucide-react";
+import {
+  Bot,
+  ArrowRight,
+  Check,
+  BarChart,
+  MessageSquare,
+  Brain,
+} from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "wouter";
@@ -33,14 +40,16 @@ const loginSchema = z.object({
 });
 
 // Registration schema with validation and password matching
-const registerSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    username: z.string().min(3, "Username must be at least 3 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -49,22 +58,26 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 const features = [
   {
     title: "Intuitive Agent Builder",
-    description: "Build AI agents with a user-friendly drag-and-drop interface. No coding required.",
+    description:
+      "Build AI agents with a user-friendly drag-and-drop interface. No coding required.",
     icon: <Bot className="h-10 w-10 text-primary" />,
   },
   {
     title: "Advanced Analytics",
-    description: "Track agent performance with detailed analytics and real-time metrics.",
+    description:
+      "Track agent performance with detailed analytics and real-time metrics.",
     icon: <BarChart className="h-10 w-10 text-primary" />,
   },
   {
     title: "Prompt Library",
-    description: "Access a rich library of pre-built prompts to accelerate your AI development.",
+    description:
+      "Access a rich library of pre-built prompts to accelerate your AI development.",
     icon: <MessageSquare className="h-10 w-10 text-primary" />,
   },
   {
     title: "Intelligent Optimization",
-    description: "Built-in tools to refine and optimize your agents automatically.",
+    description:
+      "Built-in tools to refine and optimize your agents automatically.",
     icon: <Brain className="h-10 w-10 text-primary" />,
   },
 ];
@@ -82,17 +95,20 @@ const benefits = [
 // Testimonials data
 const testimonials = [
   {
-    quote: "This tool has revolutionized how our support team operates. We've automated 70% of routine inquiries.",
+    quote:
+      "This tool has revolutionized how our support team operates. We've automated 70% of routine inquiries.",
     author: "Sarah J., Customer Support Manager",
     company: "TechCorp Inc.",
   },
   {
-    quote: "The agent builder is intuitive enough for non-technical team members while being powerful enough for our developers.",
+    quote:
+      "The agent builder is intuitive enough for non-technical team members while being powerful enough for our developers.",
     author: "Michael T., CTO",
     company: "Innovate Solutions",
   },
   {
-    quote: "We've seen a 45% increase in customer satisfaction after deploying agents built with this platform.",
+    quote:
+      "We've seen a 45% increase in customer satisfaction after deploying agents built with this platform.",
     author: "Laura M., Customer Experience Director",
     company: "Global Retail",
   },
@@ -192,11 +208,13 @@ export default function LandingPage() {
               className="max-w-3xl mx-auto"
             >
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-                Build Powerful AI Agents <span className="text-primary">Without Code</span>
+                Build Powerful AI Agents{" "}
+                <span className="text-primary">Without Code</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Design, test, and deploy intelligent AI agents in minutes. 
-                Streamline customer support, automate tasks, and enhance user experiences.
+                Design, test, and deploy intelligent AI agents in minutes.
+                Streamline customer support, automate tasks, and enhance user
+                experiences.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#auth">
@@ -205,7 +223,11 @@ export default function LandingPage() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </a>
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   View Demo
                 </Button>
               </div>
@@ -216,22 +238,29 @@ export default function LandingPage() {
         {/* Features Section */}
         <section className="py-16 bg-muted/50">
           <div className="container mx-auto px-4">
-            <motion.div 
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={containerVariants}
               className="text-center mb-12"
             >
-              <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-4">
+              <motion.h2
+                variants={itemVariants}
+                className="text-3xl font-bold mb-4"
+              >
                 Powerful Features
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-muted-foreground max-w-2xl mx-auto">
-                Everything you need to create, deploy, and manage intelligent AI agents
+              <motion.p
+                variants={itemVariants}
+                className="text-muted-foreground max-w-2xl mx-auto"
+              >
+                Everything you need to create, deploy, and manage intelligent AI
+                agents
               </motion.p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -247,7 +276,9 @@ export default function LandingPage() {
                   <div className="mb-4 p-2 bg-primary/10 rounded-full w-fit">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {feature.title}
+                  </h3>
                   <p className="text-muted-foreground">{feature.description}</p>
                 </motion.div>
               ))}
@@ -259,7 +290,7 @@ export default function LandingPage() {
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row gap-12 items-center">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -281,7 +312,7 @@ export default function LandingPage() {
                 </ul>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -296,7 +327,9 @@ export default function LandingPage() {
                     <div className="pt-6">
                       {/* Placeholder for platform screenshot or illustration */}
                       <div className="w-full h-64 bg-muted/30 rounded-md flex items-center justify-center">
-                        <p className="text-muted-foreground">Platform Interface</p>
+                        <p className="text-muted-foreground">
+                          Platform Interface
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -309,22 +342,28 @@ export default function LandingPage() {
         {/* Testimonials Section */}
         <section className="py-16 bg-muted/50">
           <div className="container mx-auto px-4">
-            <motion.div 
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={containerVariants}
               className="text-center mb-12"
             >
-              <motion.h2 variants={itemVariants} className="text-3xl font-bold mb-4">
+              <motion.h2
+                variants={itemVariants}
+                className="text-3xl font-bold mb-4"
+              >
                 What Our Users Say
               </motion.h2>
-              <motion.p variants={itemVariants} className="text-muted-foreground max-w-2xl mx-auto">
+              <motion.p
+                variants={itemVariants}
+                className="text-muted-foreground max-w-2xl mx-auto"
+              >
                 Join hundreds of companies already using our platform
               </motion.p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -340,7 +379,9 @@ export default function LandingPage() {
                   <p className="italic mb-4">"{testimonial.quote}"</p>
                   <div>
                     <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.company}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {testimonial.company}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -419,7 +460,9 @@ export default function LandingPage() {
                             className="w-full"
                             disabled={loginMutation.isPending}
                           >
-                            {loginMutation.isPending ? "Logging in..." : "Login"}
+                            {loginMutation.isPending
+                              ? "Logging in..."
+                              : "Login"}
                           </Button>
                         </form>
                       </Form>
@@ -542,7 +585,9 @@ export default function LandingPage() {
                             className="w-full"
                             disabled={registerMutation.isPending}
                           >
-                            {registerMutation.isPending ? "Creating account..." : "Register"}
+                            {registerMutation.isPending
+                              ? "Creating account..."
+                              : "Register"}
                           </Button>
                         </form>
                       </Form>
@@ -566,11 +611,12 @@ export default function LandingPage() {
               <span className="font-semibold">AI Agent Generator</span>
             </div>
             <div className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} AI Agent Generator. All rights reserved.
+              © {new Date().getFullYear()} AI Agent Generator. All rights
+              reserved.
             </div>
           </div>
         </div>
       </footer>
     </div>
   );
-} 
+}

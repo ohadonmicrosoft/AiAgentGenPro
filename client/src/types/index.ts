@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-export * from './drag-types';
+export * from "./drag-types";
 
 // Navigation item interface for sidebar
 export interface NavItem {
@@ -8,4 +8,4 @@ export interface NavItem {
   icon: ReactNode;
   requiresAuth?: boolean;
   permission?: string;
-} 
+}

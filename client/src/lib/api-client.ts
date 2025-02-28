@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/lib/hooks/use-toast";
 
 // Error types
 export class ApiError extends Error {
@@ -15,7 +15,9 @@ export class ApiError extends Error {
 }
 
 export class NetworkError extends Error {
-  constructor(message = "Network error occurred. Please check your connection.") {
+  constructor(
+    message = "Network error occurred. Please check your connection.",
+  ) {
     super(message);
     this.name = "NetworkError";
   }
@@ -29,7 +31,10 @@ export class AuthenticationError extends ApiError {
 }
 
 export class AuthorizationError extends ApiError {
-  constructor(message = "You don't have permission to access this resource", data?: any) {
+  constructor(
+    message = "You don't have permission to access this resource",
+    data?: any,
+  ) {
     super(403, message, data);
     this.name = "AuthorizationError";
   }
@@ -59,7 +64,7 @@ export const queryClient = new QueryClient({
 // Generic function to handle API errors
 const handleApiError = async (response: Response): Promise<never> => {
   let errorData: any;
-  
+
   try {
     errorData = await response.json();
   } catch (e) {
@@ -82,10 +87,10 @@ const handleApiError = async (response: Response): Promise<never> => {
 // Generic fetch function with error handling
 async function apiFetch<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<ApiResponse<T>> {
   const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
-  
+
   const headers = {
     "Content-Type": "application/json",
     ...options.headers,
@@ -132,25 +137,24 @@ async function apiFetch<T>(
 export const apiClient = {
   // Auth endpoints
   auth: {
-    login: (credentials: { email: string; password: string }) => 
+    login: (credentials: { email: string; password: string }) =>
       apiFetch<{ token: string; user: any }>("/auth/login", {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
-    
-    register: (userData: { email: string; password: string; name: string }) => 
+
+    register: (userData: { email: string; password: string; name: string }) =>
       apiFetch<{ token: string; user: any }>("/auth/register", {
         method: "POST",
         body: JSON.stringify(userData),
       }),
-    
-    logout: () => 
-      apiFetch<{ success: boolean }>("/auth/logout", { 
-        method: "POST" 
+
+    logout: () =>
+      apiFetch<{ success: boolean }>("/auth/logout", {
+        method: "POST",
       }),
-    
-    me: () => 
-      apiFetch<{ user: any }>("/auth/me"),
+
+    me: () => apiFetch<{ user: any }>("/auth/me"),
   },
 
   // Agents endpoints
@@ -160,29 +164,31 @@ export const apiClient = {
       if (params?.page) queryParams.append("page", params.page.toString());
       if (params?.limit) queryParams.append("limit", params.limit.toString());
       if (params?.search) queryParams.append("search", params.search);
-      
+
       const queryString = queryParams.toString();
-      return apiFetch<{ agents: any[]; total: number; page: number; limit: number }>(
-        `/agents${queryString ? `?${queryString}` : ""}`
-      );
+      return apiFetch<{
+        agents: any[];
+        total: number;
+        page: number;
+        limit: number;
+      }>(`/agents${queryString ? `?${queryString}` : ""}`);
     },
-    
-    getById: (id: string) => 
-      apiFetch<{ agent: any }>(`/agents/${id}`),
-    
-    create: (agent: any) => 
+
+    getById: (id: string) => apiFetch<{ agent: any }>(`/agents/${id}`),
+
+    create: (agent: any) =>
       apiFetch<{ agent: any }>("/agents", {
         method: "POST",
         body: JSON.stringify(agent),
       }),
-    
-    update: (id: string, agent: any) => 
+
+    update: (id: string, agent: any) =>
       apiFetch<{ agent: any }>(`/agents/${id}`, {
         method: "PATCH",
         body: JSON.stringify(agent),
       }),
-    
-    delete: (id: string) => 
+
+    delete: (id: string) =>
       apiFetch<{ success: boolean }>(`/agents/${id}`, {
         method: "DELETE",
       }),
@@ -190,35 +196,42 @@ export const apiClient = {
 
   // Prompts endpoints
   prompts: {
-    getAll: (params?: { page?: number; limit?: number; search?: string; category?: string }) => {
+    getAll: (params?: {
+      page?: number;
+      limit?: number;
+      search?: string;
+      category?: string;
+    }) => {
       const queryParams = new URLSearchParams();
       if (params?.page) queryParams.append("page", params.page.toString());
       if (params?.limit) queryParams.append("limit", params.limit.toString());
       if (params?.search) queryParams.append("search", params.search);
       if (params?.category) queryParams.append("category", params.category);
-      
+
       const queryString = queryParams.toString();
-      return apiFetch<{ prompts: any[]; total: number; page: number; limit: number }>(
-        `/prompts${queryString ? `?${queryString}` : ""}`
-      );
+      return apiFetch<{
+        prompts: any[];
+        total: number;
+        page: number;
+        limit: number;
+      }>(`/prompts${queryString ? `?${queryString}` : ""}`);
     },
-    
-    getById: (id: string) => 
-      apiFetch<{ prompt: any }>(`/prompts/${id}`),
-    
-    create: (prompt: any) => 
+
+    getById: (id: string) => apiFetch<{ prompt: any }>(`/prompts/${id}`),
+
+    create: (prompt: any) =>
       apiFetch<{ prompt: any }>("/prompts", {
         method: "POST",
         body: JSON.stringify(prompt),
       }),
-    
-    update: (id: string, prompt: any) => 
+
+    update: (id: string, prompt: any) =>
       apiFetch<{ prompt: any }>(`/prompts/${id}`, {
         method: "PATCH",
         body: JSON.stringify(prompt),
       }),
-    
-    delete: (id: string) => 
+
+    delete: (id: string) =>
       apiFetch<{ success: boolean }>(`/prompts/${id}`, {
         method: "DELETE",
       }),
@@ -231,34 +244,39 @@ export const apiClient = {
       if (params?.page) queryParams.append("page", params.page.toString());
       if (params?.limit) queryParams.append("limit", params.limit.toString());
       if (params?.search) queryParams.append("search", params.search);
-      
+
       const queryString = queryParams.toString();
-      return apiFetch<{ users: any[]; total: number; page: number; limit: number }>(
-        `/users${queryString ? `?${queryString}` : ""}`
-      );
+      return apiFetch<{
+        users: any[];
+        total: number;
+        page: number;
+        limit: number;
+      }>(`/users${queryString ? `?${queryString}` : ""}`);
     },
-    
-    getById: (id: string) => 
-      apiFetch<{ user: any }>(`/users/${id}`),
-    
-    update: (id: string, user: any) => 
+
+    getById: (id: string) => apiFetch<{ user: any }>(`/users/${id}`),
+
+    update: (id: string, user: any) =>
       apiFetch<{ user: any }>(`/users/${id}`, {
         method: "PATCH",
         body: JSON.stringify(user),
       }),
-    
-    delete: (id: string) => 
+
+    delete: (id: string) =>
       apiFetch<{ success: boolean }>(`/users/${id}`, {
         method: "DELETE",
       }),
-    
-    updateProfile: (profile: any) => 
+
+    updateProfile: (profile: any) =>
       apiFetch<{ user: any }>("/users/profile", {
         method: "PATCH",
         body: JSON.stringify(profile),
       }),
-    
-    changePassword: (passwords: { currentPassword: string; newPassword: string }) => 
+
+    changePassword: (passwords: {
+      currentPassword: string;
+      newPassword: string;
+    }) =>
       apiFetch<{ success: boolean }>("/users/change-password", {
         method: "POST",
         body: JSON.stringify(passwords),
@@ -271,15 +289,15 @@ export const apiClient = {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("type", type);
-      
+
       return apiFetch<{ url: string; fileId: string }>("/uploads", {
         method: "POST",
         body: formData,
         headers: {}, // Let the browser set the content type with boundary
       });
     },
-    
-    delete: (fileId: string) => 
+
+    delete: (fileId: string) =>
       apiFetch<{ success: boolean }>(`/uploads/${fileId}`, {
         method: "DELETE",
       }),
@@ -287,16 +305,15 @@ export const apiClient = {
 
   // API Keys endpoints
   apiKeys: {
-    getAll: () => 
-      apiFetch<{ apiKeys: any[] }>("/api-keys"),
-    
-    create: (name: string) => 
+    getAll: () => apiFetch<{ apiKeys: any[] }>("/api-keys"),
+
+    create: (name: string) =>
       apiFetch<{ apiKey: any }>("/api-keys", {
         method: "POST",
         body: JSON.stringify({ name }),
       }),
-    
-    delete: (id: string) => 
+
+    delete: (id: string) =>
       apiFetch<{ success: boolean }>(`/api-keys/${id}`, {
         method: "DELETE",
       }),
@@ -304,10 +321,9 @@ export const apiClient = {
 
   // Stats endpoints
   stats: {
-    getDashboardStats: () => 
-      apiFetch<{ stats: any }>("/stats/dashboard"),
-    
-    getAgentStats: (agentId: string) => 
+    getDashboardStats: () => apiFetch<{ stats: any }>("/stats/dashboard"),
+
+    getAgentStats: (agentId: string) =>
       apiFetch<{ stats: any }>(`/stats/agents/${agentId}`),
   },
 };
@@ -316,7 +332,7 @@ export const apiClient = {
 export const initializeApiErrorHandling = () => {
   window.addEventListener("unhandledrejection", (event) => {
     const error = event.reason;
-    
+
     if (error instanceof ApiError) {
       if (error instanceof AuthenticationError) {
         // Handle authentication errors globally
@@ -325,9 +341,9 @@ export const initializeApiErrorHandling = () => {
         window.location.href = "/login";
         return;
       }
-      
+
       // For other API errors, show a toast if not already handled
       toast.error(error.name, error.message);
     }
   });
-}; 
+};

@@ -13,12 +13,12 @@ export interface CreateHookOptions<TData, TVariables> {
    * The mutation function for creating a record
    */
   mutationFn: (variables: TVariables) => Promise<{ data: TData }>;
-  
+
   /**
    * Additional options for React Query
    */
   options?: MutationOptions<TData, Error, TVariables, unknown>;
-  
+
   /**
    * Query key for invalidation after mutation
    */
@@ -31,12 +31,17 @@ export interface UpdateHookOptions<TData, TVariables> {
    * The mutation function for updating a record
    */
   mutationFn: (id: string, variables: TVariables) => Promise<{ data: TData }>;
-  
+
   /**
    * Additional options for React Query
    */
-  options?: MutationOptions<TData, Error, { id: string; data: TVariables }, unknown>;
-  
+  options?: MutationOptions<
+    TData,
+    Error,
+    { id: string; data: TVariables },
+    unknown
+  >;
+
   /**
    * Query key for invalidation after mutation
    */
@@ -49,12 +54,12 @@ export interface DeleteHookOptions {
    * The mutation function for deleting a record
    */
   mutationFn: (id: string) => Promise<{ data: { success: boolean } }>;
-  
+
   /**
    * Additional options for React Query
    */
   options?: MutationOptions<{ success: boolean }, Error, string, unknown>;
-  
+
   /**
    * Query key for invalidation after mutation
    */
@@ -67,7 +72,7 @@ export interface GetHookOptions<TData, TQueryKey extends unknown[]> {
    * The query function for fetching a record
    */
   queryFn: (id: string) => Promise<{ data: TData }>;
-  
+
   /**
    * Function to generate the query key
    */
@@ -75,12 +80,16 @@ export interface GetHookOptions<TData, TQueryKey extends unknown[]> {
 }
 
 // Type for the get all operation
-export interface GetAllHookOptions<TData, TQueryParams, TQueryKey extends unknown[]> {
+export interface GetAllHookOptions<
+  TData,
+  TQueryParams,
+  TQueryKey extends unknown[],
+> {
   /**
    * The query function for fetching all records
    */
   queryFn: (params?: TQueryParams) => Promise<{ data: TData }>;
-  
+
   /**
    * Function to generate the query key
    */
@@ -95,7 +104,7 @@ export function createQueryHooks<
   TEntities,
   TCreateInput,
   TUpdateInput,
-  TQueryParams = Record<string, unknown>
+  TQueryParams = Record<string, unknown>,
 >(config: {
   entityName: string;
   getAll: GetAllHookOptions<TEntities, TQueryParams, [string, TQueryParams?]>;
@@ -116,7 +125,12 @@ export function createQueryHooks<
   // Hook for getting all entities
   function useGetAll(
     params?: TQueryParams,
-    options?: UseQueryOptions<TEntities, Error, TEntities, [string, TQueryParams?]>
+    options?: UseQueryOptions<
+      TEntities,
+      Error,
+      TEntities,
+      [string, TQueryParams?]
+    >,
   ) {
     return useQuery({
       queryKey: getAll.getQueryKey(params),
@@ -128,12 +142,12 @@ export function createQueryHooks<
   // Hook for getting a single entity by ID
   function useGetById(
     id: string,
-    options?: UseQueryOptions<TEntity, Error, TEntity, [string, string]>
+    options?: UseQueryOptions<TEntity, Error, TEntity, [string, string]>,
   ) {
     return useQuery({
       queryKey: getById.getQueryKey(id),
       queryFn: () => getById.queryFn(id).then((res) => res.data),
-      enabled: !!id && (options?.enabled !== false),
+      enabled: !!id && options?.enabled !== false,
       ...options,
     });
   }
@@ -147,16 +161,16 @@ export function createQueryHooks<
     }
 
     return useMutation({
-      mutationFn: (variables: TCreateInput) => 
+      mutationFn: (variables: TCreateInput) =>
         create.mutationFn(variables).then((res) => res.data),
       toast: {
-        success: { 
-          title: "Created Successfully", 
-          description: `${entityName} has been created successfully` 
+        success: {
+          title: "Created Successfully",
+          description: `${entityName} has been created successfully`,
         },
-        error: { 
-          title: "Creation Failed", 
-          description: `Failed to create ${entityName}` 
+        error: {
+          title: "Creation Failed",
+          description: `Failed to create ${entityName}`,
         },
       },
       options: {
@@ -164,9 +178,11 @@ export function createQueryHooks<
         onSuccess: (data, variables, context) => {
           // Invalidate relevant queries
           if (create.invalidateQueryKey) {
-            queryClient.invalidateQueries({ queryKey: create.invalidateQueryKey });
+            queryClient.invalidateQueries({
+              queryKey: create.invalidateQueryKey,
+            });
           }
-          
+
           if (create.options?.options?.onSuccess) {
             create.options.options.onSuccess(data, variables, context);
           }
@@ -184,16 +200,16 @@ export function createQueryHooks<
     }
 
     return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: TUpdateInput }) => 
+      mutationFn: ({ id, data }: { id: string; data: TUpdateInput }) =>
         update.mutationFn(id, data).then((res) => res.data),
       toast: {
-        success: { 
-          title: "Updated Successfully", 
-          description: `${entityName} has been updated successfully` 
+        success: {
+          title: "Updated Successfully",
+          description: `${entityName} has been updated successfully`,
         },
-        error: { 
-          title: "Update Failed", 
-          description: `Failed to update ${entityName}` 
+        error: {
+          title: "Update Failed",
+          description: `Failed to update ${entityName}`,
         },
       },
       options: {
@@ -201,14 +217,16 @@ export function createQueryHooks<
         onSuccess: (data, variables, context) => {
           // Invalidate relevant queries
           if (update.invalidateQueryKey) {
-            queryClient.invalidateQueries({ queryKey: update.invalidateQueryKey });
+            queryClient.invalidateQueries({
+              queryKey: update.invalidateQueryKey,
+            });
           }
-          
+
           // Also invalidate the specific entity
-          queryClient.invalidateQueries({ 
-            queryKey: getById.getQueryKey(variables.id) 
+          queryClient.invalidateQueries({
+            queryKey: getById.getQueryKey(variables.id),
           });
-          
+
           if (update.options?.options?.onSuccess) {
             update.options.options.onSuccess(data, variables, context);
           }
@@ -226,16 +244,16 @@ export function createQueryHooks<
     }
 
     return useMutation({
-      mutationFn: (id: string) => 
+      mutationFn: (id: string) =>
         deleteConfig.mutationFn(id).then((res) => res.data),
       toast: {
-        success: { 
-          title: "Deleted Successfully", 
-          description: `${entityName} has been deleted successfully` 
+        success: {
+          title: "Deleted Successfully",
+          description: `${entityName} has been deleted successfully`,
         },
-        error: { 
-          title: "Deletion Failed", 
-          description: `Failed to delete ${entityName}` 
+        error: {
+          title: "Deletion Failed",
+          description: `Failed to delete ${entityName}`,
         },
       },
       options: {
@@ -243,9 +261,11 @@ export function createQueryHooks<
         onSuccess: (data, variables, context) => {
           // Invalidate relevant queries
           if (deleteConfig.invalidateQueryKey) {
-            queryClient.invalidateQueries({ queryKey: deleteConfig.invalidateQueryKey });
+            queryClient.invalidateQueries({
+              queryKey: deleteConfig.invalidateQueryKey,
+            });
           }
-          
+
           if (deleteConfig.options?.options?.onSuccess) {
             deleteConfig.options.options.onSuccess(data, variables, context);
           }
@@ -327,4 +347,4 @@ export const usePrompts = createQueryHooks({
     mutationFn: apiClient.prompts.delete,
     invalidateQueryKey: promptKeys.lists(),
   },
-}); 
+});

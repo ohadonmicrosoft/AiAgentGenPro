@@ -29,14 +29,14 @@ export default [
     rules: {
       // Turn off the react-in-jsx-scope rule which is not needed in React 17+
       "react/react-in-jsx-scope": "off",
-      
+
       // Relax some TypeScript strictness for development
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": "warn",
-      
+
       // Escape entities in JSX
       "react/no-unescaped-entities": "warn",
-      
+
       // Allow require imports in certain files - disabling for now
       "@typescript-eslint/no-require-imports": "warn",
     },

@@ -99,19 +99,22 @@ export class ApiClient {
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.headers = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
   }
 
   setAuthToken(token: string) {
-    this.headers['Authorization'] = `Bearer ${token}`;
+    this.headers["Authorization"] = `Bearer ${token}`;
   }
 
   clearAuthToken() {
-    delete this.headers['Authorization'];
+    delete this.headers["Authorization"];
   }
 
-  async get<T>(endpoint: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
+  async get<T>(
+    endpoint: string,
+    params?: Record<string, any>,
+  ): Promise<ApiResponse<T>> {
     const url = new URL(`${this.baseUrl}${endpoint}`);
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -120,7 +123,7 @@ export class ApiClient {
     }
 
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: this.headers,
     });
 
@@ -129,7 +132,7 @@ export class ApiClient {
 
   async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       headers: this.headers,
       body: data ? JSON.stringify(data) : undefined,
     });
@@ -141,21 +144,21 @@ export class ApiClient {
 
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     const responseData = await response.json();
-    
+
     if (!response.ok) {
       // Handle error responses
       throw new ApiError(
         responseData.error.message,
         responseData.error.code,
-        responseData.error.details
+        responseData.error.details,
       );
     }
-    
+
     return responseData;
   }
 }
 
-export const apiClient = new ApiClient(process.env.REACT_APP_API_URL || '/api');
+export const apiClient = new ApiClient(process.env.REACT_APP_API_URL || "/api");
 ```
 
 ### Feature-Specific API Services
@@ -164,12 +167,12 @@ Each feature has its own API service that extends the base client:
 
 ```typescript
 // client/src/lib/api/agentService.ts
-import { apiClient } from './apiClient';
-import type { Agent, AgentCreateInput, AgentUpdateInput } from '../../types';
+import { apiClient } from "./apiClient";
+import type { Agent, AgentCreateInput, AgentUpdateInput } from "../../types";
 
 export const agentService = {
   async getAgents(): Promise<Agent[]> {
-    const response = await apiClient.get<Agent[]>('/agents');
+    const response = await apiClient.get<Agent[]>("/agents");
     return response.data;
   },
 
@@ -179,7 +182,7 @@ export const agentService = {
   },
 
   async createAgent(data: AgentCreateInput): Promise<Agent> {
-    const response = await apiClient.post<Agent>('/agents', data);
+    const response = await apiClient.post<Agent>("/agents", data);
     return response.data;
   },
 
@@ -190,7 +193,7 @@ export const agentService = {
 
   async deleteAgent(id: string): Promise<void> {
     await apiClient.delete(`/agents/${id}`);
-  }
+  },
 };
 ```
 
@@ -200,57 +203,61 @@ The application uses React Query to manage server state:
 
 ```typescript
 // client/src/hooks/useAgents.ts
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { agentService } from '../lib/api/agentService';
-import type { Agent, AgentCreateInput, AgentUpdateInput } from '../types';
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { agentService } from "../lib/api/agentService";
+import type { Agent, AgentCreateInput, AgentUpdateInput } from "../types";
 
 export function useAgents() {
-  return useQuery<Agent[], Error>('agents', agentService.getAgents);
+  return useQuery<Agent[], Error>("agents", agentService.getAgents);
 }
 
 export function useAgent(id: string) {
-  return useQuery<Agent, Error>(['agent', id], () => agentService.getAgent(id), {
-    enabled: !!id,
-  });
+  return useQuery<Agent, Error>(
+    ["agent", id],
+    () => agentService.getAgent(id),
+    {
+      enabled: !!id,
+    },
+  );
 }
 
 export function useCreateAgent() {
   const queryClient = useQueryClient();
-  
+
   return useMutation<Agent, Error, AgentCreateInput>(
     (data) => agentService.createAgent(data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('agents');
+        queryClient.invalidateQueries("agents");
       },
-    }
+    },
   );
 }
 
 export function useUpdateAgent() {
   const queryClient = useQueryClient();
-  
+
   return useMutation<Agent, Error, { id: string; data: AgentUpdateInput }>(
     ({ id, data }) => agentService.updateAgent(id, data),
     {
       onSuccess: (data) => {
-        queryClient.invalidateQueries('agents');
-        queryClient.invalidateQueries(['agent', data.id]);
+        queryClient.invalidateQueries("agents");
+        queryClient.invalidateQueries(["agent", data.id]);
       },
-    }
+    },
   );
 }
 
 export function useDeleteAgent() {
   const queryClient = useQueryClient();
-  
+
   return useMutation<void, Error, string>(
     (id) => agentService.deleteAgent(id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries('agents');
+        queryClient.invalidateQueries("agents");
       },
-    }
+    },
   );
 }
 ```
@@ -261,8 +268,8 @@ export function useDeleteAgent() {
 
 ```typescript
 // server/services/openai.ts
-import { Configuration, OpenAIApi } from 'openai';
-import { config } from '../config';
+import { Configuration, OpenAIApi } from "openai";
+import { config } from "../config";
 
 const configuration = new Configuration({
   apiKey: config.openai.apiKey,
@@ -270,16 +277,20 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-export async function generateAgentPrompt(description: string, context: string) {
+export async function generateAgentPrompt(
+  description: string,
+  context: string,
+) {
   const response = await openai.createChatCompletion({
-    model: 'gpt-4',
+    model: "gpt-4",
     messages: [
       {
-        role: 'system',
-        content: 'You are an AI assistant that helps create effective prompts for AI agents.',
+        role: "system",
+        content:
+          "You are an AI assistant that helps create effective prompts for AI agents.",
       },
       {
-        role: 'user',
+        role: "user",
         content: `Create a prompt for an AI agent with the following description: ${description}. The agent will operate in this context: ${context}`,
       },
     ],
@@ -287,7 +298,7 @@ export async function generateAgentPrompt(description: string, context: string) 
     max_tokens: 500,
   });
 
-  return response.data.choices[0]?.message?.content || '';
+  return response.data.choices[0]?.message?.content || "";
 }
 
 // Other OpenAI functions...
@@ -297,10 +308,15 @@ export async function generateAgentPrompt(description: string, context: string) 
 
 ```typescript
 // client/src/lib/firebase.ts
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -320,11 +336,11 @@ export const firebaseAuth = {
   async login(email: string, password: string) {
     return signInWithEmailAndPassword(auth, email, password);
   },
-  
+
   async register(email: string, password: string) {
     return createUserWithEmailAndPassword(auth, email, password);
   },
-  
+
   async logout() {
     return signOut(auth);
   },
@@ -343,23 +359,26 @@ export class ApiError extends Error {
 
   constructor(message: string, code: string, details?: Record<string, string>) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.code = code;
     this.details = details;
   }
 }
 
 export class NetworkError extends Error {
-  constructor(message = 'Network error occurred') {
+  constructor(message = "Network error occurred") {
     super(message);
-    this.name = 'NetworkError';
+    this.name = "NetworkError";
   }
 }
 
 export class AuthenticationError extends ApiError {
-  constructor(message = 'Authentication required', details?: Record<string, string>) {
-    super(message, 'AUTHENTICATION_REQUIRED', details);
-    this.name = 'AuthenticationError';
+  constructor(
+    message = "Authentication required",
+    details?: Record<string, string>,
+  ) {
+    super(message, "AUTHENTICATION_REQUIRED", details);
+    this.name = "AuthenticationError";
   }
 }
 ```
@@ -368,20 +387,20 @@ export class AuthenticationError extends ApiError {
 
 ```typescript
 // client/src/lib/api/errorHandler.ts
-import { ApiError, AuthenticationError } from './errors';
-import { toast } from '../toast';
-import { authService } from './authService';
+import { ApiError, AuthenticationError } from "./errors";
+import { toast } from "../toast";
+import { authService } from "./authService";
 
 export function setupGlobalErrorHandler() {
-  window.addEventListener('unhandledrejection', (event) => {
+  window.addEventListener("unhandledrejection", (event) => {
     const error = event.reason;
-    
+
     if (error instanceof ApiError) {
       handleApiError(error);
     } else {
       // Handle other errors
-      toast.error('An unexpected error occurred');
-      console.error('Unhandled error:', error);
+      toast.error("An unexpected error occurred");
+      console.error("Unhandled error:", error);
     }
   });
 }
@@ -390,13 +409,13 @@ function handleApiError(error: ApiError) {
   if (error instanceof AuthenticationError) {
     // Handle authentication errors
     authService.logout();
-    toast.error('Your session has expired. Please log in again.');
-  } else if (error.code === 'VALIDATION_ERROR') {
+    toast.error("Your session has expired. Please log in again.");
+  } else if (error.code === "VALIDATION_ERROR") {
     // Handle validation errors
-    toast.error('Please check your input and try again');
+    toast.error("Please check your input and try again");
   } else {
     // Handle other API errors
-    toast.error(error.message || 'An error occurred');
+    toast.error(error.message || "An error occurred");
   }
 }
 ```
@@ -407,19 +426,19 @@ function handleApiError(error: ApiError) {
 
 ```typescript
 // client/src/mocks/handlers.ts
-import { rest } from 'msw';
+import { rest } from "msw";
 
 export const handlers = [
-  rest.get('/api/agents', (req, res, ctx) => {
+  rest.get("/api/agents", (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
         success: true,
         data: [
           {
-            id: '1',
-            name: 'Customer Support Agent',
-            description: 'Handles customer inquiries',
+            id: "1",
+            name: "Customer Support Agent",
+            description: "Handles customer inquiries",
             // Other fields...
           },
           // More agents...
@@ -427,12 +446,12 @@ export const handlers = [
         error: null,
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: 'test-req-1',
+          requestId: "test-req-1",
         },
-      })
+      }),
     );
   }),
-  
+
   // More handlers...
 ];
 ```
@@ -441,26 +460,26 @@ export const handlers = [
 
 ```typescript
 // client/src/lib/api/__tests__/agentService.test.ts
-import { agentService } from '../agentService';
-import { apiClient } from '../apiClient';
-import { mockAgent } from '../../mocks/data';
+import { agentService } from "../agentService";
+import { apiClient } from "../apiClient";
+import { mockAgent } from "../../mocks/data";
 
 // Mock the apiClient
-jest.mock('../apiClient');
+jest.mock("../apiClient");
 
-describe('agentService', () => {
+describe("agentService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getAgents', () => {
-    it('should fetch agents successfully', async () => {
+  describe("getAgents", () => {
+    it("should fetch agents successfully", async () => {
       const mockResponse = { data: [mockAgent] };
       (apiClient.get as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await agentService.getAgents();
 
-      expect(apiClient.get).toHaveBeenCalledWith('/agents');
+      expect(apiClient.get).toHaveBeenCalledWith("/agents");
       expect(result).toEqual([mockAgent]);
     });
   });
@@ -485,7 +504,7 @@ paths:
     get:
       summary: List all agents
       responses:
-        '200':
+        "200":
           description: List of agents
           content:
             application/json:
@@ -497,7 +516,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Agent'
+                      $ref: "#/components/schemas/Agent"
                   error:
                     type: null
     # More paths...
@@ -527,35 +546,39 @@ The API uses JWT for authentication:
 
 ```typescript
 // server/middleware/auth.ts
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { config } from '../config';
-import { UserService } from '../services/userService';
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { config } from "../config";
+import { UserService } from "../services/userService";
 
-export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export async function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const authHeader = req.headers.authorization;
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({
       success: false,
       data: null,
       error: {
-        code: 'AUTHENTICATION_REQUIRED',
-        message: 'Authentication required',
+        code: "AUTHENTICATION_REQUIRED",
+        message: "Authentication required",
       },
     });
   }
-  
-  const token = authHeader.split(' ')[1];
-  
+
+  const token = authHeader.split(" ")[1];
+
   try {
     const decoded = jwt.verify(token, config.jwt.secret) as { userId: string };
     const user = await UserService.getUserById(decoded.userId);
-    
+
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
-    
+
     req.user = user;
     next();
   } catch (error) {
@@ -563,8 +586,8 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
       success: false,
       data: null,
       error: {
-        code: 'INVALID_TOKEN',
-        message: 'Invalid or expired token',
+        code: "INVALID_TOKEN",
+        message: "Invalid or expired token",
       },
     });
   }
@@ -575,7 +598,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
 ```typescript
 // server/middleware/rateLimit.ts
-import rateLimit from 'express-rate-limit';
+import rateLimit from "express-rate-limit";
 
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -586,8 +609,8 @@ export const apiLimiter = rateLimit({
     success: false,
     data: null,
     error: {
-      code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Too many requests, please try again later',
+      code: "RATE_LIMIT_EXCEEDED",
+      message: "Too many requests, please try again later",
     },
   },
 });
@@ -601,8 +624,8 @@ export const authLimiter = rateLimit({
     success: false,
     data: null,
     error: {
-      code: 'RATE_LIMIT_EXCEEDED',
-      message: 'Too many authentication attempts, please try again later',
+      code: "RATE_LIMIT_EXCEEDED",
+      message: "Too many authentication attempts, please try again later",
     },
   },
 });
@@ -611,18 +634,22 @@ export const authLimiter = rateLimit({
 ## Recommended API Improvements
 
 1. **Implement GraphQL**
+
    - Add GraphQL layer for more flexible data fetching
    - Reduce over-fetching and under-fetching
 
 2. **Add API Versioning**
+
    - Implement versioned API endpoints (e.g., `/api/v1/agents`)
    - Create a strategy for API evolution and backward compatibility
 
 3. **Enhance Error Handling**
+
    - Implement more granular error codes
    - Add request ID tracking for better debugging
 
 4. **Improve Performance**
+
    - Add response compression
    - Implement proper caching headers
    - Consider edge caching for frequently accessed data
@@ -630,4 +657,4 @@ export const authLimiter = rateLimit({
 5. **Enhance Security**
    - Add CSRF protection
    - Implement API key management for external integrations
-   - Add request signing for sensitive operations 
+   - Add request signing for sensitive operations

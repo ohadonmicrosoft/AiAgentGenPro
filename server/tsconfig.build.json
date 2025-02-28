@@ -8,5 +8,10 @@
     "removeComments": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/__tests__/**", "**/__mocks__/**"]
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**"
+  ]
 }

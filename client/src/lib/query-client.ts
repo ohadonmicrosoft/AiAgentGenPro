@@ -39,12 +39,12 @@ const defaultQueryOptions: DefaultOptions = {
       if (error?.status === 401 || error?.status === 403) {
         return false;
       }
-      
+
       // Retry network errors more times
       if (isNetworkError(error)) {
         return failureCount < 5;
       }
-      
+
       // Default retry behavior
       return failureCount < 3;
     },
@@ -57,12 +57,12 @@ const defaultQueryOptions: DefaultOptions = {
       if (error?.status === 401 || error?.status === 403) {
         return false;
       }
-      
+
       // Retry network errors a few times
       if (isNetworkError(error)) {
         return failureCount < 3;
       }
-      
+
       // Default: don't retry mutations
       return false;
     },
@@ -94,4 +94,4 @@ queryClient.getQueryCache().config.defaultOptions = {
       },
     }),
   },
-}; 
+};

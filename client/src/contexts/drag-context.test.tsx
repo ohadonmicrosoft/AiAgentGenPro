@@ -1,54 +1,53 @@
-import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../test/utils';
-import { DragProvider, useDragContext, DragError } from './drag-context';
-import type { Position } from '../types/drag-types';
+import React from "react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "../test/utils";
+import { DragProvider, useDragContext, DragError } from "./drag-context";
+import type { Position } from "../types/drag-types";
 
 // Mock component that uses the drag context
 const TestComponent: React.FC = () => {
-  const { 
-    dragState, 
-    startDrag, 
-    updateDrag, 
-    endDrag, 
+  const {
+    dragState,
+    startDrag,
+    updateDrag,
+    endDrag,
     cancelDrag,
     setTargetContainer,
     registerDropContainer,
     unregisterDropContainer,
-    prefersReducedMotion
+    prefersReducedMotion,
   } = useDragContext();
 
   return (
     <div>
-      <div data-testid="drag-state">
-        {JSON.stringify(dragState)}
-      </div>
-      <button 
+      <div data-testid="drag-state">{JSON.stringify(dragState)}</div>
+      <button
         data-testid="start-drag-btn"
-        onClick={(e) => startDrag({ type: 'test-item', id: 'item-1' }, 'item-1', 'container-1', e)}
+        onClick={(e) =>
+          startDrag(
+            { type: "test-item", id: "item-1" },
+            "item-1",
+            "container-1",
+            e,
+          )
+        }
       >
         Start Drag
       </button>
-      <button 
-        data-testid="cancel-drag-btn"
-        onClick={() => cancelDrag()}
-      >
+      <button data-testid="cancel-drag-btn" onClick={() => cancelDrag()}>
         Cancel Drag
       </button>
-      <button 
-        data-testid="end-drag-btn"
-        onClick={() => endDrag()}
-      >
+      <button data-testid="end-drag-btn" onClick={() => endDrag()}>
         End Drag
       </button>
-      <button 
+      <button
         data-testid="set-target-btn"
-        onClick={() => setTargetContainer('container-2')}
+        onClick={() => setTargetContainer("container-2")}
       >
         Set Target
       </button>
       <div data-testid="reduced-motion">
-        {prefersReducedMotion ? 'reduced' : 'normal'}
+        {prefersReducedMotion ? "reduced" : "normal"}
       </div>
     </div>
   );
@@ -64,13 +63,13 @@ const ErrorComponent: React.FC = () => {
   }
 };
 
-describe('DragContext', () => {
+describe("DragContext", () => {
   // Mock createDragProxy
   const mockCreateDragProxy = vi.fn();
-  
+
   // Mock getElementById
   const mockGetElementById = vi.fn();
-  
+
   // Mock the document methods
   beforeEach(() => {
     // Mock createElement
@@ -80,13 +79,13 @@ describe('DragContext', () => {
       // Mock element's methods if needed
       return el;
     });
-    
+
     // Mock appendChild
     const originalAppendChild = document.body.appendChild;
     document.body.appendChild = vi.fn((child) => {
       return originalAppendChild.call(document.body, child);
     });
-    
+
     // Mock removeChild
     const originalRemoveChild = document.body.removeChild;
     document.body.removeChild = vi.fn((child) => {
@@ -103,33 +102,35 @@ describe('DragContext', () => {
       bottom: 100,
       x: 0,
       y: 0,
-      toJSON: () => {}
+      toJSON: () => {},
     }));
-    
+
     // Mock className manipulation
     document.body.classList.add = vi.fn();
     document.body.classList.remove = vi.fn();
   });
-  
+
   afterEach(() => {
     vi.resetAllMocks();
   });
-  
-  it('should throw an error when used outside a provider', () => {
+
+  it("should throw an error when used outside a provider", () => {
     render(<ErrorComponent />);
-    expect(screen.getByTestId('error')).toHaveTextContent('useDragContext must be used within a DragProvider');
+    expect(screen.getByTestId("error")).toHaveTextContent(
+      "useDragContext must be used within a DragProvider",
+    );
   });
-  
-  it('should provide the initial drag state', () => {
+
+  it("should provide the initial drag state", () => {
     render(
       <DragProvider>
         <TestComponent />
-      </DragProvider>
+      </DragProvider>,
     );
-    
-    const dragStateEl = screen.getByTestId('drag-state');
-    const dragState = JSON.parse(dragStateEl.textContent || '{}');
-    
+
+    const dragStateEl = screen.getByTestId("drag-state");
+    const dragState = JSON.parse(dragStateEl.textContent || "{}");
+
     expect(dragState.isDragging).toBe(false);
     expect(dragState.startPosition).toBeNull();
     expect(dragState.currentPosition).toBeNull();
@@ -138,18 +139,18 @@ describe('DragContext', () => {
     expect(dragState.sourceContainerId).toBeNull();
     expect(dragState.targetContainerId).toBeNull();
   });
-  
-  it('should start dragging when startDrag is called', async () => {
+
+  it("should start dragging when startDrag is called", async () => {
     render(
       <DragProvider>
         <TestComponent />
-      </DragProvider>
+      </DragProvider>,
     );
-    
-    const startDragBtn = screen.getByTestId('start-drag-btn');
-    
+
+    const startDragBtn = screen.getByTestId("start-drag-btn");
+
     // Mock the MouseEvent
-    Object.defineProperty(startDragBtn, 'getBoundingClientRect', {
+    Object.defineProperty(startDragBtn, "getBoundingClientRect", {
       value: () => ({
         left: 0,
         top: 0,
@@ -162,89 +163,89 @@ describe('DragContext', () => {
       }),
       configurable: true,
     });
-    
+
     fireEvent.click(startDragBtn, {
       clientX: 50,
       clientY: 25,
     });
-    
+
     // Wait for state update
     await waitFor(() => {
-      const dragStateEl = screen.getByTestId('drag-state');
-      const dragState = JSON.parse(dragStateEl.textContent || '{}');
+      const dragStateEl = screen.getByTestId("drag-state");
+      const dragState = JSON.parse(dragStateEl.textContent || "{}");
       expect(dragState.isDragging).toBe(true);
     });
-    
+
     // Check if body class was added
-    expect(document.body.classList.add).toHaveBeenCalledWith('dragging');
+    expect(document.body.classList.add).toHaveBeenCalledWith("dragging");
   });
-  
-  it('should cancel dragging when cancelDrag is called', async () => {
+
+  it("should cancel dragging when cancelDrag is called", async () => {
     render(
       <DragProvider>
         <TestComponent />
-      </DragProvider>
+      </DragProvider>,
     );
-    
+
     // Start dragging
-    const startDragBtn = screen.getByTestId('start-drag-btn');
+    const startDragBtn = screen.getByTestId("start-drag-btn");
     fireEvent.click(startDragBtn, {
       clientX: 50,
       clientY: 25,
     });
-    
+
     // Wait for drag to start
     await waitFor(() => {
-      const dragStateEl = screen.getByTestId('drag-state');
-      const dragState = JSON.parse(dragStateEl.textContent || '{}');
+      const dragStateEl = screen.getByTestId("drag-state");
+      const dragState = JSON.parse(dragStateEl.textContent || "{}");
       expect(dragState.isDragging).toBe(true);
     });
-    
+
     // Cancel drag
-    const cancelDragBtn = screen.getByTestId('cancel-drag-btn');
+    const cancelDragBtn = screen.getByTestId("cancel-drag-btn");
     fireEvent.click(cancelDragBtn);
-    
+
     // Wait for state update
     await waitFor(() => {
-      const dragStateEl = screen.getByTestId('drag-state');
-      const dragState = JSON.parse(dragStateEl.textContent || '{}');
+      const dragStateEl = screen.getByTestId("drag-state");
+      const dragState = JSON.parse(dragStateEl.textContent || "{}");
       expect(dragState.isDragging).toBe(false);
     });
-    
+
     // Check if body class was removed
-    expect(document.body.classList.remove).toHaveBeenCalledWith('dragging');
+    expect(document.body.classList.remove).toHaveBeenCalledWith("dragging");
   });
-  
-  it('should set target container when setTargetContainer is called', async () => {
+
+  it("should set target container when setTargetContainer is called", async () => {
     render(
       <DragProvider>
         <TestComponent />
-      </DragProvider>
+      </DragProvider>,
     );
-    
+
     // Start dragging
-    const startDragBtn = screen.getByTestId('start-drag-btn');
+    const startDragBtn = screen.getByTestId("start-drag-btn");
     fireEvent.click(startDragBtn, {
       clientX: 50,
       clientY: 25,
     });
-    
+
     // Wait for drag to start
     await waitFor(() => {
-      const dragStateEl = screen.getByTestId('drag-state');
-      const dragState = JSON.parse(dragStateEl.textContent || '{}');
+      const dragStateEl = screen.getByTestId("drag-state");
+      const dragState = JSON.parse(dragStateEl.textContent || "{}");
       expect(dragState.isDragging).toBe(true);
     });
-    
+
     // Set target container
-    const setTargetBtn = screen.getByTestId('set-target-btn');
+    const setTargetBtn = screen.getByTestId("set-target-btn");
     fireEvent.click(setTargetBtn);
-    
+
     // Wait for state update
     await waitFor(() => {
-      const dragStateEl = screen.getByTestId('drag-state');
-      const dragState = JSON.parse(dragStateEl.textContent || '{}');
-      expect(dragState.targetContainerId).toBe('container-2');
+      const dragStateEl = screen.getByTestId("drag-state");
+      const dragState = JSON.parse(dragStateEl.textContent || "{}");
+      expect(dragState.targetContainerId).toBe("container-2");
     });
   });
-}); 
+});

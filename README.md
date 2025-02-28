@@ -72,6 +72,7 @@ This approach allows tools to find configuration files in their expected locatio
 > **Note about Git and symlinks:** The project is configured to track these symbolic links in Git, not the files they point to. Make sure you're using a Git client that supports symlinks. On Windows, you may need to enable symlink support by setting `git config --global core.symlinks true` and running Git with administrator privileges or enabling Developer Mode.
 
 Files that remain in the root directory include:
+
 - `package.json` and `package-lock.json` - For npm dependency management
 - `.env` and `.env.example` - Environment variables
 - `.gitignore` - Git ignore patterns

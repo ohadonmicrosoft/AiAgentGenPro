@@ -69,14 +69,16 @@ const mockAgents = [
   {
     id: "1",
     name: "Customer Support Bot",
-    description: "Handles customer inquiries automatically with a formal response style.",
+    description:
+      "Handles customer inquiries automatically with a formal response style.",
     status: "active",
     lastUpdated: "Updated 2 days ago",
   },
   {
     id: "2",
     name: "Product Recommendation",
-    description: "Suggests products based on customer preferences and past purchases.",
+    description:
+      "Suggests products based on customer preferences and past purchases.",
     status: "active",
     lastUpdated: "Updated 5 days ago",
   },
@@ -102,29 +104,29 @@ const performanceData = [
 
 // Quick action items
 const quickActions = [
-  { 
-    label: "Create New Agent", 
-    icon: <Plus className="h-5 w-5" />, 
+  {
+    label: "Create New Agent",
+    icon: <Plus className="h-5 w-5" />,
     href: "/create-agent",
-    description: "Start building a new AI agent"
+    description: "Start building a new AI agent",
   },
-  { 
-    label: "View All Agents", 
-    icon: <Bot className="h-5 w-5" />, 
+  {
+    label: "View All Agents",
+    icon: <Bot className="h-5 w-5" />,
     href: "/agents",
-    description: "Manage your existing agents"
+    description: "Manage your existing agents",
   },
-  { 
-    label: "Prompt Library", 
-    icon: <BookText className="h-5 w-5" />, 
+  {
+    label: "Prompt Library",
+    icon: <BookText className="h-5 w-5" />,
     href: "/prompts",
-    description: "Access and manage your prompts"
+    description: "Access and manage your prompts",
   },
-  { 
-    label: "Settings", 
-    icon: <Settings className="h-5 w-5" />, 
+  {
+    label: "Settings",
+    icon: <Settings className="h-5 w-5" />,
     href: "/settings",
-    description: "Configure your account preferences"
+    description: "Configure your account preferences",
   },
 ];
 
@@ -164,7 +166,7 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  // Fetch agents from API 
+  // Fetch agents from API
   const { data: agents } = useQuery<Agent[]>({
     queryKey: ["/api/agents"],
     queryFn: () => Promise.resolve(mockAgents),
@@ -173,19 +175,19 @@ export default function Dashboard() {
 
   // Generate performance chart path
   const generateChartPath = () => {
-    const maxValue = Math.max(...performanceData.map(item => item.value));
+    const maxValue = Math.max(...performanceData.map((item) => item.value));
     const height = 50;
     const width = 150;
     const xStep = width / (performanceData.length - 1);
-    
+
     let path = `M 0 ${height - (performanceData[0].value / maxValue) * height}`;
-    
+
     for (let i = 1; i < performanceData.length; i++) {
       const x = i * xStep;
       const y = height - (performanceData[i].value / maxValue) * height;
       path += ` L ${x} ${y}`;
     }
-    
+
     return path;
   };
 
@@ -199,9 +201,7 @@ export default function Dashboard() {
               <Card className="h-full transition-all duration-300 hover:shadow-md hover:border-primary/20">
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      {icon}
-                    </div>
+                    <div className="p-2 bg-primary/10 rounded-lg">{icon}</div>
                     <div>
                       <h3 className="font-medium text-base group-hover:text-primary transition-colors">
                         {label}
@@ -229,17 +229,19 @@ export default function Dashboard() {
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium text-muted-foreground mb-1">{title}</p>
+            <p className="text-sm font-medium text-muted-foreground mb-1">
+              {title}
+            </p>
             <h3 className="text-2xl font-bold tracking-tight">{value}</h3>
             {trend && (
-              <div className={`flex items-center mt-1 text-sm ${trend.direction === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-                {trend.direction === 'up' ? '↑' : '↓'} {trend.percentage}%
+              <div
+                className={`flex items-center mt-1 text-sm ${trend.direction === "up" ? "text-green-500" : "text-red-500"}`}
+              >
+                {trend.direction === "up" ? "↑" : "↓"} {trend.percentage}%
               </div>
             )}
           </div>
-          <div className="p-2 bg-primary/10 rounded-lg">
-            {icon}
-          </div>
+          <div className="p-2 bg-primary/10 rounded-lg">{icon}</div>
         </div>
       </CardContent>
     </Card>
@@ -251,11 +253,14 @@ export default function Dashboard() {
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start mb-1">
           <CardTitle className="text-base font-bold">{agent.name}</CardTitle>
-          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-            agent.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' : 
-            'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400'
-          }`}>
-            {agent.status === 'active' ? 'Active' : 'Draft'}
+          <div
+            className={`px-2 py-1 rounded-full text-xs font-medium ${
+              agent.status === "active"
+                ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
+                : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400"
+            }`}
+          >
+            {agent.status === "active" ? "Active" : "Draft"}
           </div>
         </div>
         <CardDescription className="text-xs mt-0">
@@ -263,9 +268,7 @@ export default function Dashboard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-3">
-        <p className="text-sm text-muted-foreground">
-          {agent.description}
-        </p>
+        <p className="text-sm text-muted-foreground">{agent.description}</p>
       </CardContent>
       <CardFooter className="pt-0 flex justify-between">
         <Link href={`/agents/${agent.id}`}>
@@ -292,7 +295,8 @@ export default function Dashboard() {
         >
           <h1 className="text-3xl font-bold tracking-tight mb-2">Dashboard</h1>
           <p className="text-muted-foreground mb-6">
-            Welcome to the AI Agent Generator. Create, test, and manage your AI agents.
+            Welcome to the AI Agent Generator. Create, test, and manage your AI
+            agents.
           </p>
         </motion.div>
 
@@ -303,35 +307,35 @@ export default function Dashboard() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           <motion.div variants={itemVariants}>
-            <StatsCard 
-              title="Active Agents" 
-              value={stats?.activeAgents || 0} 
-              icon={<Bot className="h-5 w-5 text-primary" />} 
-              trend={{ direction: 'up', percentage: 12 }}
+            <StatsCard
+              title="Active Agents"
+              value={stats?.activeAgents || 0}
+              icon={<Bot className="h-5 w-5 text-primary" />}
+              trend={{ direction: "up", percentage: 12 }}
             />
           </motion.div>
           <motion.div variants={itemVariants}>
-            <StatsCard 
-              title="Saved Prompts" 
-              value={stats?.savedPrompts || 0} 
-              icon={<BookText className="h-5 w-5 text-primary" />} 
-              trend={{ direction: 'up', percentage: 8 }}
+            <StatsCard
+              title="Saved Prompts"
+              value={stats?.savedPrompts || 0}
+              icon={<BookText className="h-5 w-5 text-primary" />}
+              trend={{ direction: "up", percentage: 8 }}
             />
           </motion.div>
           <motion.div variants={itemVariants}>
-            <StatsCard 
-              title="Total Interactions" 
-              value={stats?.totalInteractions || 0} 
-              icon={<MessageSquare className="h-5 w-5 text-primary" />} 
-              trend={{ direction: 'up', percentage: 24 }}
+            <StatsCard
+              title="Total Interactions"
+              value={stats?.totalInteractions || 0}
+              icon={<MessageSquare className="h-5 w-5 text-primary" />}
+              trend={{ direction: "up", percentage: 24 }}
             />
           </motion.div>
           <motion.div variants={itemVariants}>
-            <StatsCard 
-              title="Deployments" 
-              value={stats?.deployments || 0} 
-              icon={<Zap className="h-5 w-5 text-primary" />} 
-              trend={{ direction: 'up', percentage: 5 }}
+            <StatsCard
+              title="Deployments"
+              value={stats?.deployments || 0}
+              icon={<Zap className="h-5 w-5 text-primary" />}
+              trend={{ direction: "up", percentage: 5 }}
             />
           </motion.div>
         </motion.div>
@@ -352,10 +356,10 @@ export default function Dashboard() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 gap-3">
                   {quickActions.map((action, index) => (
-                    <QuickActionCard 
-                      key={index} 
-                      label={action.label} 
-                      icon={action.icon} 
+                    <QuickActionCard
+                      key={index}
+                      label={action.label}
+                      icon={action.icon}
                       href={action.href}
                       description={action.description}
                     />
@@ -376,11 +380,17 @@ export default function Dashboard() {
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <div>
                   <CardTitle>Recent Agents</CardTitle>
-                  <CardDescription>Your recently created agents</CardDescription>
+                  <CardDescription>
+                    Your recently created agents
+                  </CardDescription>
                 </div>
                 <Link href="/agents">
-                  <Button variant="ghost" className="font-medium text-sm gap-1" size="sm">
-                    View All 
+                  <Button
+                    variant="ghost"
+                    className="font-medium text-sm gap-1"
+                    size="sm"
+                  >
+                    View All
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -396,7 +406,8 @@ export default function Dashboard() {
                   <div className="flex flex-col items-center py-8 text-center">
                     <Bot className="h-12 w-12 text-muted-foreground/50 mb-4" />
                     <p className="text-muted-foreground mb-4">
-                      You haven't created any agents yet. Get started by creating your first agent.
+                      You haven't created any agents yet. Get started by
+                      creating your first agent.
                     </p>
                     <Link href="/create-agent">
                       <Button>
@@ -420,7 +431,9 @@ export default function Dashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Performance Metrics</CardTitle>
-              <CardDescription>Agent usage and interactions over time</CardDescription>
+              <CardDescription>
+                Agent usage and interactions over time
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -433,14 +446,16 @@ export default function Dashboard() {
                     <span className="text-sm font-bold">625ms</span>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <motion.div 
+                    <motion.div
                       className="h-full bg-primary"
                       initial={{ width: 0 }}
                       animate={animateChart ? { width: "72%" } : { width: 0 }}
                       transition={{ duration: 1, ease: "easeOut" }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">Average response time across all agents</p>
+                  <p className="text-xs text-muted-foreground">
+                    Average response time across all agents
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -452,14 +467,16 @@ export default function Dashboard() {
                     <span className="text-sm font-bold">99.8%</span>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <motion.div 
+                    <motion.div
                       className="h-full bg-green-500"
                       initial={{ width: 0 }}
                       animate={animateChart ? { width: "98%" } : { width: 0 }}
                       transition={{ duration: 1, ease: "easeOut" }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">System availability last 30 days</p>
+                  <p className="text-xs text-muted-foreground">
+                    System availability last 30 days
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -471,14 +488,16 @@ export default function Dashboard() {
                     <span className="text-sm font-bold">87%</span>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <motion.div 
+                    <motion.div
                       className="h-full bg-amber-500"
                       initial={{ width: 0 }}
                       animate={animateChart ? { width: "87%" } : { width: 0 }}
                       transition={{ duration: 1, ease: "easeOut" }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">Successfully completed tasks</p>
+                  <p className="text-xs text-muted-foreground">
+                    Successfully completed tasks
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -489,7 +508,12 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className="h-[60px] relative">
-                    <svg width="100%" height="100%" viewBox="0 0 150 50" preserveAspectRatio="none">
+                    <svg
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 150 50"
+                      preserveAspectRatio="none"
+                    >
                       <motion.path
                         d={generateChartPath()}
                         fill="none"
@@ -497,12 +521,18 @@ export default function Dashboard() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         initial={{ pathLength: 0, opacity: 0 }}
-                        animate={animateChart ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+                        animate={
+                          animateChart
+                            ? { pathLength: 1, opacity: 1 }
+                            : { pathLength: 0, opacity: 0 }
+                        }
                         transition={{ duration: 1.5, ease: "easeInOut" }}
                       />
                     </svg>
                   </div>
-                  <p className="text-xs text-muted-foreground">Total interactions last 7 days</p>
+                  <p className="text-xs text-muted-foreground">
+                    Total interactions last 7 days
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -518,7 +548,9 @@ export default function Dashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Learning Resources</CardTitle>
-              <CardDescription>Improve your skills with these resources</CardDescription>
+              <CardDescription>
+                Improve your skills with these resources
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -529,13 +561,18 @@ export default function Dashboard() {
                         <Code className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium mb-1">Prompt Engineering Guide</h3>
-                        <p className="text-xs text-muted-foreground">Learn advanced techniques for crafting effective prompts</p>
+                        <h3 className="text-sm font-medium mb-1">
+                          Prompt Engineering Guide
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          Learn advanced techniques for crafting effective
+                          prompts
+                        </p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card className="bg-muted/40 hover:bg-muted/60 transition-colors">
                   <CardContent className="p-4">
                     <div className="flex items-start space-x-3">
@@ -543,13 +580,17 @@ export default function Dashboard() {
                         <History className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium mb-1">AI Agent Templates</h3>
-                        <p className="text-xs text-muted-foreground">Ready-to-use templates for common use cases</p>
+                        <h3 className="text-sm font-medium mb-1">
+                          AI Agent Templates
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          Ready-to-use templates for common use cases
+                        </p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card className="bg-muted/40 hover:bg-muted/60 transition-colors">
                   <CardContent className="p-4">
                     <div className="flex items-start space-x-3">
@@ -557,8 +598,12 @@ export default function Dashboard() {
                         <Sparkles className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium mb-1">Best Practices</h3>
-                        <p className="text-xs text-muted-foreground">Tips and strategies for building effective AI agents</p>
+                        <h3 className="text-sm font-medium mb-1">
+                          Best Practices
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          Tips and strategies for building effective AI agents
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -578,4 +623,4 @@ export default function Dashboard() {
       </div>
     </MainLayout>
   );
-} 
+}

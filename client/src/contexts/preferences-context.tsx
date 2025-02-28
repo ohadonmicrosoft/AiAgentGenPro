@@ -51,4 +51,4 @@ export function PreferencesProvider({ children }: PreferencesProviderProps) {
       {children}
     </PreferencesContext.Provider>
   );
-} 
+}

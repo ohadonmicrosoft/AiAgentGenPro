@@ -94,65 +94,65 @@ ai-agent-generator/
 
 ### Client Files
 
-| Current Location | New Location | Notes |
-|------------------|--------------|-------|
-| client/src/App.tsx | client/src/App.tsx | No change |
-| client/src/main.tsx | client/src/main.tsx | No change |
-| client/src/index.css | client/src/index.css | No change |
-| client/src/constants.ts | client/src/constants.ts | No change |
-| client/src/service-worker.ts | client/src/service-worker.ts | No change |
-| client/src/service-worker-registration.ts | client/src/lib/service-worker-registration.ts | Move to lib |
-| client/src/components/*.tsx | client/src/components/ | No change |
-| client/src/components/ui/*.tsx | client/src/components/ui/ | No change |
-| client/src/components/auth/*.tsx | client/src/components/auth/ | No change |
-| client/src/components/wizard/*.tsx | client/src/components/wizard/ | No change |
-| client/src/components/mobile/*.tsx | client/src/components/mobile/ | No change |
-| client/src/contexts/*.tsx | client/src/contexts/ | Consolidate all contexts here |
-| client/src/context/*.tsx | client/src/contexts/ | Move files to contexts/ |
-| client/src/hooks/*.ts | client/src/hooks/ | No change |
-| client/src/hooks/*.tsx | client/src/hooks/ | No change |
-| client/src/hooks/animations/*.ts | client/src/hooks/animations/ | No change |
-| client/src/lib/*.ts | client/src/lib/ | No change |
-| client/src/lib/*.tsx | client/src/lib/ | No change |
-| client/src/layouts/*.tsx | client/src/layouts/ | No change |
-| client/src/pages/*.tsx | client/src/pages/ | No change |
-| client/src/providers/*.tsx | client/src/providers/ | No change |
-| client/src/types/*.ts | client/src/types/ | No change |
-| client/src/types.ts | client/src/types/index.ts | Move to types directory |
+| Current Location                          | New Location                                  | Notes                         |
+| ----------------------------------------- | --------------------------------------------- | ----------------------------- |
+| client/src/App.tsx                        | client/src/App.tsx                            | No change                     |
+| client/src/main.tsx                       | client/src/main.tsx                           | No change                     |
+| client/src/index.css                      | client/src/index.css                          | No change                     |
+| client/src/constants.ts                   | client/src/constants.ts                       | No change                     |
+| client/src/service-worker.ts              | client/src/service-worker.ts                  | No change                     |
+| client/src/service-worker-registration.ts | client/src/lib/service-worker-registration.ts | Move to lib                   |
+| client/src/components/\*.tsx              | client/src/components/                        | No change                     |
+| client/src/components/ui/\*.tsx           | client/src/components/ui/                     | No change                     |
+| client/src/components/auth/\*.tsx         | client/src/components/auth/                   | No change                     |
+| client/src/components/wizard/\*.tsx       | client/src/components/wizard/                 | No change                     |
+| client/src/components/mobile/\*.tsx       | client/src/components/mobile/                 | No change                     |
+| client/src/contexts/\*.tsx                | client/src/contexts/                          | Consolidate all contexts here |
+| client/src/context/\*.tsx                 | client/src/contexts/                          | Move files to contexts/       |
+| client/src/hooks/\*.ts                    | client/src/hooks/                             | No change                     |
+| client/src/hooks/\*.tsx                   | client/src/hooks/                             | No change                     |
+| client/src/hooks/animations/\*.ts         | client/src/hooks/animations/                  | No change                     |
+| client/src/lib/\*.ts                      | client/src/lib/                               | No change                     |
+| client/src/lib/\*.tsx                     | client/src/lib/                               | No change                     |
+| client/src/layouts/\*.tsx                 | client/src/layouts/                           | No change                     |
+| client/src/pages/\*.tsx                   | client/src/pages/                             | No change                     |
+| client/src/providers/\*.tsx               | client/src/providers/                         | No change                     |
+| client/src/types/\*.ts                    | client/src/types/                             | No change                     |
+| client/src/types.ts                       | client/src/types/index.ts                     | Move to types directory       |
 
 ### Server Files
 
-| Current Location | New Location | Notes |
-|------------------|--------------|-------|
-| server/index.ts | server/index.ts | No change |
-| server/vite.ts | server/config/vite.ts | Move to config directory |
-| server/db.ts | server/models/db.ts | Move to models directory |
-| server/auth.ts | server/services/auth.ts | Move to services directory |
-| server/openai.ts | server/services/openai.ts | Move to services directory |
-| server/storage.ts | server/services/storage.ts | Move to services directory |
-| server/slack.ts | server/services/slack.ts | Move to services directory |
-| server/middleware.ts | server/middlewares/index.ts | Move to middlewares directory |
-| server/routes.ts | server/routes/index.ts | Move to routes directory |
-| server/api/*.ts | server/api/ | No change |
-| server/lib/*.ts | server/lib/ | No change |
-| server/migrations/*.ts | server/migrations/ | No change |
+| Current Location        | New Location                | Notes                         |
+| ----------------------- | --------------------------- | ----------------------------- |
+| server/index.ts         | server/index.ts             | No change                     |
+| server/vite.ts          | server/config/vite.ts       | Move to config directory      |
+| server/db.ts            | server/models/db.ts         | Move to models directory      |
+| server/auth.ts          | server/services/auth.ts     | Move to services directory    |
+| server/openai.ts        | server/services/openai.ts   | Move to services directory    |
+| server/storage.ts       | server/services/storage.ts  | Move to services directory    |
+| server/slack.ts         | server/services/slack.ts    | Move to services directory    |
+| server/middleware.ts    | server/middlewares/index.ts | Move to middlewares directory |
+| server/routes.ts        | server/routes/index.ts      | Move to routes directory      |
+| server/api/\*.ts        | server/api/                 | No change                     |
+| server/lib/\*.ts        | server/lib/                 | No change                     |
+| server/migrations/\*.ts | server/migrations/          | No change                     |
 
 ### Shared Files
 
-| Current Location | New Location | Notes |
-|------------------|--------------|-------|
+| Current Location | New Location     | Notes     |
+| ---------------- | ---------------- | --------- |
 | shared/schema.ts | shared/schema.ts | No change |
 
 ### Configuration Files
 
-| Current Location | New Location | Notes |
-|------------------|--------------|-------|
-| tsconfig.json | tsconfig.json | No change |
-| .eslintrc.json | config/.eslintrc.json | Move to config directory |
-| .eslintignore | config/.eslintignore | Move to config directory |
-| config/*.js | config/ | No change |
-| config/*.ts | config/ | No change |
-| config/*.json | config/ | No change |
+| Current Location | New Location          | Notes                    |
+| ---------------- | --------------------- | ------------------------ |
+| tsconfig.json    | tsconfig.json         | No change                |
+| .eslintrc.json   | config/.eslintrc.json | Move to config directory |
+| .eslintignore    | config/.eslintignore  | Move to config directory |
+| config/\*.js     | config/               | No change                |
+| config/\*.ts     | config/               | No change                |
+| config/\*.json   | config/               | No change                |
 
 ## Common Linting Issues to Address
 
@@ -174,4 +174,4 @@ ai-agent-generator/
 2. Clearer separation of concerns
 3. Better developer experience with intuitive file locations
 4. Reduced redundancy
-5. Easier onboarding for new developers 
+5. Easier onboarding for new developers

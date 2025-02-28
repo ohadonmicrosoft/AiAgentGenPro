@@ -1,6 +1,6 @@
 /**
  * Migration: 00001-create-users-table.ts
- * 
+ *
  * Creates the initial users table structure.
  * This is an example migration file for use with a SQL database.
  * In a Firestore project, this would represent the schema design.
@@ -25,8 +25,8 @@ export async function up() {
   // });
 
   // For Firestore, we'd document the schema design:
-  console.log('Migrating: Create users collection structure');
-  
+  console.log("Migrating: Create users collection structure");
+
   /*
     Collection: users
     Document ID: Firebase Auth UID
@@ -51,19 +51,19 @@ export async function up() {
     - email (ASC)
     - createdAt (DESC)
   */
-  
+
   return Promise.resolve();
 }
 
 export async function down() {
   // Example SQL rollback:
   // await db.schema.dropTable('users');
-  
+
   // For Firestore, we'd document the rollback procedure:
-  console.log('Rolling back: Drop users collection structure');
-  
+  console.log("Rolling back: Drop users collection structure");
+
   // Note: In Firestore, we don't typically drop collections in rollbacks,
   // but we would document the process for removing data if needed.
-  
+
   return Promise.resolve();
-} 
+}

@@ -97,7 +97,7 @@ describe('useAuth', () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
 
     const credentials = { email: 'test@example.com', password: 'password123' };
-    
+
     await act(async () => {
       await result.current.login(credentials);
     });
@@ -116,38 +116,38 @@ describe('useAuth', () => {
 
 ```typescript
 // client/src/utils/__tests__/formatters.test.ts
-import { formatDate, formatCurrency, truncateText } from '../formatters';
+import { formatDate, formatCurrency, truncateText } from "../formatters";
 
-describe('formatters', () => {
-  describe('formatDate', () => {
-    it('formats date correctly', () => {
-      const date = new Date('2023-01-15T12:30:00Z');
-      expect(formatDate(date)).toBe('Jan 15, 2023');
+describe("formatters", () => {
+  describe("formatDate", () => {
+    it("formats date correctly", () => {
+      const date = new Date("2023-01-15T12:30:00Z");
+      expect(formatDate(date)).toBe("Jan 15, 2023");
     });
 
-    it('handles different format options', () => {
-      const date = new Date('2023-01-15T12:30:00Z');
-      expect(formatDate(date, { month: 'long' })).toBe('January 15, 2023');
-    });
-  });
-
-  describe('formatCurrency', () => {
-    it('formats currency correctly', () => {
-      expect(formatCurrency(1234.56)).toBe('$1,234.56');
-    });
-
-    it('handles different currencies', () => {
-      expect(formatCurrency(1234.56, 'EUR')).toBe('€1,234.56');
+    it("handles different format options", () => {
+      const date = new Date("2023-01-15T12:30:00Z");
+      expect(formatDate(date, { month: "long" })).toBe("January 15, 2023");
     });
   });
 
-  describe('truncateText', () => {
-    it('truncates text to specified length', () => {
-      expect(truncateText('This is a long text', 10)).toBe('This is a...');
+  describe("formatCurrency", () => {
+    it("formats currency correctly", () => {
+      expect(formatCurrency(1234.56)).toBe("$1,234.56");
     });
 
-    it('does not truncate text shorter than limit', () => {
-      expect(truncateText('Short', 10)).toBe('Short');
+    it("handles different currencies", () => {
+      expect(formatCurrency(1234.56, "EUR")).toBe("€1,234.56");
+    });
+  });
+
+  describe("truncateText", () => {
+    it("truncates text to specified length", () => {
+      expect(truncateText("This is a long text", 10)).toBe("This is a...");
+    });
+
+    it("does not truncate text shorter than limit", () => {
+      expect(truncateText("Short", 10)).toBe("Short");
     });
   });
 });
@@ -159,35 +159,35 @@ describe('formatters', () => {
 
 ```typescript
 // client/src/lib/api/__tests__/agentService.integration.test.ts
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
-import { agentService } from '../agentService';
+import { setupServer } from "msw/node";
+import { rest } from "msw";
+import { agentService } from "../agentService";
 
 const server = setupServer(
-  rest.get('/api/agents', (req, res, ctx) => {
+  rest.get("/api/agents", (req, res, ctx) => {
     return res(
       ctx.json({
         success: true,
         data: [
-          { id: '1', name: 'Test Agent 1' },
-          { id: '2', name: 'Test Agent 2' },
+          { id: "1", name: "Test Agent 1" },
+          { id: "2", name: "Test Agent 2" },
         ],
         error: null,
-      })
+      }),
     );
   }),
-  
-  rest.get('/api/agents/:id', (req, res, ctx) => {
+
+  rest.get("/api/agents/:id", (req, res, ctx) => {
     const { id } = req.params;
     return res(
       ctx.json({
         success: true,
         data: { id, name: `Test Agent ${id}` },
         error: null,
-      })
+      }),
     );
   }),
-  
+
   // More handlers...
 );
 
@@ -195,17 +195,17 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-describe('agentService integration', () => {
-  it('fetches agents successfully', async () => {
+describe("agentService integration", () => {
+  it("fetches agents successfully", async () => {
     const agents = await agentService.getAgents();
     expect(agents).toHaveLength(2);
-    expect(agents[0].name).toBe('Test Agent 1');
+    expect(agents[0].name).toBe("Test Agent 1");
   });
 
-  it('fetches a single agent by ID', async () => {
-    const agent = await agentService.getAgent('1');
-    expect(agent.id).toBe('1');
-    expect(agent.name).toBe('Test Agent 1');
+  it("fetches a single agent by ID", async () => {
+    const agent = await agentService.getAgent("1");
+    expect(agent.id).toBe("1");
+    expect(agent.name).toBe("Test Agent 1");
   });
 
   // More tests...
@@ -260,7 +260,7 @@ describe('AgentForm integration', () => {
     fireEvent.change(screen.getByLabelText(/name/i), {
       target: { value: 'New Agent' },
     });
-    
+
     fireEvent.change(screen.getByLabelText(/description/i), {
       target: { value: 'Test description' },
     });
@@ -294,7 +294,7 @@ import { firebaseAuth } from '../../lib/firebase';
 // Mock component that uses the auth context
 const TestComponent = () => {
   const { user, login, logout } = useAuth();
-  
+
   return (
     <div>
       {user ? (
@@ -358,36 +358,39 @@ describe('AuthContext integration', () => {
 
 ```typescript
 // e2e/tests/agent-creation.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('user can create a new agent', async ({ page }) => {
+test("user can create a new agent", async ({ page }) => {
   // Login
-  await page.goto('/login');
-  await page.fill('input[name="email"]', 'test@example.com');
-  await page.fill('input[name="password"]', 'password123');
+  await page.goto("/login");
+  await page.fill('input[name="email"]', "test@example.com");
+  await page.fill('input[name="password"]', "password123");
   await page.click('button[type="submit"]');
-  
+
   // Navigate to agent creation
-  await page.click('text=Create Agent');
-  
+  await page.click("text=Create Agent");
+
   // Fill out the form
-  await page.fill('input[name="name"]', 'E2E Test Agent');
-  await page.fill('textarea[name="description"]', 'This is a test agent created by E2E tests');
-  await page.selectOption('select[name="category"]', 'customer-support');
-  
+  await page.fill('input[name="name"]', "E2E Test Agent");
+  await page.fill(
+    'textarea[name="description"]',
+    "This is a test agent created by E2E tests",
+  );
+  await page.selectOption('select[name="category"]', "customer-support");
+
   // Move to next step
   await page.click('button:has-text("Next")');
-  
+
   // Configure agent
-  await page.fill('textarea[name="prompt"]', 'You are a helpful assistant...');
+  await page.fill('textarea[name="prompt"]', "You are a helpful assistant...");
   await page.click('input[name="useOpenAI"]');
-  
+
   // Complete creation
   await page.click('button:has-text("Create Agent")');
-  
+
   // Verify success
-  await expect(page.locator('.toast-success')).toBeVisible();
-  await expect(page.locator('h1')).toContainText('E2E Test Agent');
+  await expect(page.locator(".toast-success")).toBeVisible();
+  await expect(page.locator("h1")).toContainText("E2E Test Agent");
 });
 ```
 
@@ -395,34 +398,34 @@ test('user can create a new agent', async ({ page }) => {
 
 ```typescript
 // e2e/tests/authentication.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('user can register and login', async ({ page }) => {
+test("user can register and login", async ({ page }) => {
   const email = `test-${Date.now()}@example.com`;
-  const password = 'securePassword123';
-  
+  const password = "securePassword123";
+
   // Register
-  await page.goto('/register');
+  await page.goto("/register");
   await page.fill('input[name="email"]', email);
   await page.fill('input[name="password"]', password);
   await page.fill('input[name="confirmPassword"]', password);
   await page.click('button[type="submit"]');
-  
+
   // Verify redirect to dashboard
   await expect(page).toHaveURL(/dashboard/);
-  
+
   // Logout
   await page.click('button:has-text("Logout")');
-  
+
   // Login with new credentials
-  await page.goto('/login');
+  await page.goto("/login");
   await page.fill('input[name="email"]', email);
   await page.fill('input[name="password"]', password);
   await page.click('button[type="submit"]');
-  
+
   // Verify successful login
   await expect(page).toHaveURL(/dashboard/);
-  await expect(page.locator('text=Welcome back')).toBeVisible();
+  await expect(page.locator("text=Welcome back")).toBeVisible();
 });
 ```
 
@@ -430,36 +433,36 @@ test('user can register and login', async ({ page }) => {
 
 ```typescript
 // e2e/tests/responsive.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('responsive design', () => {
-  test('desktop layout', async ({ page }) => {
+test.describe("responsive design", () => {
+  test("desktop layout", async ({ page }) => {
     // Set viewport to desktop size
     await page.setViewportSize({ width: 1280, height: 800 });
-    
-    await page.goto('/');
-    
+
+    await page.goto("/");
+
     // Verify desktop layout elements
-    await expect(page.locator('nav.sidebar')).toBeVisible();
-    await expect(page.locator('header.top-nav')).toBeVisible();
-    await expect(page.locator('button.mobile-menu')).not.toBeVisible();
+    await expect(page.locator("nav.sidebar")).toBeVisible();
+    await expect(page.locator("header.top-nav")).toBeVisible();
+    await expect(page.locator("button.mobile-menu")).not.toBeVisible();
   });
-  
-  test('mobile layout', async ({ page }) => {
+
+  test("mobile layout", async ({ page }) => {
     // Set viewport to mobile size
     await page.setViewportSize({ width: 375, height: 667 });
-    
-    await page.goto('/');
-    
+
+    await page.goto("/");
+
     // Verify mobile layout elements
-    await expect(page.locator('nav.sidebar')).not.toBeVisible();
-    await expect(page.locator('button.mobile-menu')).toBeVisible();
-    
+    await expect(page.locator("nav.sidebar")).not.toBeVisible();
+    await expect(page.locator("button.mobile-menu")).toBeVisible();
+
     // Open mobile menu
-    await page.click('button.mobile-menu');
-    
+    await page.click("button.mobile-menu");
+
     // Verify mobile menu is visible
-    await expect(page.locator('nav.mobile-nav')).toBeVisible();
+    await expect(page.locator("nav.mobile-nav")).toBeVisible();
   });
 });
 ```
@@ -525,10 +528,12 @@ module.exports = {
 ### Component Testing
 
 1. **Test behavior, not implementation**
+
    - Focus on what the component does, not how it does it
    - Avoid testing implementation details
 
 2. **Use user-centric queries**
+
    - Prefer `getByRole`, `getByLabelText`, and `getByText` over `getByTestId`
    - Test from the user's perspective
 
@@ -539,10 +544,12 @@ module.exports = {
 ### API Testing
 
 1. **Mock external dependencies**
+
    - Use MSW to mock API responses
    - Test both success and error scenarios
 
 2. **Test error handling**
+
    - Verify that errors are handled gracefully
    - Test different error types and status codes
 
@@ -554,10 +561,12 @@ module.exports = {
 ### End-to-End Testing
 
 1. **Focus on critical paths**
+
    - Identify and test the most important user journeys
    - Don't try to test everything with E2E tests
 
 2. **Use realistic test data**
+
    - Create test data that resembles real user data
    - Consider using factories or fixtures for consistent test data
 
@@ -582,31 +591,31 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'npm'
-          
+          node-version: "16"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Lint
         run: npm run lint
-        
+
       - name: Unit and integration tests
         run: npm test
-        
+
       - name: Build
         run: npm run build
-        
+
       - name: E2E tests
         run: npm run test:e2e
-        
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
 ```
@@ -617,8 +626,8 @@ jobs:
 
 ```typescript
 // jest.setup.js
-import '@testing-library/jest-dom';
-import { server } from './src/mocks/server';
+import "@testing-library/jest-dom";
+import { server } from "./src/mocks/server";
 
 // Setup MSW
 beforeAll(() => server.listen());
@@ -626,9 +635,9 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -645,7 +654,9 @@ global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
   observe() {}
-  takeRecords() { return []; }
+  takeRecords() {
+    return [];
+  }
   unobserve() {}
 };
 ```
@@ -654,40 +665,40 @@ global.IntersectionObserver = class IntersectionObserver {
 
 ```typescript
 // playwright.config.ts
-import { PlaywrightTestConfig } from '@playwright/test';
+import { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
-  testDir: './e2e/tests',
+  testDir: "./e2e/tests",
   timeout: 30000,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'playwright-report/test-results.json' }],
+    ["html", { outputFolder: "playwright-report" }],
+    ["json", { outputFile: "playwright-report/test-results.json" }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    baseURL: process.env.BASE_URL || "http://localhost:3000",
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
   },
   projects: [
     {
-      name: 'chromium',
-      use: { browserName: 'chromium' },
+      name: "chromium",
+      use: { browserName: "chromium" },
     },
     {
-      name: 'firefox',
-      use: { browserName: 'firefox' },
+      name: "firefox",
+      use: { browserName: "firefox" },
     },
     {
-      name: 'webkit',
-      use: { browserName: 'webkit' },
+      name: "webkit",
+      use: { browserName: "webkit" },
     },
     {
-      name: 'mobile-chrome',
+      name: "mobile-chrome",
       use: {
-        browserName: 'chromium',
+        browserName: "chromium",
         viewport: { width: 375, height: 667 },
         deviceScaleFactor: 2,
         isMobile: true,
@@ -702,21 +713,25 @@ export default config;
 ## Recommended Testing Improvements
 
 1. **Implement Visual Regression Testing**
+
    - Set up Storybook for component documentation
    - Integrate Chromatic for visual regression testing
    - Create stories for all key components
 
 2. **Enhance E2E Test Coverage**
+
    - Add more comprehensive E2E tests for critical flows
    - Implement user journey testing
    - Add performance testing in the E2E pipeline
 
 3. **Improve Test Data Management**
+
    - Create factories for generating test data
    - Implement database seeding for E2E tests
    - Use consistent test data across all test types
 
 4. **Add Contract Testing**
+
    - Implement contract tests between frontend and backend
    - Use tools like Pact for consumer-driven contract testing
    - Ensure API changes don't break existing consumers
@@ -724,4 +739,4 @@ export default config;
 5. **Implement Accessibility Testing**
    - Add automated accessibility tests
    - Include manual accessibility testing in the QA process
-   - Create accessibility testing guidelines 
+   - Create accessibility testing guidelines

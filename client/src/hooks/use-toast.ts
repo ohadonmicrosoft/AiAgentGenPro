@@ -1,44 +1,52 @@
-import { toast } from "@/components/ui/toast";
+import { toast, useToast as useToastImpl } from "@/lib/hooks/use-toast";
 
 export interface ToastProps {
-  title?: string;
+  title: string;
   description?: string;
-  action?: React.ReactNode;
 }
-
-export type ToastActionElement = React.ReactElement<{
-  altText: string;
-  onClick: () => void;
-}>;
 
 /**
  * Hook for displaying toast notifications
- * This is a wrapper around the sonner toast library
+ * This is a wrapper around our toast implementation
  */
 export function useToast() {
+  const { toast: toastFn } = useToastImpl();
+  
   return {
-    toast: ({ title, description, action, ...props }: ToastProps) => {
-      toast(title, {
+    toast: ({ title, description }: { title: string; description?: string }) => {
+      toastFn({
+        title,
         description,
-        action,
-        ...props,
+        variant: "default"
       });
     },
-    success: (message: string, description?: string) => {
-      toast.success(message, { description });
+    success: (title: string, description?: string) => {
+      toastFn({
+        title,
+        description,
+        variant: "success"
+      });
     },
-    error: (message: string, description?: string) => {
-      toast.error(message, { description });
+    error: (title: string, description?: string) => {
+      toastFn({
+        title,
+        description,
+        variant: "destructive"
+      });
     },
-    warning: (message: string, description?: string) => {
-      toast.warning(message, { description });
+    warning: (title: string, description?: string) => {
+      toastFn({
+        title,
+        description,
+        variant: "warning"
+      });
     },
-    info: (message: string, description?: string) => {
-      toast.info(message, { description });
+    info: (title: string, description?: string) => {
+      toastFn({
+        title,
+        description,
+        variant: "info"
+      });
     },
-    dismiss: (toastId?: string) => {
-      toast.dismiss(toastId);
-    },
-    promise: toast.promise,
   };
-} 
+}
