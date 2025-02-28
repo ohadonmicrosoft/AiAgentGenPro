@@ -1,1 +1,1 @@
-./config/postcss.config.js
+config/postcss.config.js

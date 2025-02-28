@@ -53,6 +53,31 @@ The project is organized into the following directories:
 
 Configuration files in the root directory are symbolic links to their actual locations in the respective directories, which helps keep the root directory clean while maintaining compatibility with tools that expect configuration files in the root.
 
+#### Configuration File Symlinks
+
+The following configuration files in the root directory are symbolic links to their actual locations:
+
+- `eslint.config.js` → `config/eslint.config.js`
+- `postcss.config.js` → `config/postcss.config.js`
+- `tailwind.config.js` → `config/tailwind.config.js`
+- `vitest.config.ts` → `config/vitest.config.ts`
+- `.firebaserc` → `firebase/.firebaserc`
+- `firebase.json` → `firebase/firebase.json`
+- `firestore.indexes.json` → `firebase/firestore.indexes.json`
+- `firestore.rules` → `firebase/firestore.rules`
+- `storage.rules` → `firebase/storage.rules`
+
+This approach allows tools to find configuration files in their expected locations while maintaining a clean and organized project structure.
+
+> **Note about Git and symlinks:** The project is configured to track these symbolic links in Git, not the files they point to. Make sure you're using a Git client that supports symlinks. On Windows, you may need to enable symlink support by setting `git config --global core.symlinks true` and running Git with administrator privileges or enabling Developer Mode.
+
+Files that remain in the root directory include:
+- `package.json` and `package-lock.json` - For npm dependency management
+- `.env` and `.env.example` - Environment variables
+- `.gitignore` - Git ignore patterns
+- `README.md` - Project documentation
+- `vite.config.js` - Main Vite configuration
+
 ## Getting Started
 
 To get started with the project, follow these steps:
@@ -85,4 +110,4 @@ When contributing to this project, please follow these guidelines:
 For questions or support, contact the project maintainers:
 
 - Project Lead: [project-lead@example.com](mailto:project-lead@example.com)
-- Technical Lead: [tech-lead@example.com](mailto:tech-lead@example.com) 
+- Technical Lead: [tech-lead@example.com](mailto:tech-lead@example.com)

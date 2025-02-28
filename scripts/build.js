@@ -79,9 +79,14 @@ try {
   // Copy Firebase config if it exists
   if (fs.existsSync('firebase.json')) {
     fs.copyFileSync('firebase.json', 'dist/firebase.json');
+  } else if (fs.existsSync('firebase/firebase.json')) {
+    fs.copyFileSync('firebase/firebase.json', 'dist/firebase.json');
   }
+  
   if (fs.existsSync('.firebaserc')) {
     fs.copyFileSync('.firebaserc', 'dist/.firebaserc');
+  } else if (fs.existsSync('firebase/.firebaserc')) {
+    fs.copyFileSync('firebase/.firebaserc', 'dist/.firebaserc');
   }
   
   console.log(chalk.green('Files copied successfully'));

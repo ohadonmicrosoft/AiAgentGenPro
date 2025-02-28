@@ -51,7 +51,6 @@ firebase-debug.log
 firebase-debug.*.log
 .runtimeconfig.json
 ui-debug.log
-.firebaserc
 
 # Docker
 .dockerignore

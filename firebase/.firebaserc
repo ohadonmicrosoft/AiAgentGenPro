@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "ai-agent-gen-pro",
+    "development": "ai-agent-gen-pro",
+    "staging": "ai-agent-gen-pro",
+    "production": "ai-agent-gen-pro"
+  }
+} 

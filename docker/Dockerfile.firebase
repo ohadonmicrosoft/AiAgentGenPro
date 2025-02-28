@@ -16,11 +16,11 @@ RUN npm install -g firebase-tools
 RUN npm install
 
 # Copy Firebase configuration
-COPY firebase.json .
-COPY .firebaserc .
-COPY firestore.rules .
-COPY firestore.indexes.json .
-COPY storage.rules .
+COPY firebase/firebase.json .
+COPY firebase/.firebaserc .
+COPY firebase/firestore.rules .
+COPY firebase/firestore.indexes.json .
+COPY firebase/storage.rules .
 
 # Create directory for emulator data
 RUN mkdir -p .firebase
