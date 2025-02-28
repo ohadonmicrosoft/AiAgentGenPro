@@ -86,48 +86,104 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Listen to Firebase auth state changes
   useEffect(() => {
     const auth = getAuth();
+    let isUnmounted = false;
 
     // Setup auth state listener
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (isUnmounted) return;
+      
       setIsLoading(true);
 
       try {
         if (firebaseUser) {
-          // Get the user's details from our backend to get the role
-          const response = await apiClient.auth.me();
-          const userData = response.data.user;
+          try {
+            // Get the user's details from our backend to get the role
+            const response = await apiClient.auth.me();
+            const userData = response.data.user;
 
-          setUser({
-            ...transformUser(firebaseUser),
-            role: userData.role || "user",
-          });
+            if (!isUnmounted) {
+              setUser({
+                ...transformUser(firebaseUser),
+                role: userData.role || "user",
+              });
+            }
+          } catch (apiError) {
+            console.error("Error getting user data from API:", apiError);
+            
+            // Still set the user with default role if API fails
+            if (!isUnmounted) {
+              setUser({
+                ...transformUser(firebaseUser),
+                role: "user", // Default role
+              });
+              
+              // Show toast error about API issue
+              toast.error(
+                "API Connection Issue",
+                "Connected to authentication but couldn't fetch user details. Some features may be limited."
+              );
+            }
+          }
         } else {
-          setUser(null);
+          if (!isUnmounted) {
+            setUser(null);
+          }
         }
       } catch (error) {
-        console.error("Error getting user data:", error);
-        setUser(null);
+        console.error("Error in auth state change handler:", error);
+        if (!isUnmounted) {
+          setUser(null);
+          setError(error instanceof Error ? error : new Error(String(error)));
+          
+          // Show error in UI if possible
+          const errorContainer = document.getElementById('error-container');
+          const fallbackElement = document.getElementById('fallback-ui');
+          
+          if (errorContainer && fallbackElement) {
+            errorContainer.style.display = 'block';
+            fallbackElement.style.display = 'block';
+            errorContainer.textContent = `Authentication error: ${error instanceof Error ? error.message : String(error)}`;
+          }
+        }
       } finally {
+        if (!isUnmounted) {
+          setIsLoading(false);
+        }
+      }
+    }, (error) => {
+      // This is the error callback for onAuthStateChanged
+      console.error("Auth state change error:", error);
+      if (!isUnmounted) {
+        setError(error instanceof Error ? error : new Error(String(error)));
         setIsLoading(false);
       }
     });
 
-    // Setup token refresh listener
+    // Setup token refresh listener with error handling
     const unsubscribeToken = onIdTokenChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const token = await firebaseUser.getIdToken();
-        localStorage.setItem("auth-token", token);
-      } else {
-        localStorage.removeItem("auth-token");
+      try {
+        if (firebaseUser) {
+          const token = await firebaseUser.getIdToken();
+          localStorage.setItem("auth-token", token);
+        } else {
+          localStorage.removeItem("auth-token");
+        }
+      } catch (tokenError) {
+        console.error("Error refreshing auth token:", tokenError);
+        // Don't let token errors crash the app
       }
+    }, (error) => {
+      // This is the error callback for onIdTokenChanged
+      console.error("Token refresh error:", error);
     });
 
     // Clean up subscription
     return () => {
+      isUnmounted = true;
       unsubscribeAuth();
       unsubscribeToken();
     };
-  }, []);
+  }, [toast]);
 
   // Sign in with email and password
   const signIn = async (email: string, password: string): Promise<User> => {

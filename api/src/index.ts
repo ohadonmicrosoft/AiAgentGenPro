@@ -13,8 +13,11 @@ import * as logger from "firebase-functions/logger";
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
-export const api = onRequest((request, response) => {
-  logger.info("API request received", {
+export const apiGateway = onRequest({
+  region: 'europe-west3', // Frankfurt region - close to Israel
+  cors: true,
+}, (request, response) => {
+  logger.info("API Gateway request received", {
     path: request.path,
     method: request.method,
     query: request.query,
@@ -22,7 +25,7 @@ export const api = onRequest((request, response) => {
 
   response.json({
     status: "success",
-    message: "API is running",
+    message: "API Gateway is running",
     path: request.path,
     timestamp: new Date().toISOString(),
   });

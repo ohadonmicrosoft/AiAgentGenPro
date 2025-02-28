@@ -1,5 +1,5 @@
 import { Slot } from "@radix-ui/react-slot";
-import { type VariantProps, cva } from "class-variance-authority";
+import { type VariantProps, cva } from "../../lib/cva-local";
 import * as React from "react";
 
 import { withErrorBoundary } from "./error-boundary";

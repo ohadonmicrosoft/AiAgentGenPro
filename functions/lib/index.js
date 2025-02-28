@@ -32,12 +32,16 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserProfile = exports.api = void 0;
 const functions = __importStar(require("firebase-functions"));
 const admin = __importStar(require("firebase-admin"));
-const express = __importStar(require("express"));
-const cors = __importStar(require("cors"));
+const expressModule = __importStar(require("express"));
+const express = expressModule.default || expressModule;
+const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -46,7 +50,7 @@ dotenv.config();
 const db = admin.firestore();
 // Initialize Express app
 const app = express();
-app.use(cors({ origin: true }));
+app.use((0, cors_1.default)({ origin: true }));
 // User API endpoints
 app.get("/api/user/:uid", async (req, res) => {
     try {
@@ -239,9 +243,13 @@ app.get("/api/stats", async (req, res) => {
     }
 });
 // Export the Express API as a Firebase Function
-exports.api = functions.https.onRequest(app);
+exports.api = functions
+    .region('europe-west3') // Set region to Frankfurt, Germany (close to Israel)
+    .https.onRequest(app);
 // User creation trigger to set up initial data
-exports.createUserProfile = functions.auth
+exports.createUserProfile = functions
+    .region('europe-west3') // Set region to Frankfurt, Germany (close to Israel)
+    .auth
     .user()
     .onCreate(async (user) => {
     try {

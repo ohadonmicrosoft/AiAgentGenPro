@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
+        // Remove direct path alias to allow import map to work in the browser
       },
     },
     build: {
@@ -37,8 +38,9 @@ export default defineConfig(({ mode }) => {
           // Explicitly mark problematic dependencies as external
           "react-router-dom",
           "sonner",
-          "class-variance-authority",
           "react-intersection-observer",
+          // Explicitly mark class-variance-authority as external to use import map
+          "class-variance-authority"
         ],
         output: {
           manualChunks: {
@@ -47,6 +49,7 @@ export default defineConfig(({ mode }) => {
               "@tanstack/react-query",
               "@radix-ui/react-dialog",
               "@radix-ui/react-dropdown-menu",
+              // Remove from vendor chunk to use import map
             ],
             "firebase-vendor": [
               "firebase/app",
@@ -84,9 +87,10 @@ export default defineConfig(({ mode }) => {
         "@tanstack/react-query",
         "firebase/app",
         "firebase/auth",
-        "class-variance-authority",
+        // Remove class-variance-authority to use import map
         "react-intersection-observer",
       ],
+      // Remove force option for class-variance-authority
     },
   };
 });

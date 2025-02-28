@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Debug Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2563eb;
+        }
+        .log {
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .warning {
+            color: #ca8a04;
+            font-weight: bold;
+        }
+        .info-box {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .error-box {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-family: monospace;
+        }
+        .steps {
+            margin-left: 20px;
+        }
+        .steps li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firebase Debug Page</h1>
+    <p>This page tests Firebase connectivity and initialization. Check the console for more detailed logs.</p>
+    
+    <div class="log" id="logOutput"></div>
+    
+    <div id="authErrorContainer" class="error-box">
+        <h3>Authentication Error: Anonymous Sign-in Not Enabled</h3>
+        <p>The error <code>auth/configuration-not-found</code> typically means anonymous authentication is not enabled in your Firebase project.</p>
+        <p>To fix this:</p>
+        <ol class="steps">
+            <li>Go to the <a href="https://console.firebase.google.com/project/ai-agent-gen-pro/authentication/providers" target="_blank">Firebase Console</a></li>
+            <li>Click on "Authentication" in the left sidebar</li>
+            <li>Go to the "Sign-in method" tab</li>
+            <li>Find "Anonymous" in the list of providers and click it</li>
+            <li>Enable the toggle switch and click "Save"</li>
+            <li>Return to this page and try the test again</li>
+        </ol>
+    </div>
+
+    <div class="info-box">
+        <h3>Troubleshooting Tips</h3>
+        <p>If you're seeing errors:</p>
+        <ul>
+            <li><strong>auth/configuration-not-found</strong>: Enable Anonymous authentication in Firebase console</li>
+            <li><strong>permission-denied</strong>: Check Firebase security rules for Firestore and Storage</li>
+            <li><strong>function-not-found</strong>: Make sure your Firebase Functions are deployed</li>
+        </ul>
+    </div>
+    
+    <div>
+        <button id="testFirebaseInit">Test Firebase Initialization</button>
+        <button id="testAuth">Test Auth</button>
+        <button id="testFirestore">Test Firestore</button>
+        <button id="testStorage">Test Storage</button>
+        <button id="testFunctions">Test Functions</button>
+        <button id="clearLog">Clear Log</button>
+    </div>
+
+    <p>If the main application is showing a blank screen, this debug page can help identify Firebase connectivity issues.</p>
+
+    <script type="module">
+        // Import Firebase modules from CDN
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js';
+        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js';
+        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js';
+        import { getStorage, ref, listAll } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js';
+        import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-functions.js';
+
+        const logOutput = document.getElementById('logOutput');
+        const authErrorContainer = document.getElementById('authErrorContainer');
+        
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.classList.add(type);
+            entry.textContent = `[${new Date().toISOString()}] ${message}`;
+            logOutput.appendChild(entry);
+            logOutput.scrollTop = logOutput.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+
+        function showAuthError(isAnonymousAuthError) {
+            if (isAnonymousAuthError) {
+                authErrorContainer.style.display = 'block';
+            }
+        }
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzCFi1YlcMYNfZ0_I0uECf5UGljFqebG4",
+            authDomain: "ai-agent-gen-pro.firebaseapp.com",
+            projectId: "ai-agent-gen-pro",
+            storageBucket: "ai-agent-gen-pro.appspot.com",
+            messagingSenderId: "977931434163",
+            appId: "1:977931434163:web:f91959ce07d84e419bd8c6",
+            measurementId: "G-9XL86THRM5",
+        };
+
+        let app;
+        let auth;
+        let db;
+        let storage;
+        let functions;
+
+        // Test Firebase initialization
+        document.getElementById('testFirebaseInit').addEventListener('click', async () => {
+            try {
+                log('Initializing Firebase...', 'info');
+                app = initializeApp(firebaseConfig);
+                log('Firebase initialized successfully!', 'success');
+                authErrorContainer.style.display = 'none';
+            } catch (error) {
+                log(`Firebase initialization error: ${error.message}`, 'error');
+                console.error('Firebase initialization error details:', error);
+            }
+        });
+
+        // Test Auth
+        document.getElementById('testAuth').addEventListener('click', async () => {
+            if (!app) {
+                log('Initialize Firebase first!', 'warning');
+                return;
+            }
+            
+            try {
+                log('Testing Firebase Auth...', 'info');
+                auth = getAuth(app);
+                log('Auth initialized successfully!', 'success');
+                
+                try {
+                    log('Attempting anonymous sign-in...', 'info');
+                    const result = await signInAnonymously(auth);
+                    log(`Anonymous sign-in successful: ${result.user.uid}`, 'success');
+                    authErrorContainer.style.display = 'none';
+                } catch (signInError) {
+                    log(`Anonymous sign-in error: Firebase: Error (${signInError.code}).`, 'error');
+                    console.error('Anonymous sign-in error details:', signInError);
+                    
+                    // Check for specific auth configuration error
+                    if (signInError.code === 'auth/configuration-not-found') {
+                        showAuthError(true);
+                    }
+                }
+            } catch (error) {
+                log(`Auth error: ${error.message}`, 'error');
+                console.error('Auth error details:', error);
+            }
+        });
+
+        // Test Firestore
+        document.getElementById('testFirestore').addEventListener('click', async () => {
+            if (!app) {
+                log('Initialize Firebase first!', 'warning');
+                return;
+            }
+            
+            try {
+                log('Testing Firestore...', 'info');
+                db = getFirestore(app);
+                log('Firestore initialized successfully!', 'success');
+                
+                try {
+                    log('Attempting to list collections...', 'info');
+                    const usersSnapshot = await getDocs(collection(db, 'users'));
+                    log(`Found ${usersSnapshot.size} documents in users collection`, 'success');
+                } catch (queryError) {
+                    log(`Firestore query error: ${queryError.message}`, 'error');
+                    console.error('Firestore query error details:', queryError);
+                    
+                    if (queryError.code === 'permission-denied') {
+                        log('This is likely due to Firestore security rules preventing access.', 'warning');
+                    }
+                }
+            } catch (error) {
+                log(`Firestore error: ${error.message}`, 'error');
+                console.error('Firestore error details:', error);
+            }
+        });
+
+        // Test Storage
+        document.getElementById('testStorage').addEventListener('click', async () => {
+            if (!app) {
+                log('Initialize Firebase first!', 'warning');
+                return;
+            }
+            
+            try {
+                log('Testing Storage...', 'info');
+                storage = getStorage(app);
+                log('Storage initialized successfully!', 'success');
+                
+                try {
+                    log('Attempting to list storage items...', 'info');
+                    const storageRef = ref(storage);
+                    const result = await listAll(storageRef);
+                    log(`Found ${result.items.length} items in storage root`, 'success');
+                } catch (listError) {
+                    log(`Storage list error: ${listError.message}`, 'error');
+                    console.error('Storage list error details:', listError);
+                    
+                    if (listError.code === 'storage/unauthorized') {
+                        log('This is likely due to Storage security rules preventing access.', 'warning');
+                    }
+                }
+            } catch (error) {
+                log(`Storage error: ${error.message}`, 'error');
+                console.error('Storage error details:', error);
+            }
+        });
+
+        // Test Functions
+        document.getElementById('testFunctions').addEventListener('click', async () => {
+            if (!app) {
+                log('Initialize Firebase first!', 'warning');
+                return;
+            }
+            
+            try {
+                log('Testing Functions...', 'info');
+                functions = getFunctions(app);
+                log('Functions initialized successfully!', 'success');
+                
+                try {
+                    log('Attempting to call api function...', 'info');
+                    const testFunction = httpsCallable(functions, 'api');
+                    const result = await testFunction({ message: 'Hello from debug page' });
+                    log(`Function call result: ${JSON.stringify(result.data)}`, 'success');
+                } catch (callError) {
+                    log(`Function call error: ${callError.message}`, 'error');
+                    console.error('Function call error details:', callError);
+                    
+                    if (callError.code === 'functions/not-found') {
+                        log('This function might not be deployed yet. Check the Firebase console.', 'warning');
+                    }
+                }
+            } catch (error) {
+                log(`Functions error: ${error.message}`, 'error');
+                console.error('Functions error details:', error);
+            }
+        });
+
+        // Clear log
+        document.getElementById('clearLog').addEventListener('click', () => {
+            logOutput.innerHTML = '';
+            log('Log cleared', 'info');
+            authErrorContainer.style.display = 'none';
+        });
+
+        // Initial setup
+        log('Debug page loaded successfully', 'success');
+        log('Click the buttons above to test Firebase services', 'info');
+    </script>
+</body>
+</html> 

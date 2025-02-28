@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import express, { Request, Response } from "express";
+import * as expressModule from "express";
+const express = expressModule.default || expressModule;
 import cors from "cors";
 import * as dotenv from "dotenv";
 
@@ -223,10 +224,14 @@ app.get("/api/stats", async (req, res) => {
 });
 
 // Export the Express API as a Firebase Function
-export const api = functions.https.onRequest(app);
+export const api = functions
+  .region('europe-west3')  // Set region to Frankfurt, Germany (close to Israel)
+  .https.onRequest(app);
 
 // User creation trigger to set up initial data
-export const createUserProfile = functions.auth
+export const createUserProfile = functions
+  .region('europe-west3')  // Set region to Frankfurt, Germany (close to Israel)
+  .auth
   .user()
   .onCreate(async (user) => {
     try {
