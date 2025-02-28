@@ -35,6 +35,24 @@ The AI Agent Generator is a web application that allows users to create, configu
 - **AI Integration**: OpenAI API
 - **Deployment**: Docker, Kubernetes, Google Cloud Platform
 
+### Project Structure
+
+The project is organized into the following directories:
+
+- `/client` - Frontend React application
+- `/server` - Backend Node.js application
+- `/functions` - Firebase Cloud Functions
+- `/config` - Configuration files (ESLint, PostCSS, Tailwind, Vitest)
+- `/firebase` - Firebase configuration files
+- `/docker` - Docker configuration files
+- `/scripts` - Build and deployment scripts
+- `/docs` - Project documentation
+- `/shared` - Shared code between client and server
+- `/monitoring` - Monitoring and analytics configuration
+- `/nginx` - Nginx configuration for production
+
+Configuration files in the root directory are symbolic links to their actual locations in the respective directories, which helps keep the root directory clean while maintaining compatibility with tools that expect configuration files in the root.
+
 ## Getting Started
 
 To get started with the project, follow these steps:

@@ -5,17 +5,15 @@ import { config } from '../config/app.config';
 import { logger } from '../lib/logger';
 
 // Extend Express Request type to include user
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        uid: string;
-        email?: string;
-        email_verified?: boolean;
-        admin?: boolean;
-        [key: string]: any;
-      };
-    }
+declare module 'express' {
+  interface Request {
+    user?: {
+      uid: string;
+      email?: string;
+      email_verified?: boolean;
+      admin?: boolean;
+      [key: string]: any;
+    };
   }
 }
 

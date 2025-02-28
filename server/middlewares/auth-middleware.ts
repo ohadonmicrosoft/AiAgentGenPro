@@ -4,20 +4,18 @@ import { logger } from '../lib/logger';
 import { AppError } from '../lib/error-handling';
 
 // Add user to request object
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        uid: string;
-        email?: string;
-        emailVerified?: boolean;
-        displayName?: string;
-        photoURL?: string;
-        phoneNumber?: string;
-        disabled?: boolean;
-        admin?: boolean;
-      };
-    }
+declare module 'express' {
+  interface Request {
+    user?: {
+      uid: string;
+      email?: string;
+      emailVerified?: boolean;
+      displayName?: string;
+      photoURL?: string;
+      phoneNumber?: string;
+      disabled?: boolean;
+      admin?: boolean;
+    };
   }
 }
 

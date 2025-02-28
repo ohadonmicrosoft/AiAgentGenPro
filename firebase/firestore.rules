@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to determine if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to determine if the request has valid user data
+    function isValidUser(userData) {
+      return userData.size() > 0 &&
+             'email' in userData &&
+             'displayName' in userData;
+    }
+    
+    // Helper function to validate agent data
+    function isValidAgent(agentData) {
+      return agentData.size() > 0 &&
+             'name' in agentData &&
+             'promptTemplate' in agentData &&
+             'ownerId' in agentData;
+    }
+    
+    // User collection rules
+    match /users/{userId} {
+      // Allow read if authenticated and it's the user's own document or admin
+      allow read: if isAuthenticated() && (request.auth.uid == userId || request.auth.token.admin == true);
+      
+      // Allow create if authenticated and creating their own document
+      allow create: if isAuthenticated() && 
+                    request.auth.uid == userId && 
+                    isValidUser(request.resource.data);
+                    
+      // Allow update if authenticated and it's the user's own document
+      allow update: if isAuthenticated() && 
+                    request.auth.uid == userId;
+                    
+      // Allow delete if authenticated and it's the user's own document or admin
+      allow delete: if isAuthenticated() && 
+                   (request.auth.uid == userId || request.auth.token.admin == true);
+    }
+    
+    // Agent collection rules
+    match /agents/{agentId} {
+      // Allow read if the agent is public or if the user is the owner
+      allow read: if resource.data.isPublic == true || 
+                  (isAuthenticated() && resource.data.ownerId == request.auth.uid);
+      
+      // Allow create if authenticated and setting themselves as owner
+      allow create: if isAuthenticated() && 
+                    request.resource.data.ownerId == request.auth.uid &&
+                    isValidAgent(request.resource.data);
+      
+      // Allow update if authenticated and the user is the owner
+      allow update: if isAuthenticated() && 
+                    resource.data.ownerId == request.auth.uid;
+      
+      // Allow delete if authenticated and the user is the owner
+      allow delete: if isAuthenticated() && 
+                    resource.data.ownerId == request.auth.uid;
+    }
+  }
+} 

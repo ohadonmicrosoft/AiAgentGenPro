@@ -95,7 +95,7 @@ export function createQueryHooks<
   TEntities,
   TCreateInput,
   TUpdateInput,
-  TQueryParams = {}
+  TQueryParams = Record<string, unknown>
 >(config: {
   entityName: string;
   getAll: GetAllHookOptions<TEntities, TQueryParams, [string, TQueryParams?]>;

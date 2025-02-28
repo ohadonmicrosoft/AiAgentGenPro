@@ -161,4 +161,19 @@ export function handleError(error: unknown, includeDetails = false): {
   
   // Handle standard Error instances
   if (error instanceof Error) {
-    logger.error(`
+    logger.error(`Unhandled error: ${error.message}`);
+    return {
+      error: 'An unexpected error occurred',
+      code: 'UnknownError',
+      statusCode: 500,
+    };
+  }
+  
+  // Default error response
+  logger.error(`Unknown error type: ${String(error)}`);
+  return {
+    error: 'An unexpected error occurred',
+    code: 'UnknownError',
+    statusCode: 500,
+  };
+}
