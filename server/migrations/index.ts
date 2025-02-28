@@ -36,6 +36,31 @@ export async function getMigrations(): Promise<Migration[]> {
   return migrations.sort((a, b) => parseInt(a.id) - parseInt(b.id));
 }
 
+// Check if the database is up to date with all migrations
+export async function isDatabaseUpToDate(): Promise<boolean> {
+  const migrations = await getMigrations();
+  
+  if (migrations.length === 0) {
+    // If there are no migrations, consider the database up to date
+    return true;
+  }
+  
+  try {
+    // In a real implementation, this would check against a migrations table in the database
+    // to determine which migrations have been applied
+    
+    // For now, we'll just return true to indicate the database is up to date
+    // TODO: Implement actual check against migration records in the database
+    logger.info("Database migration check: assuming up to date for development");
+    return true;
+  } catch (error) {
+    logger.error("Failed to check database migration status", {
+      error: (error as Error).message,
+    });
+    return false;
+  }
+}
+
 // Run all pending migrations
 export async function runMigrations(): Promise<void> {
   const migrations = await getMigrations();
