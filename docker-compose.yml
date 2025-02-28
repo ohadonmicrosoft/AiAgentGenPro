@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - CLIENT_PORT=3000
+      - SERVER_PORT=5000
+      - REDIS_URL=redis://redis:6379
+      - USE_MOCK_STORAGE=true
+    depends_on:
+      - redis
+      - firebase-emulator
+    networks:
+      - app-network
+    command: npm run dev
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+
+  firebase-emulator:
+    build:
+      context: .
+      dockerfile: Dockerfile.firebase
+    volumes:
+      - .:/app
+      - firebase-data:/app/.firebase
+    ports:
+      - "4000:4000"  # Emulator UI
+      - "8080:8080"  # Firestore
+      - "9099:9099"  # Auth
+      - "9199:9199"  # Storage
+      - "5001:5001"  # Functions
+    networks:
+      - app-network
+    command: npm run firebase:emulators:start
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  firebase-data:

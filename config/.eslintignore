@@ -1,0 +1,9 @@
+# Properly configured ignore patterns
+node_modules/
+dist/
+client/dist/
+functions/lib/
+.firebase/
+.git/
+*.log
+*.lock 

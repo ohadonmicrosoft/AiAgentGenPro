@@ -1,0 +1,52 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper function to determine if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to determine if the user is the owner of a file
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // User profile images
+    match /users/{userId}/profile/{fileName} {
+      // Allow read if the file exists
+      allow read: if resource != null;
+      
+      // Allow write if authenticated and it's the user's own directory
+      allow write: if isAuthenticated() && isOwner(userId);
+      
+      // Allow delete if authenticated and it's the user's own directory
+      allow delete: if isAuthenticated() && isOwner(userId);
+    }
+    
+    // Agent assets
+    match /agents/{agentId}/{fileName} {
+      // Allow read if the file exists
+      allow read: if resource != null;
+      
+      // Allow write if authenticated and the user is the owner of the agent
+      // This would require a Firestore lookup in a real implementation
+      allow write: if isAuthenticated();
+      
+      // Allow delete if authenticated and the user is the owner of the agent
+      // This would require a Firestore lookup in a real implementation
+      allow delete: if isAuthenticated();
+    }
+    
+    // Public assets
+    match /public/{fileName} {
+      // Allow read for all users
+      allow read: if true;
+      
+      // Allow write only for authenticated users
+      allow write: if isAuthenticated();
+      
+      // Allow delete only for authenticated admin users
+      allow delete: if isAuthenticated() && request.auth.token.admin == true;
+    }
+  }
+} 
